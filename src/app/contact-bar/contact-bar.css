@@ -1,0 +1,65 @@
+.quick-contact-bar {
+  align-items: center;
+  background-color: #2b343c;
+  border-bottom: 1px solid #495866;
+  border-top: 1px solid #495866;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0.6rem 1.4rem;
+}
+
+.quick-contact-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.brand-text {
+  color: #e7c778;
+  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0;
+  text-transform: none;
+}
+
+.quick-social-group {
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.social-link {
+  align-items: center;
+  background-color: #f2c35c;
+  border-radius: 50%;
+  color: #1f2a30;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  text-decoration: none;
+  width: 32px;
+}
+
+.social-link:hover {
+  background-color: #d89f2f;
+}
+
+.social-link svg {
+  fill: currentColor;
+  height: 17px;
+  width: 17px;
+}
+
+@media (max-width: 900px) {
+  .quick-contact-bar {
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0.65rem 1rem;
+  }
+
+  .quick-contact-group {
+    justify-content: center;
+  }
+}
