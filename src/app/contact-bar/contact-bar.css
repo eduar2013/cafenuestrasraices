@@ -1,18 +1,28 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1200;
+}
+
 .quick-contact-bar {
   align-items: center;
-  background-color: #2b343c;
-  border-bottom: 1px solid #495866;
-  border-top: 1px solid #495866;
+  background-color: #000000;
+  border-bottom: 1px solid #000000;
+  border-top: 1px solid #000000;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin: 0;
   padding: 0.6rem 1.4rem;
+  position: relative;
 }
 
 .quick-contact-group {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  left: 1.4rem;
+  position: absolute;
 }
 
 .brand-text {
@@ -28,6 +38,7 @@
 .quick-social-group {
   display: inline-flex;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .social-link {
@@ -61,5 +72,7 @@
 
   .quick-contact-group {
     justify-content: center;
+    left: auto;
+    position: static;
   }
 }
