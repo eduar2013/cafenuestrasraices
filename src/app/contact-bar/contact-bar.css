@@ -38,7 +38,8 @@
 .quick-social-group {
   display: inline-flex;
   gap: 0.5rem;
-  justify-content: center;
+  justify-content: flex-end;
+  margin-left: auto;
 }
 
 .social-link {

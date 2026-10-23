@@ -96,8 +96,8 @@ el foco al boton.
 
 ## Nuestros productos
 
-La seccion del carrusel usa un fondo durazno pastel de ancho completo
-(`#f6d8c8`), que contrasta con los tonos verdosos de Origenes. Conserva
+La seccion del carrusel usa un fondo azul grisaceo pastel de ancho completo
+(`#dce8ee`), que contrasta con los tonos verdosos de Origenes. Conserva
 titulos verdes y acentos cafe para mantener la legibilidad.
 Sus estilos se encuentran en `src/app/carousel/carousel.css`.
 
