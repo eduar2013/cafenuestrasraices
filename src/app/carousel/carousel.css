@@ -1,5 +1,11 @@
+:host {
+  background-color: #f6d8c8;
+  display: block;
+  padding: 3rem 0;
+}
+
 .offers-section {
-  margin: 2.5rem auto 0;
+  margin: 0 auto;
   max-width: 1180px;
   padding: 0 1rem;
 }
@@ -10,7 +16,7 @@
 }
 
 .offers-title {
-  color: #d08a31;
+  color: #825522;
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0 0 0.35rem;

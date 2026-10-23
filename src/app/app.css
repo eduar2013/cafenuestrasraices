@@ -30,3 +30,23 @@
     width: 100%;
   }
 }
+:host {
+  background-color: #000;
+  box-sizing: border-box;
+  display: block;
+}
+
+app-navbar,
+app-cafe-history,
+app-carousel {
+  display: block;
+}
+
+[id] {
+  scroll-margin-top: 1rem;
+}
+
+[tabindex="-1"]:focus-visible {
+  outline: 3px solid #75501e;
+  outline-offset: -3px;
+}

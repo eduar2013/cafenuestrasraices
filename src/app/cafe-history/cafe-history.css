@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+
+.history-section {
+  --history-video-height: 650px;
+  background-color: #ffe100;
+  background-image:
+    radial-gradient(ellipse at top left, #f8bd4d50, transparent 60%),
+    linear-gradient(135deg, #feffc9, #e6e073);
+  border-block: 1px solid #b6955d40;
+  color: #3d2b1f;
+  font-family: Georgia, 'Times New Roman', serif;
+  padding: 4.5rem 1.5rem;
+}
+
+.history-content {
+  align-items: start;
+  display: grid;
+  gap: 3rem 4rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.history-heading {
+  grid-column: 1 / -1;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #b6955d66;
+  text-align: center;
+}
+
+.history-logo {
+  align-self: center;
+  margin-bottom: 2rem;
+  width: 128px;
+}
+
+.history-story {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: var(--history-video-height);
+}
+
+.history-logo img {
+  display: block;
+  height: auto;
+  max-height: 148px;
+  object-fit: contain;
+  width: 100%;
+}
+
+.history-heading h2 {
+  color: #4b3322;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  margin: 0;
+}
+
+.history-story > p {
+  font-size: clamp(1.1rem, 1.4vw, 1.2rem);
+  line-height: 1.9;
+  margin: 0 0 1.5rem;
+}
+
+.history-story > p:last-child {
+  margin-bottom: 0;
+}
+
+.history-video {
+  min-width: 0;
+  text-align: center;
+}
+
+.video-embed {
+  background-color: #fff;
+  border: 0;
+  border-radius: 0.75rem;
+  display: block;
+  height: var(--history-video-height);
+  width: 100%;
+}
+
+.video-link {
+  color: #75501e;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.video-hint {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin: 0.75rem 0 0;
+}
+
+.video-link:hover {
+  color: #3d2b1f;
+}
+
+.video-link:focus-visible {
+  outline: 3px solid #75501e;
+  outline-offset: 5px;
+}
+
+@media (max-width: 760px) {
+  .history-content {
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .history-video {
+    grid-column: 1 / -1;
+    justify-self: center;
+    max-width: 380px;
+    width: 100%;
+  }
+
+  .history-story {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .history-section {
+    padding: 2.5rem 1.25rem;
+  }
+
+  .history-logo {
+    width: 96px;
+  }
+}

@@ -1,0 +1,255 @@
+:host {
+  display: block;
+}
+
+.origins-section {
+  background: linear-gradient(145deg, #f8f5ed, #e9eddf);
+  color: #34281e;
+  font-family: Georgia, 'Times New Roman', serif;
+  padding: 4.5rem 1.5rem;
+}
+
+.origins-container {
+  margin: auto;
+  max-width: 1120px;
+}
+
+.origins-heading {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.eyebrow {
+  color: #46603b;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0.75rem 0;
+}
+
+.origins-heading > p {
+  line-height: 1.7;
+}
+
+.demo-notice {
+  color: #655136;
+  font-size: 0.9rem;
+  margin: 1rem auto 0;
+  max-width: 680px;
+}
+
+.origins-layout {
+  align-items: start;
+  display: grid;
+  gap: 3rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.origin-map {
+  aspect-ratio: 400 / 520;
+  background: radial-gradient(ellipse, #fffaf0, #e3e8da);
+  border: 1px solid #b7bfa6;
+  border-radius: 1.5rem;
+  margin: auto;
+  max-width: 420px;
+  position: relative;
+}
+
+.origin-map > img {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.map-point {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  height: 24px;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 24px;
+}
+
+.map-point span {
+  background: #344e35;
+  border: 3px solid #fff9e9;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px #0004;
+  height: 14px;
+  width: 14px;
+}
+
+.map-point.is-selected span {
+  background: #6e341b;
+  box-shadow: 0 0 0 6px #6e341b35;
+}
+
+.map-point:hover span {
+  box-shadow: 0 0 0 6px #344e3535;
+}
+
+.map-country {
+  bottom: 18%;
+  font-size: 0.9rem;
+  left: 35%;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  position: absolute;
+}
+
+.map-caption {
+  color: #5f6756;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.origin-list,
+.coffee-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.origin-list {
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+.origin-list button,
+.coffee-options button {
+  background: #fffaf0;
+  border: 1px solid #79856c;
+  border-radius: 1.5rem;
+  color: #344e35;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+}
+
+button[aria-pressed='true']:not(.map-point),
+.origin-list button:hover,
+.coffee-options button:hover {
+  background: #344e35;
+  color: #fffaf0;
+}
+
+button:focus-visible {
+  outline: 3px solid #6e341b;
+  outline-offset: 3px;
+}
+
+.origin-detail {
+  background: #fffcf6;
+  border: 1px solid #dfd5bf;
+  border-radius: 1.25rem;
+  box-shadow: 0 12px 36px #34281e12;
+  overflow: hidden;
+}
+
+.coffee-photo {
+  position: relative;
+}
+
+.coffee-photo img {
+  display: block;
+  height: 190px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.coffee-photo span {
+  background: #211b16e6;
+  bottom: 0.75rem;
+  color: #fff;
+  font-size: 0.75rem;
+  left: 1rem;
+  padding: 0.35rem 0.65rem;
+  position: absolute;
+}
+
+.coffee-info {
+  padding: 1.75rem;
+}
+
+h3 {
+  font-size: 1.8rem;
+  margin: 0.5rem 0;
+}
+
+.coffee-location,
+.coffee-description,
+.availability {
+  line-height: 1.7;
+}
+
+.coffee-options {
+  margin-top: 1rem;
+}
+
+dl {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+dt {
+  color: #66553e;
+  font-size: 0.85rem;
+}
+
+dd {
+  margin: 0.35rem 0 0;
+}
+
+h4 {
+  margin-bottom: 0.75rem;
+}
+
+.tasting-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.tasting-notes li {
+  background: #f3e4c5;
+  border-radius: 1rem;
+  padding: 0.4rem 0.75rem;
+}
+
+.availability {
+  border-top: 1px solid #dfd5bf;
+  font-size: 0.85rem;
+  margin: 1.5rem 0 0;
+  padding-top: 1rem;
+}
+
+@media (max-width: 760px) {
+  .origins-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .origins-layout {
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .coffee-info {
+    padding: 1.25rem;
+  }
+}

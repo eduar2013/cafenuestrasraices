@@ -1,0 +1,98 @@
+<section class="origins-section" aria-labelledby="origins-title">
+  <div class="origins-container">
+    <header class="origins-heading">
+      <p class="eyebrow">De la tierra a tu taza</p>
+      <h2 id="origins-title">Explora nuestros orígenes</h2>
+      <p>Selecciona un punto en el mapa y descubre la historia que puede llevar cada café.</p>
+      <p class="demo-notice">Descubre LabrAlma de Heliconia. Los demás cafés están identificados como ejemplos y no representan la oferta actual del local. Las ubicaciones son aproximadas.</p>
+    </header>
+
+    <div class="origins-layout">
+      <div class="origins-explorer">
+        <div class="origin-map" role="group" aria-label="Mapa de orígenes de café en Colombia">
+          <img src="images/origins/colombia.svg" alt="Mapa de Colombia continental con división por departamentos y Bogotá D.C." width="400" height="520" loading="lazy" />
+          @for (origin of origins; track origin.id) {
+            <button
+              class="map-point"
+              type="button"
+              [style.left.%]="mapLeft(origin)"
+              [style.top.%]="mapTop(origin)"
+              [class.is-selected]="selectedOrigin().id === origin.id"
+              [attr.aria-pressed]="selectedOrigin().id === origin.id"
+              [attr.aria-label]="'Explorar cafés de ' + origin.name"
+              [title]="origin.name"
+              aria-controls="origin-detail"
+              (click)="selectOrigin(origin)"
+            ><span aria-hidden="true"></span></button>
+          }
+          <span class="map-country" aria-hidden="true">Colombia</span>
+        </div>
+        <p class="map-caption">División departamental continental · Ubicaciones aproximadas</p>
+        <p class="map-caption">No incluye el archipiélago de San Andrés, Providencia y Santa Catalina.</p>
+        <div class="origin-list" role="group" aria-label="Seleccionar origen por nombre">
+          @for (origin of origins; track origin.id) {
+            <button type="button"
+              [attr.aria-pressed]="selectedOrigin().id === origin.id"
+              aria-controls="origin-detail"
+              (click)="selectOrigin(origin)"
+            >{{ origin.name }}</button>
+          }
+        </div>
+      </div>
+
+      <div id="origin-detail" class="origin-detail" aria-live="polite" aria-atomic="true">
+        <div class="coffee-photo">
+          <img
+            [src]="selectedCoffee().image ?? 'images/carousel/slide-1.jpg'"
+            [alt]="selectedCoffee().image
+              ? (selectedCoffee().imageAlt ?? selectedCoffee().name)
+              : 'Fotografía ilustrativa de café; no corresponde a un producto específico'"
+            loading="lazy"
+          />
+          @if (!selectedCoffee().image) {
+            <span>Imagen ilustrativa</span>
+          }
+        </div>
+        <div class="coffee-info">
+          <p class="eyebrow">{{ selectedOrigin().name }}{{ selectedCoffee().isExample ? ' · Ejemplo' : '' }}</p>
+          <h3>{{ selectedCoffee().name }}</h3>
+          <p class="coffee-location">{{ selectedOrigin().location }}</p>
+          @if (selectedOrigin().coffees.length > 1) {
+            <div class="coffee-options" role="group" aria-label="Cafés de este origen">
+              @for (coffee of selectedOrigin().coffees; track coffee.id) {
+                <button type="button"
+                  [attr.aria-pressed]="selectedCoffee().id === coffee.id"
+                  (click)="selectedCoffee.set(coffee)"
+                >{{ coffee.name }}</button>
+              }
+            </div>
+          }
+          <p class="coffee-description">{{ selectedCoffee().description }}</p>
+          <dl>
+            <div><dt>Variedad</dt><dd>{{ selectedCoffee().variety }}</dd></div>
+            <div><dt>Proceso</dt><dd>{{ selectedCoffee().process }}</dd></div>
+            <div><dt>Tueste</dt><dd>{{ selectedCoffee().roast }}</dd></div>
+            @if (selectedCoffee().altitude; as altitude) {
+              <div><dt>Altura de cultivo</dt><dd>{{ altitude }} m s. n. m.</dd></div>
+            }
+            <div>
+              <dt>{{ selectedCoffee().isExample ? 'Presentación de ejemplo' : 'Presentaciones' }}</dt>
+              <dd>
+                @for (weight of selectedCoffee().presentations ?? [250]; track weight; let last = $last) {
+                  {{ weight }} g{{ last ? '' : ' y ' }}
+                }
+              </dd>
+            </div>
+          </dl>
+          <h4>Notas en taza</h4>
+          <ul class="tasting-notes">
+            @for (note of selectedCoffee().notes; track $index) {
+              <li>{{ note }}</li>
+            }
+          </ul>
+          <p class="availability">Consulta en el local los cafés, presentaciones y precios disponibles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

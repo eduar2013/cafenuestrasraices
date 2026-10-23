@@ -1,0 +1,106 @@
+:host {
+  display: block;
+}
+
+.site-footer {
+  background: #211b16;
+  border-top: 3px solid #c49b50;
+  color: #eee3d1;
+  font-family: Georgia, 'Times New Roman', serif;
+  margin-top: 3rem;
+  padding: 3.5rem 1.5rem 1.25rem;
+}
+
+.footer-content,
+.footer-bottom {
+  margin: 0 auto;
+  max-width: 1180px;
+}
+
+.footer-content {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1.3fr repeat(3, minmax(0, 1fr));
+}
+
+.brand-name {
+  color: #f7d27b;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-top: 0;
+}
+
+h2 {
+  color: #f7d27b;
+  font-size: 1.1rem;
+  margin: 0 0 1rem;
+}
+
+p {
+  line-height: 1.7;
+  margin: 0 0 1rem;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  align-items: center;
+  color: #eee3d1;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  line-height: 1.5;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f7d27b;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+a:focus-visible {
+  outline: 2px solid #f7d27b;
+  outline-offset: 4px;
+}
+
+.external-hint {
+  font-size: 0.8rem;
+}
+
+.footer-bottom {
+  align-items: center;
+  border-top: 1px solid #c49b5050;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+}
+
+.footer-bottom p {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .footer-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .site-footer {
+    padding: 2.5rem 1.25rem 1.25rem;
+  }
+
+  .footer-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

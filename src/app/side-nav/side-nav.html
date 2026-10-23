@@ -1,0 +1,54 @@
+<div class="side-nav" (keydown.escape)="close(); toggleButton.focus(); $event.stopPropagation()">
+  <button
+    #toggleButton
+    class="nav-toggle"
+    type="button"
+    [attr.aria-expanded]="isOpen()"
+    aria-controls="side-nav-links"
+    [attr.aria-label]="isOpen() ? 'Cerrar menú' : 'Abrir menú'"
+    (click)="toggle()"
+  >
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      @if (isOpen()) {
+        <path d="m6 6 12 12M6 18 18 6" />
+      } @else {
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      }
+    </svg>
+  </button>
+<nav id="side-nav-links" aria-label="Navegación por secciones" [hidden]="!isOpen()">
+  <ul>
+    <li>
+      <a href="#inicio" aria-label="Inicio" title="Inicio" (click)="close()">
+        <span class="nav-initial" aria-hidden="true">I</span>
+        <span class="nav-label">Inicio</span>
+      </a>
+    </li>
+    <li>
+      <a href="#historia" aria-label="Historia" title="Historia" (click)="close()">
+        <span class="nav-initial" aria-hidden="true">H</span>
+        <span class="nav-label">Historia</span>
+      </a>
+    </li>
+    <li>
+      <a href="#productos" aria-label="Productos" title="Productos" (click)="close()">
+        <span class="nav-initial" aria-hidden="true">P</span>
+        <span class="nav-label">Productos</span>
+      </a>
+    </li>
+    <li>
+      <a href="#origenes" aria-label="Orígenes del café" title="Orígenes del café" (click)="close()">
+        <span class="nav-initial" aria-hidden="true">O</span>
+        <span class="nav-label">Orígenes</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ubicacion" aria-label="Ubicación y horarios" title="Ubicación y horarios" (click)="close()">
+        <span class="nav-initial" aria-hidden="true">U</span>
+        <span class="nav-label">Ubicación</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</div>
