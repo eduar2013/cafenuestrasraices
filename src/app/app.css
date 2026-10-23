@@ -1,22 +1,32 @@
 .featured-image-section {
+  align-items: center;
+  background-color: #111;
   display: flex;
   justify-content: center;
-  margin: 0rem 0 1rem;
+  margin: 0;
+  min-height: calc(100dvh - 64px);
+  overflow: hidden;
+  padding: 0;
   width: 100%;
 }
 
 .featured-image {
-  border-radius: 1px;
+  border-radius: 0;
   display: block;
-  height: 100%;  
-  object-fit: cover;
+  height: 100%;
+  max-height: calc(100dvh - 64px);
+  object-fit: contain;
   object-position: center;
   width: 100%;
 }
 
 @media (max-width: 900px) {
+  .featured-image-section {
+    min-height: calc(100dvh - 96px);
+  }
+
   .featured-image {
-    height: 220px;
+    max-height: calc(100dvh - 96px);
     width: 100%;
   }
 }
