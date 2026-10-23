@@ -1,0 +1,30 @@
+<section class="offers-section">
+  <div class="offers-header">
+    <h2 class="offers-title">Lo que ofrecemos</h2>
+    <h3 class="offers-subtitle">Nuestros productos</h3>
+    <p class="offers-description">
+      Desde café de origen hasta bebidas especiales — todo preparado con amor y granos seleccionados.
+    </p>
+  </div>
+
+  <div class="carousel-wrapper" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
+    <button (click)="prev()" class="btn-control">&#10094;</button>
+    
+    <div class="carousel-track-container">
+      <div class="carousel-track" [style.transform]="'translateX(calc(-' + currentIndex() + ' * ((100% - 3rem) / 3 + 1.5rem)))'">
+        
+        @for (img of images; track img.src) {
+          <div class="carousel-item">
+            <img [src]="img.src" [alt]="img.alt" />
+            <div class="carousel-card">
+              <h3 class="carousel-card-title">{{ img.title }}</h3>
+              <p class="carousel-card-description">{{ img.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <button (click)="next()" class="btn-control">&#10095;</button>
+  </div>
+</section>

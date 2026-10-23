@@ -1,11 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { NavbarComponent } from './navbar/navbar';
+import { CarouselComponent } from './carousel/carousel';
+
 
 @Component({
-  imports: [],
+  imports: [NavbarComponent,CarouselComponent],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {
-  protected readonly title = signal('cafe-nuestras-raices');
-}
+export class App {}
