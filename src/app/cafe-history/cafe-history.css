@@ -4,11 +4,9 @@
 
 .history-section {
   --history-video-height: 650px;
-  background-color: #ffe100;
-  background-image:
-    radial-gradient(ellipse at top left, #f8bd4d50, transparent 60%),
-    linear-gradient(135deg, #feffc9, #e6e073);
-  border-block: 1px solid #b6955d40;
+  background-color: #f8f4ec;
+  background-image: linear-gradient(180deg, #fbf8f2 0%, #f3ede1 100%);
+  border-block: 1px solid #dccdb2;
   color: #3d2b1f;
   font-family: Georgia, 'Times New Roman', serif;
   padding: 4.5rem 1.5rem;
@@ -25,9 +23,16 @@
 
 .history-heading {
   grid-column: 1 / -1;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #b6955d66;
   text-align: center;
+}
+
+.history-heading::after {
+  background-color: #c49b50;
+  content: '';
+  display: block;
+  height: 2px;
+  margin: 1.25rem auto 0;
+  width: 64px;
 }
 
 .history-logo {
@@ -54,10 +59,12 @@
 .history-heading h2 {
   color: #4b3322;
   font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: 0.01em;
   margin: 0;
 }
 
 .history-story > p {
+  color: #4a3a2e;
   font-size: clamp(1.1rem, 1.4vw, 1.2rem);
   line-height: 1.9;
   margin: 0 0 1.5rem;
@@ -74,8 +81,9 @@
 
 .video-embed {
   background-color: #fff;
-  border: 0;
+  border: 1px solid #e6dccb;
   border-radius: 0.75rem;
+  box-shadow: 0 12px 32px -16px #3d2b1f40;
   display: block;
   height: var(--history-video-height);
   width: 100%;

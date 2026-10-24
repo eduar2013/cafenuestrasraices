@@ -7,6 +7,7 @@ import { SHOP_PRODUCTS } from './shop/catalog';
 
 describe('App', () => {
   beforeEach(async () => {
+    localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideRouter(routes)],

@@ -1,0 +1,164 @@
+<div class="cart-backdrop" [class.is-open]="open()" (click)="close()"></div>
+<aside
+  id="cart-drawer"
+  class="cart-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cart-title"
+  [class.is-open]="open()"
+  [attr.inert]="open() ? null : ''"
+>
+  <header class="cart-header">
+    <h2 id="cart-title">
+      Tu carrito <span>({{ cart.count() }})</span>
+    </h2>
+    <button
+      #cartClose
+      type="button"
+      class="icon-button"
+      aria-label="Cerrar carrito"
+      (click)="close()"
+    >
+      ✕
+    </button>
+  </header>
+
+  @if (cart.items().length === 0) {
+    <div class="cart-empty">
+      <p class="empty-cart">Tu carrito está vacío. Elige una presentación y añade tu café favorito.</p>
+      <button type="button" class="secondary-button" (click)="close()">
+        Explorar productos
+      </button>
+    </div>
+  } @else {
+    <div class="shipping-progress">
+      @if (cart.freeShippingRemaining() > 0) {
+        <p>
+          Te faltan
+          <strong>{{
+            cart.freeShippingRemaining() | currency: 'COP' : 'symbol-narrow' : '1.0-0'
+          }}</strong>
+          para el envío gratis.
+        </p>
+      } @else {
+        <p><strong>¡Tu pedido tiene envío gratis!</strong></p>
+      }
+      <div
+        class="progress-track"
+        role="progressbar"
+        aria-label="Progreso hacia el envío gratis"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [attr.aria-valuenow]="shippingProgress()"
+      >
+        <div class="progress-bar" [style.width.%]="shippingProgress()"></div>
+      </div>
+    </div>
+
+    <ul class="cart-items">
+      @for (item of cart.items(); track item.variant.id) {
+        <li class="cart-item">
+          <div class="cart-thumb">
+            @if (item.product.image) {
+              <img
+                [src]="item.product.image"
+                alt=""
+                [style.object-position]="item.product.imagePosition ?? 'center'"
+              />
+            } @else {
+              <img class="thumb-logo" src="favicon.png" alt="" />
+            }
+          </div>
+          <div class="cart-item-body">
+            <div class="cart-item-top">
+              <h3>{{ item.product.name }}</h3>
+              <p class="line-total">
+                {{
+                  item.variant.price * item.quantity
+                    | currency: 'COP' : 'symbol-narrow' : '1.0-0'
+                }}
+              </p>
+            </div>
+            <p class="cart-item-meta">
+              {{ item.variant.label }} ·
+              {{ item.variant.price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} c/u
+            </p>
+            <div class="cart-item-actions">
+              <div class="quantity-controls">
+                <button
+                  type="button"
+                  [attr.aria-label]="
+                    'Reducir cantidad de ' + item.product.name + ' ' + item.variant.label
+                  "
+                  (click)="cart.decrease(item.variant.id)"
+                >
+                  −
+                </button>
+                <span [attr.aria-label]="'Cantidad: ' + item.quantity">{{ item.quantity }}</span>
+                <button
+                  type="button"
+                  [attr.aria-label]="
+                    'Aumentar cantidad de ' + item.product.name + ' ' + item.variant.label
+                  "
+                  (click)="cart.increase(item.variant.id)"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                class="remove-button"
+                type="button"
+                [attr.aria-label]="'Eliminar ' + item.product.name + ' ' + item.variant.label"
+                (click)="cart.remove(item.variant.id)"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+
+    <footer class="cart-summary">
+      <dl>
+        <div>
+          <dt>Subtotal</dt>
+          <dd>{{ cart.total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</dd>
+        </div>
+        <div>
+          <dt>Envío</dt>
+          <dd>
+            @if (cart.shipping() === 0) {
+              Gratis
+            } @else {
+              {{ cart.shipping() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+            }
+          </dd>
+        </div>
+        <div class="cart-total" aria-live="polite">
+          <dt>Total</dt>
+          <dd>{{ cart.grandTotal() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
+        </div>
+      </dl>
+      <button type="button" class="checkout-button" (click)="checkoutNotice.set(true)">
+        Finalizar compra
+      </button>
+      @if (checkoutNotice()) {
+        <p class="checkout-notice" role="alert">
+          Esta tienda es una demostración: todavía no procesa pagos ni pedidos.
+        </p>
+      }
+      <div class="cart-secondary-actions">
+        <button type="button" class="link-button" (click)="close()">Seguir comprando</button>
+        <button class="clear-button link-button" type="button" (click)="cart.clear()">
+          Vaciar carrito
+        </button>
+      </div>
+      <p class="cart-note">
+        Envío simulado de {{ shippingCost | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}, gratis desde
+        {{ freeShippingFrom | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}. Tu carrito se guarda
+        en este navegador.
+      </p>
+    </footer>
+  }
+</aside>

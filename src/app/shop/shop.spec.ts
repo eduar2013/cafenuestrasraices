@@ -6,6 +6,7 @@ import { SHOP_PRODUCTS } from './catalog';
 
 describe('ShopComponent', () => {
   beforeEach(async () => {
+    localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [ShopComponent],
       providers: [provideRouter([])],
@@ -25,9 +26,7 @@ describe('ShopComponent', () => {
     expect(cart.count()).toBe(2);
     expect(cart.items()).toHaveLength(1);
     expect(cart.total()).toBe(56000);
-    const select = element.querySelector('select')!;
-    select.value = 'labralma-340';
-    select.dispatchEvent(new Event('change'));
+    element.querySelector<HTMLInputElement>('input[value="labralma-340"]')!.click();
     await fixture.whenStable();
     expect(element.querySelector('.product-price')?.textContent).toContain('36,000');
     element.querySelector<HTMLButtonElement>('.primary-button')!.click();
@@ -68,5 +67,68 @@ describe('ShopComponent', () => {
     expect(cart.items()).toHaveLength(0);
     expect(cart.total()).toBe(0);
     expect(element.querySelector('.empty-cart')).not.toBeNull();
+  });
+
+  it('should open the cart drawer and close it with Escape', async () => {
+    const fixture = TestBed.createComponent(ShopComponent);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    const drawer = element.querySelector('.cart-drawer')!;
+    const toggle = element.querySelector<HTMLButtonElement>('.cart-toggle')!;
+    expect(drawer.classList).not.toContain('is-open');
+    expect(drawer.hasAttribute('inert')).toBe(true);
+    toggle.click();
+    await fixture.whenStable();
+    expect(drawer.classList).toContain('is-open');
+    expect(drawer.hasAttribute('inert')).toBe(false);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await fixture.whenStable();
+    expect(drawer.classList).not.toContain('is-open');
+    expect(document.activeElement).toBe(toggle);
+  });
+
+  it('should charge simulated shipping until the free shipping threshold', async () => {
+    const fixture = TestBed.createComponent(ShopComponent);
+    const cart = TestBed.inject(CartService);
+    const geisha = SHOP_PRODUCTS.find((product) => product.id === 'geisha-huila')!;
+    cart.add(SHOP_PRODUCTS[0], SHOP_PRODUCTS[0].variants[0]);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(cart.shipping()).toBe(9000);
+    expect(cart.grandTotal()).toBe(37000);
+    expect(element.querySelector('.shipping-progress')?.textContent).toContain('92,000');
+    cart.add(geisha, geisha.variants[0]);
+    cart.add(geisha, geisha.variants[0]);
+    await fixture.whenStable();
+    expect(cart.shipping()).toBe(0);
+    expect(cart.grandTotal()).toBe(152000);
+    expect(element.querySelector('.shipping-progress')?.textContent).toContain('envío gratis');
+  });
+
+  it('should filter products by category', async () => {
+    const fixture = TestBed.createComponent(ShopComponent);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelectorAll('.product-card')).toHaveLength(SHOP_PRODUCTS.length);
+    const accessories = Array.from(element.querySelectorAll<HTMLButtonElement>('.filter-chip')).find(
+      (chip) => chip.textContent?.trim() === 'Accesorios',
+    )!;
+    accessories.click();
+    await fixture.whenStable();
+    expect(accessories.getAttribute('aria-pressed')).toBe('true');
+    expect(element.querySelectorAll('.product-card')).toHaveLength(
+      SHOP_PRODUCTS.filter((product) => product.category === 'accesorios').length,
+    );
+  });
+
+  it('should restore the saved cart after a reload', async () => {
+    const cart = TestBed.inject(CartService);
+    cart.add(SHOP_PRODUCTS[0], SHOP_PRODUCTS[0].variants[1]);
+    cart.increase(SHOP_PRODUCTS[0].variants[1].id);
+    TestBed.tick();
+    TestBed.resetTestingModule();
+    const restored = TestBed.inject(CartService);
+    expect(restored.count()).toBe(2);
+    expect(restored.items()[0].variant.id).toBe('labralma-340');
   });
 });

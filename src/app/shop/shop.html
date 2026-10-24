@@ -4,114 +4,140 @@
     <header class="shop-header">
       <p class="eyebrow">Café Nuestras Raíces</p>
       <h1 id="shop-title">Nuestra tienda</h1>
-      <p>Cafés de origen para disfrutar en casa.</p>
+      <p>Cafés de especialidad colombianos, tostados con cuidado para disfrutar en casa.</p>
       <p class="demo-notice">
         Precios simulados en pesos colombianos (COP). Esta tienda es una demostración: no procesa
         pagos ni pedidos.
       </p>
     </header>
-    <p class="shop-status" role="status">{{ message() }}</p>
-    <div class="shop-layout">
-      <section aria-labelledby="catalog-title">
-        <h2 id="catalog-title">Nuestros cafés</h2>
-        <div class="product-grid">
-          @for (product of products; track product.id) {
-            <article class="product-card">
-              <img [src]="product.image" [alt]="product.name" />
-              <div class="product-info">
-                <h3>{{ product.name }}</h3>
-                <p>{{ product.description }}</p>
-                <label [for]="'variant-' + product.id">Presentación</label>
-                <select
-                  [id]="'variant-' + product.id"
-                  [value]="variant(product).id"
-                  (change)="selectVariant(product, $event)"
-                >
-                  @for (option of product.variants; track option.id) {
-                    <option [value]="option.id">{{ option.weight }} g</option>
+
+    <div class="shop-toolbar">
+      <div class="category-filters" role="group" aria-label="Filtrar por categoría">
+        <button
+          type="button"
+          class="filter-chip"
+          [attr.aria-pressed]="category() === 'todos'"
+          (click)="category.set('todos')"
+        >
+          Todos
+        </button>
+        @for (option of categories; track option.id) {
+          <button
+            type="button"
+            class="filter-chip"
+            [attr.aria-pressed]="category() === option.id"
+            (click)="category.set(option.id)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+      <button
+        #cartToggle
+        type="button"
+        class="cart-toggle"
+        aria-haspopup="dialog"
+        aria-controls="cart-drawer"
+        [attr.aria-label]="'Abrir carrito, ' + cart.count() + ' productos'"
+        (click)="openCart()"
+      >
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path
+            d="M6 7h12l-1 13H7L6 7Zm3 0V6a3 3 0 0 1 6 0v1"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="cart-toggle-label">Carrito</span>
+        @if (cart.count() > 0) {
+          <span class="cart-badge">{{ cart.count() }}</span>
+        }
+      </button>
+    </div>
+
+    <section aria-labelledby="catalog-title">
+      <div class="catalog-heading">
+        <h2 id="catalog-title">Nuestros productos</h2>
+        <p class="result-count">{{ products().length }} productos</p>
+      </div>
+      <div class="product-grid">
+        @for (product of products(); track product.id) {
+          <article class="product-card">
+            <div class="product-media">
+              @if (product.image) {
+                <img
+                  [src]="product.image"
+                  [alt]="product.name"
+                  [style.object-position]="product.imagePosition ?? 'center'"
+                  loading="lazy"
+                />
+              } @else {
+                <div class="product-placeholder">
+                  <img src="favicon.png" alt="" />
+                  <span>Foto próximamente</span>
+                </div>
+              }
+              @if (product.badge) {
+                <span class="product-badge">{{ product.badge }}</span>
+              }
+            </div>
+            <div class="product-info">
+              <p class="product-category">{{ categoryLabel(product.category) }}</p>
+              <h3>{{ product.name }}</h3>
+              @if (product.details) {
+                <p class="product-details">{{ product.details }}</p>
+              }
+              <p class="product-description">{{ product.description }}</p>
+              @if (product.notes) {
+                <ul class="product-notes" aria-label="Notas de cata">
+                  @for (note of product.notes; track note) {
+                    <li>{{ note }}</li>
                   }
-                </select>
+                </ul>
+              }
+              @if (product.variants.length > 1) {
+                <fieldset class="variant-picker">
+                  <legend>Presentación</legend>
+                  @for (option of product.variants; track option.id) {
+                    <label class="variant-option">
+                      <input
+                        type="radio"
+                        [name]="'variant-' + product.id"
+                        [value]="option.id"
+                        [checked]="variant(product).id === option.id"
+                        (change)="selectVariant(product, option.id)"
+                      />
+                      <span>{{ option.label }}</span>
+                    </label>
+                  }
+                </fieldset>
+              } @else {
+                <p class="variant-single">Presentación: {{ variant(product).label }}</p>
+              }
+              <div class="product-footer">
                 <p class="product-price">
-                  {{ variant(product).price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP
-                  <span>· Precio simulado</span>
+                  {{ variant(product).price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                  <span>COP · precio simulado</span>
                 </p>
                 <button class="primary-button" type="button" (click)="add(product)">
                   Añadir al carrito
                 </button>
               </div>
-            </article>
-          }
-        </div>
-      </section>
-      <aside class="cart-panel" aria-labelledby="cart-title">
-        <h2 id="cart-title">
-          Tu carrito <span>({{ cart.count() }})</span>
-        </h2>
-        @if (cart.items().length === 0) {
-          <p class="empty-cart">
-            Tu carrito está vacío. Selecciona una presentación y añade tu café favorito.
-          </p>
-        } @else {
-          <ul class="cart-items">
-            @for (item of cart.items(); track item.variant.id) {
-              <li>
-                <h3>{{ item.product.name }}</h3>
-                <p>
-                  {{ item.variant.weight }} g ·
-                  {{ item.variant.price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP /
-                  unidad
-                </p>
-                <div class="quantity-controls">
-                  <button
-                    type="button"
-                    [attr.aria-label]="
-                      'Reducir cantidad de ' + item.product.name + ' ' + item.variant.weight + ' g'
-                    "
-                    (click)="cart.decrease(item.variant.id)"
-                  >
-                    −
-                  </button>
-                  <span [attr.aria-label]="'Cantidad: ' + item.quantity">{{ item.quantity }}</span>
-                  <button
-                    type="button"
-                    [attr.aria-label]="
-                      'Aumentar cantidad de ' + item.product.name + ' ' + item.variant.weight + ' g'
-                    "
-                    (click)="cart.increase(item.variant.id)"
-                  >
-                    +
-                  </button>
-                  <button
-                    class="remove-button"
-                    type="button"
-                    [attr.aria-label]="
-                      'Eliminar ' + item.product.name + ' ' + item.variant.weight + ' g'
-                    "
-                    (click)="cart.remove(item.variant.id)"
-                  >
-                    Eliminar
-                  </button>
-                </div>
-                <p class="line-total">
-                  Subtotal:
-                  {{
-                    item.variant.price * item.quantity | currency: 'COP' : 'symbol-narrow' : '1.0-0'
-                  }}
-                  COP
-                </p>
-              </li>
-            }
-          </ul>
-          <p class="cart-total" aria-live="polite">
-            Total simulado: {{ cart.total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP
-          </p>
-          <button class="clear-button" type="button" (click)="cart.clear()">Vaciar carrito</button>
+            </div>
+          </article>
         }
-        <p class="cart-note">
-          El carrito se conserva mientras navegas por el sitio. Al recargar la página se vacía. No
-          se realizan compras.
-        </p>
-      </aside>
-    </div>
+      </div>
+    </section>
   </div>
+
+  <div class="shop-toast" role="status" [class.is-visible]="message()">
+    <span>{{ message() }}</span>
+    @if (message()) {
+      <button type="button" class="toast-action" (click)="openCart()">Ver carrito</button>
+    }
+  </div>
+
+  <app-cart-drawer [(open)]="cartOpen" (closed)="cartToggle.focus()" />
 </main>
