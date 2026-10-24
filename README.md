@@ -110,6 +110,21 @@ y el ano actual. Para agregar enlaces de interes, edita la lista de
 `target="_blank"` y `rel="noopener noreferrer"`. El diseno se adapta de cuatro
 columnas a una en moviles.
 
+## Tienda y carrito de demostracion
+
+La pagina principal incluye una seccion de acceso a la tienda, tambien disponible
+desde el menu lateral y el footer. La ruta `/#/tienda` usa Angular Router con
+hash para permitir recargas y enlaces directos en GitHub Pages sin configurar
+reescrituras del servidor. Las secciones de inicio usan rutas como `/#/#historia`.
+
+El catalogo en `src/app/shop/catalog.ts` incluye LabrAlma en 250 g y 340 g con
+precios **simulados** de 28.000 y 36.000 COP. Se pueden cambiar o agregar productos
+y presentaciones en ese archivo; no son precios oficiales ni hay control de stock.
+El carrito permite agregar, aumentar, reducir, eliminar y vaciar articulos.
+Cada presentacion es una linea independiente y su subtotal se calcula por cantidad.
+El carrito se mantiene en memoria al navegar entre paginas, pero se vacia al
+recargar o cerrar la pagina. No hay pagos, checkout, pedidos ni backend.
+
 ## Building
 To build the project run:
 

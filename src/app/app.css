@@ -1,52 +1,5 @@
-.featured-image-section {
-  align-items: center;
-  background-color: #000000;
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  min-height: calc(100dvh - 64px);
-  overflow: hidden;
-  padding: 0;
-  width: 100%;
-}
-
-.featured-image {
-  border-radius: 0;
-  display: block;
-  height: 100%;
-  max-height: calc(100dvh - 64px);
-  object-fit: contain;
-  object-position: center;
-  width: 100%;
-}
-
-@media (max-width: 900px) {
-  .featured-image-section {
-    min-height: calc(100dvh - 96px);
-  }
-
-  .featured-image {
-    max-height: calc(100dvh - 96px);
-    width: 100%;
-  }
-}
 :host {
   background-color: #000;
   box-sizing: border-box;
   display: block;
-}
-
-app-navbar,
-app-cafe-history,
-app-carousel {
-  display: block;
-}
-
-[id] {
-  scroll-margin-top: 1rem;
-}
-
-[tabindex="-1"]:focus-visible {
-  outline: 3px solid #75501e;
-  outline-offset: -3px;
 }

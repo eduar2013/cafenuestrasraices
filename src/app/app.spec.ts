@@ -1,12 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { Router, provideRouter } from '@angular/router';
+import { routes } from './app.routes';
+import { CartService } from './shop/cart';
+import { SHOP_PRODUCTS } from './shop/catalog';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-    })
-      .compileComponents();
+      providers: [provideRouter(routes)],
+    }).compileComponents();
+    await TestBed.inject(Router).navigateByUrl('/');
   });
 
   it('should create the app', () => {
@@ -24,10 +29,19 @@ describe('App', () => {
 
     expect(nav?.getAttribute('aria-label')).toBe('Navegación por secciones');
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
-      '#inicio', '#historia', '#productos', '#origenes', '#ubicacion',
+      '/#inicio',
+      '/#historia',
+      '/#productos',
+      '/#origenes',
+      '/tienda',
+      '/#ubicacion',
     ]);
     for (const link of links) {
-      const target = compiled.querySelector(link.getAttribute('href')!);
+      const href = link.getAttribute('href')!;
+      if (href === '/tienda') {
+        continue;
+      }
+      const target = compiled.querySelector(href.slice(href.indexOf('#')));
       expect(target).not.toBeNull();
       expect(target?.getAttribute('tabindex')).toBe('-1');
       expect(link.getAttribute('aria-label')).toBeTruthy();
@@ -85,8 +99,9 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const history = compiled.querySelector('app-cafe-history');
     expect(history?.querySelector('h2')?.textContent).toContain('Nuestra historia');
-    expect(history?.compareDocumentPosition(compiled.querySelector('app-carousel')!))
-      .toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(history?.compareDocumentPosition(compiled.querySelector('app-carousel')!)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
     expect(history?.querySelector('img')?.getAttribute('src')).toBe('images/cafe/image.png');
     expect(history?.querySelector('img')?.getAttribute('alt')).toBe('Logo de Café Nuestras Raíces');
   });
@@ -101,17 +116,38 @@ describe('App', () => {
     expect(footer.querySelector('h2')?.textContent).toBe('Enlaces de interés');
     expect(footer.textContent).toContain(String(new Date().getFullYear()));
     const links = Array.from(footer.querySelectorAll('a'));
-    expect(links.length).toBe(8);
+    expect(links.length).toBe(9);
     for (const link of links) {
       const href = link.getAttribute('href')!;
-      if (href.startsWith('#')) {
-        expect(compiled.querySelector(href)).not.toBeNull();
+      if (href.startsWith('/#')) {
+        expect(compiled.querySelector(href.slice(1))).not.toBeNull();
+      } else if (href === '/tienda') {
+        expect(link.textContent).toBe('Tienda');
       } else {
         expect(href.startsWith('https://')).toBe(true);
         expect(link.getAttribute('target')).toBe('_blank');
         expect(link.getAttribute('rel')).toBe('noopener noreferrer');
       }
     }
+  });
+
+  it('should open the shop and retain the cart when returning from home', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.shop-preview a')?.getAttribute('href')).toBe('/tienda');
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/tienda');
+    await fixture.whenStable();
+    expect(compiled.querySelector('h1')?.textContent).toBe('Nuestra tienda');
+    expect(compiled.querySelector('app-cafe-history')).toBeNull();
+    TestBed.inject(CartService).add(SHOP_PRODUCTS[0], SHOP_PRODUCTS[0].variants[0]);
+    await router.navigateByUrl('/#historia');
+    await fixture.whenStable();
+    expect(compiled.querySelector('#historia')).not.toBeNull();
+    await router.navigateByUrl('/tienda');
+    await fixture.whenStable();
+    expect(compiled.querySelector('#cart-title')?.textContent).toContain('(1)');
   });
 
   it('should place the logo above the story below the shared title', async () => {
@@ -142,9 +178,7 @@ describe('App', () => {
     const link = compiled.querySelector('app-cafe-history a');
     const video = compiled.querySelector('app-cafe-history iframe');
 
-    expect(video?.getAttribute('src')).toBe(
-      'https://www.instagram.com/reel/DZvGNztxa6K/embed/',
-    );
+    expect(video?.getAttribute('src')).toBe('https://www.instagram.com/reel/DZvGNztxa6K/embed/');
     expect(video?.getAttribute('title')).toContain('Café Nuestras Raíces');
     expect(video?.getAttribute('loading')).toBe('lazy');
     expect(video?.hasAttribute('allowfullscreen')).toBe(true);

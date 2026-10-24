@@ -1,0 +1,60 @@
+:host,
+app-navbar,
+app-carousel {
+  display: block;
+}
+
+[id] {
+  scroll-margin-top: 7rem;
+}
+
+[tabindex='-1']:focus-visible {
+  outline: 3px solid #75501e;
+  outline-offset: -3px;
+}
+
+.shop-preview {
+  background: linear-gradient(135deg, #f8e8c5, #ecce94);
+  color: #3d2b1f;
+  font-family: Georgia, 'Times New Roman', serif;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin: 1rem 0;
+}
+
+p {
+  line-height: 1.7;
+}
+
+.demo-note {
+  font-size: 0.9rem;
+}
+
+a {
+  background: #34281e;
+  border-radius: 0.5rem;
+  color: #fff5dc;
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+}
+
+a:hover {
+  background: #57402c;
+}
+
+a:focus-visible {
+  outline: 3px solid #75501e;
+  outline-offset: 4px;
+}

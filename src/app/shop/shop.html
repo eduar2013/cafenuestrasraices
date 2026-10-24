@@ -1,0 +1,117 @@
+<main class="shop-page" aria-labelledby="shop-title">
+  <div class="shop-container">
+    <a class="back-link" routerLink="/">← Volver al inicio</a>
+    <header class="shop-header">
+      <p class="eyebrow">Café Nuestras Raíces</p>
+      <h1 id="shop-title">Nuestra tienda</h1>
+      <p>Cafés de origen para disfrutar en casa.</p>
+      <p class="demo-notice">
+        Precios simulados en pesos colombianos (COP). Esta tienda es una demostración: no procesa
+        pagos ni pedidos.
+      </p>
+    </header>
+    <p class="shop-status" role="status">{{ message() }}</p>
+    <div class="shop-layout">
+      <section aria-labelledby="catalog-title">
+        <h2 id="catalog-title">Nuestros cafés</h2>
+        <div class="product-grid">
+          @for (product of products; track product.id) {
+            <article class="product-card">
+              <img [src]="product.image" [alt]="product.name" />
+              <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <label [for]="'variant-' + product.id">Presentación</label>
+                <select
+                  [id]="'variant-' + product.id"
+                  [value]="variant(product).id"
+                  (change)="selectVariant(product, $event)"
+                >
+                  @for (option of product.variants; track option.id) {
+                    <option [value]="option.id">{{ option.weight }} g</option>
+                  }
+                </select>
+                <p class="product-price">
+                  {{ variant(product).price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP
+                  <span>· Precio simulado</span>
+                </p>
+                <button class="primary-button" type="button" (click)="add(product)">
+                  Añadir al carrito
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+      <aside class="cart-panel" aria-labelledby="cart-title">
+        <h2 id="cart-title">
+          Tu carrito <span>({{ cart.count() }})</span>
+        </h2>
+        @if (cart.items().length === 0) {
+          <p class="empty-cart">
+            Tu carrito está vacío. Selecciona una presentación y añade tu café favorito.
+          </p>
+        } @else {
+          <ul class="cart-items">
+            @for (item of cart.items(); track item.variant.id) {
+              <li>
+                <h3>{{ item.product.name }}</h3>
+                <p>
+                  {{ item.variant.weight }} g ·
+                  {{ item.variant.price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP /
+                  unidad
+                </p>
+                <div class="quantity-controls">
+                  <button
+                    type="button"
+                    [attr.aria-label]="
+                      'Reducir cantidad de ' + item.product.name + ' ' + item.variant.weight + ' g'
+                    "
+                    (click)="cart.decrease(item.variant.id)"
+                  >
+                    −
+                  </button>
+                  <span [attr.aria-label]="'Cantidad: ' + item.quantity">{{ item.quantity }}</span>
+                  <button
+                    type="button"
+                    [attr.aria-label]="
+                      'Aumentar cantidad de ' + item.product.name + ' ' + item.variant.weight + ' g'
+                    "
+                    (click)="cart.increase(item.variant.id)"
+                  >
+                    +
+                  </button>
+                  <button
+                    class="remove-button"
+                    type="button"
+                    [attr.aria-label]="
+                      'Eliminar ' + item.product.name + ' ' + item.variant.weight + ' g'
+                    "
+                    (click)="cart.remove(item.variant.id)"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+                <p class="line-total">
+                  Subtotal:
+                  {{
+                    item.variant.price * item.quantity | currency: 'COP' : 'symbol-narrow' : '1.0-0'
+                  }}
+                  COP
+                </p>
+              </li>
+            }
+          </ul>
+          <p class="cart-total" aria-live="polite">
+            Total simulado: {{ cart.total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP
+          </p>
+          <button class="clear-button" type="button" (click)="cart.clear()">Vaciar carrito</button>
+        }
+        <p class="cart-note">
+          El carrito se conserva mientras navegas por el sitio. Al recargar la página se vacía. No
+          se realizan compras.
+        </p>
+      </aside>
+    </div>
+  </div>
+</main>
