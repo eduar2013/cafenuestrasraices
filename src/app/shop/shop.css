@@ -137,8 +137,8 @@ p {
 }
 .product-grid {
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 }
 .product-card {
   background: #fffcf6;
@@ -156,21 +156,49 @@ p {
   transform: translateY(-2px);
 }
 .product-media {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 3;
   background: #ede5d5;
   max-width: 100%;
   overflow: hidden;
   position: relative;
 }
-.product-media > img {
+.product-zoom {
+  background: none;
+  border: 0;
+  cursor: zoom-in;
   display: block;
   height: 100%;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+.product-zoom:focus-visible {
+  outline: 3px solid #344e35;
+  outline-offset: -3px;
+}
+/* The whole photo is always visible; a blurred copy fills the rest of the frame. */
+.product-backdrop {
+  filter: blur(20px) saturate(1.1);
+  height: 100%;
+  inset: 0;
   object-fit: cover;
+  opacity: 0.6;
+  position: absolute;
+  transform: scale(1.2);
+  width: 100%;
+}
+.product-photo {
+  display: block;
+  filter: drop-shadow(0 10px 14px #2a1d1240);
+  height: 100%;
+  object-fit: contain;
+  position: relative;
   transition: transform 0.4s ease;
   width: 100%;
 }
-.product-card:hover .product-media > img {
-  transform: scale(1.03);
+.product-card:hover .product-photo {
+  transform: scale(1.04);
 }
 .product-placeholder {
   align-items: center;
@@ -206,7 +234,7 @@ p {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 1.25rem;
+  padding: 1rem;
 }
 .product-category {
   color: #75501e;
@@ -216,39 +244,52 @@ p {
   text-transform: uppercase;
 }
 .product-info h3 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin: 0 0 0.25rem;
+}
+.product-details,
+.product-description {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 .product-details {
   color: #66543b;
-  font-size: 0.85rem;
-  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  margin: 0 0 0.4rem;
 }
 .product-description {
-  font-size: 0.95rem;
-  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  margin: 0 0 0.6rem;
 }
 .product-notes {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
   list-style: none;
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   padding: 0;
 }
 .product-notes li {
   background: #f3ead6;
   border-radius: 999px;
   color: #574026;
-  font-size: 0.78rem;
-  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.6rem;
+}
+.product-notes .more-notes {
+  background: transparent;
+  border: 1px solid #e0d2b8;
+  cursor: help;
 }
 .variant-picker {
   border: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   padding: 0;
 }
 .variant-picker legend,
@@ -287,17 +328,15 @@ p {
   outline-offset: 2px;
 }
 .product-footer {
-  align-items: center;
   border-top: 1px solid #eee3d1;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.75rem;
-  justify-content: space-between;
   margin-top: auto;
-  padding-top: 1rem;
+  padding-top: 0.75rem;
 }
 .product-price {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.2;
   margin: 0;
@@ -330,6 +369,160 @@ button {
 }
 .primary-button:hover {
   background: #223c24;
+}
+.primary-button:disabled {
+  background: #9a9186;
+  border-color: #9a9186;
+  cursor: not-allowed;
+}
+.add-button {
+  align-items: center;
+  border-radius: 999px;
+  box-shadow: 0 8px 18px -10px #223c24b3;
+  display: inline-flex;
+  font-weight: 600;
+  gap: 0.5rem;
+  justify-content: center;
+  letter-spacing: 0.01em;
+  padding: 0.65rem 1.25rem;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+  width: 100%;
+}
+.add-button:hover:not(:disabled) {
+  box-shadow: 0 12px 22px -10px #223c24cc;
+  transform: translateY(-1px);
+}
+.add-button:active:not(:disabled) {
+  box-shadow: 0 4px 10px -6px #223c24b3;
+  transform: scale(0.98);
+}
+.add-button:focus-visible {
+  outline: 3px solid #b8863b;
+  outline-offset: 2px;
+}
+.add-button.is-added {
+  background: #5d7f3c;
+  border-color: #5d7f3c;
+}
+.add-button:disabled {
+  background: #ece5d8;
+  border-color: #ece5d8;
+  box-shadow: none;
+  color: #8c7d6b;
+}
+.catalog-status {
+  color: #6b5a45;
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
+.zoom-hint {
+  align-items: center;
+  background: #fffcf6e6;
+  border-radius: 999px;
+  bottom: 0.75rem;
+  color: #34281e;
+  display: flex;
+  height: 2.25rem;
+  justify-content: center;
+  position: absolute;
+  right: 0.75rem;
+  width: 2.25rem;
+}
+
+/* Image dialog */
+.image-dialog {
+  background: transparent;
+  border: 0;
+  max-height: 100dvh;
+  max-width: 100vw;
+  overflow: visible;
+  padding: 1rem;
+}
+.image-dialog::backdrop {
+  background: #1b140ee6;
+}
+.image-dialog figure {
+  margin: 0;
+}
+.image-frame {
+  border-radius: 0.75rem;
+  cursor: zoom-in;
+  line-height: 0;
+  overflow: hidden;
+}
+.image-frame.is-zoomed {
+  cursor: grab;
+  touch-action: none;
+}
+.image-frame.is-panning {
+  cursor: grabbing;
+}
+.image-frame img {
+  display: block;
+  max-height: calc(100dvh - 9rem);
+  max-width: min(100%, 64rem);
+  object-fit: contain;
+  transform-origin: 0 0;
+  transition: transform 0.15s ease-out;
+  user-select: none;
+}
+.image-frame.is-panning img {
+  transition: none;
+}
+.image-dialog figcaption {
+  align-items: center;
+  color: #fffcf6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}
+.zoom-controls {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+.zoom-controls button {
+  background: #fffcf6;
+  border: 0;
+  border-radius: 999px;
+  color: #34281e;
+  cursor: pointer;
+  font-size: 1.2rem;
+  height: 44px;
+  width: 44px;
+}
+.zoom-controls button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+.zoom-controls output {
+  font-variant-numeric: tabular-nums;
+  min-width: 3.5rem;
+  text-align: center;
+}
+.zoom-help {
+  color: #fffcf6b3;
+  font-size: 0.8rem;
+  margin: 0.5rem 0 0;
+}
+.image-dialog-close {
+  background: #fffcf6;
+  border: 0;
+  border-radius: 999px;
+  color: #34281e;
+  cursor: pointer;
+  font-size: 1rem;
+  height: 44px;
+  position: absolute;
+  right: 0;
+  top: -0.5rem;
+  width: 44px;
 }
 
 /* Toast */
@@ -397,7 +590,9 @@ a:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .product-card,
-  .product-media > img,
+  .product-photo,
+  .add-button,
+  .image-frame img,
   .shop-toast {
     transition: none;
   }

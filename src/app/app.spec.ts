@@ -3,14 +3,14 @@ import { App } from './app';
 import { Router, provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { CartService } from './shop/cart';
-import { SHOP_PRODUCTS } from './shop/catalog';
+import { flushCatalog, provideCatalogTesting } from './shop/catalog.testing';
 
 describe('App', () => {
   beforeEach(async () => {
     localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter(routes)],
+      providers: [provideRouter(routes), provideCatalogTesting()],
     }).compileComponents();
     await TestBed.inject(Router).navigateByUrl('/');
   });
@@ -139,10 +139,12 @@ describe('App', () => {
     expect(compiled.querySelector('.shop-preview a')?.getAttribute('href')).toBe('/tienda');
     const router = TestBed.inject(Router);
     await router.navigateByUrl('/tienda');
+    const catalog = await flushCatalog();
     await fixture.whenStable();
     expect(compiled.querySelector('h1')?.textContent).toBe('Nuestra tienda');
     expect(compiled.querySelector('app-cafe-history')).toBeNull();
-    TestBed.inject(CartService).add(SHOP_PRODUCTS[0], SHOP_PRODUCTS[0].variants[0]);
+    const [product] = catalog.products();
+    TestBed.inject(CartService).add(product, product.variants[0]);
     await router.navigateByUrl('/#historia');
     await fixture.whenStable();
     expect(compiled.querySelector('#historia')).not.toBeNull();

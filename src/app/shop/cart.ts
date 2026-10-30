@@ -1,5 +1,5 @@
-import { Injectable, computed, effect, signal } from '@angular/core';
-import { ProductVariant, ShopProduct, findVariant } from './catalog';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { CatalogService, ProductVariant, ShopProduct } from './catalog';
 
 export interface CartItem {
   readonly product: ShopProduct;
@@ -13,10 +13,23 @@ export const FREE_SHIPPING_FROM = 120000;
 
 const STORAGE_KEY = 'cnr-cart';
 
+interface CartEntry {
+  readonly id: string;
+  readonly quantity: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private readonly state = signal<readonly CartItem[]>(loadItems());
-  readonly items = this.state.asReadonly();
+  private readonly catalog = inject(CatalogService);
+  private readonly state = signal<readonly CartEntry[]>(loadEntries());
+  // Items are rebuilt from the catalog loaded from the API, so prices and names are
+  // always current. Saved entries are kept while the catalog is still loading.
+  readonly items = computed(() =>
+    this.state().flatMap((entry): CartItem[] => {
+      const match = this.catalog.findVariant(entry.id);
+      return match ? [{ ...match, quantity: entry.quantity }] : [];
+    }),
+  );
   readonly count = computed(() => this.items().reduce((sum, item) => sum + item.quantity, 0));
   readonly total = computed(() =>
     this.items().reduce((sum, item) => sum + item.variant.price * item.quantity, 0),
@@ -28,38 +41,37 @@ export class CartService {
   readonly freeShippingRemaining = computed(() => Math.max(0, FREE_SHIPPING_FROM - this.total()));
 
   constructor() {
-    effect(() => saveItems(this.items()));
+    effect(() => saveEntries(this.state()));
   }
 
-  add(product: ShopProduct, variant: ProductVariant): void {
-    this.state.update((items) => {
-      const exists = items.some((item) => item.variant.id === variant.id);
-      return exists
-        ? items.map((item) =>
-            item.variant.id === variant.id ? { ...item, quantity: item.quantity + 1 } : item,
+  add(_product: ShopProduct, variant: ProductVariant): void {
+    this.state.update((entries) =>
+      entries.some((entry) => entry.id === variant.id)
+        ? entries.map((entry) =>
+            entry.id === variant.id ? { ...entry, quantity: entry.quantity + 1 } : entry,
           )
-        : [...items, { product, variant, quantity: 1 }];
-    });
+        : [...entries, { id: variant.id, quantity: 1 }],
+    );
   }
 
   increase(id: string): void {
-    this.state.update((items) =>
-      items.map((item) =>
-        item.variant.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+    this.state.update((entries) =>
+      entries.map((entry) =>
+        entry.id === id ? { ...entry, quantity: entry.quantity + 1 } : entry,
       ),
     );
   }
 
   decrease(id: string): void {
-    this.state.update((items) =>
-      items
-        .map((item) => (item.variant.id === id ? { ...item, quantity: item.quantity - 1 } : item))
-        .filter((item) => item.quantity > 0),
+    this.state.update((entries) =>
+      entries
+        .map((entry) => (entry.id === id ? { ...entry, quantity: entry.quantity - 1 } : entry))
+        .filter((entry) => entry.quantity > 0),
     );
   }
 
   remove(id: string): void {
-    this.state.update((items) => items.filter((item) => item.variant.id !== id));
+    this.state.update((entries) => entries.filter((entry) => entry.id !== id));
   }
 
   clear(): void {
@@ -67,30 +79,26 @@ export class CartService {
   }
 }
 
-// The cart is stored as variant ids + quantities and rebuilt from the catalog,
-// so price or name changes in the catalog are always reflected.
-function loadItems(): readonly CartItem[] {
+function loadEntries(): readonly CartEntry[] {
   try {
     const saved: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]');
     if (!Array.isArray(saved)) {
       return [];
     }
     return saved.flatMap((entry) => {
-      const match = typeof entry?.id === 'string' ? findVariant(entry.id) : undefined;
       const quantity = Number(entry?.quantity);
-      return match && Number.isInteger(quantity) && quantity > 0 ? [{ ...match, quantity }] : [];
+      return typeof entry?.id === 'string' && Number.isInteger(quantity) && quantity > 0
+        ? [{ id: entry.id, quantity }]
+        : [];
     });
   } catch {
     return [];
   }
 }
 
-function saveItems(items: readonly CartItem[]): void {
+function saveEntries(entries: readonly CartEntry[]): void {
   try {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(items.map((item) => ({ id: item.variant.id, quantity: item.quantity }))),
-    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
   } catch {
     // Storage unavailable (private mode, blocked cookies): the cart still works in memory.
   }
