@@ -3,106 +3,100 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
-  ApiCoffeeInfo,
-  ApiPrice,
+  ApiCoffeeDetail,
   ApiProduct,
   ApiProductList,
+  ApiVariant,
   CATALOG_API_URL,
   CatalogService,
 } from './catalog';
 
-export const TEST_CATALOG_URL = 'http://test/productos';
+export const TEST_CATALOG_URL = 'http://test/products';
 
-const cafe = { id: 1, slug: 'cafe', nombre: 'Café' };
+const coffeeCategory = { id: 1, slug: 'coffee', name: 'Café' };
 
-function price(sku: string, precio: number, opciones: ApiPrice['opciones'], stock = 10): ApiPrice {
-  return { id: 0, sku, imagen_url: null, opciones, precio, stock, disponible: stock > 0 };
+function variant(sku: string, variant_name: string, price: number, stock = 10): ApiVariant {
+  return {
+    id: 0,
+    sku,
+    variant_name,
+    weight: null,
+    grind_type: null,
+    price,
+    stock,
+    is_default: false,
+    is_available: stock > 0,
+  };
 }
 
-function coffee(
-  id: number,
-  nombre: string,
-  precios: ApiPrice[],
-  extra: Partial<ApiCoffeeInfo> = {},
-): ApiCoffeeInfo {
+function coffee(extra: Partial<ApiCoffeeDetail> = {}): ApiCoffeeDetail {
   return {
-    id,
-    nombre,
-    imagen_url: null,
-    proceso: null,
-    variedad: null,
-    tostion: null,
-    notas: null,
-    ubicacion: null,
-    precios,
+    process: null,
+    variety: null,
+    roast_level: null,
+    origin: null,
+    tasting_notes: null,
     ...extra,
   };
 }
 
-function product(id: number, nombre: string, extra: Partial<ApiProduct>): ApiProduct {
+function product(id: number, name: string, extra: Partial<ApiProduct>): ApiProduct {
   return {
     id,
-    nombre,
-    descripcion: '',
-    imagen_url: null,
-    categoria: cafe,
-    activo: true,
-    disponible: true,
-    informacion_cafe: [],
-    precios: [],
+    name,
+    slug: name.toLowerCase().replace(/\s+/g, '-'),
+    description: '',
+    is_active: true,
+    is_available: true,
+    category: coffeeCategory,
+    brand: null,
+    coffee_detail: coffee(),
+    variants: [],
+    images: [],
     ...extra,
   };
 }
 
 export const TEST_CATALOG: ApiProductList = {
-  total: 5,
+  total: 6,
   items: [
     product(1, 'LabrAlma', {
-      imagen_url: 'images/productos/labralma-web.jpg',
-      informacion_cafe: [
-        coffee(
-          1,
-          'LabrAlma',
-          [
-            price('labralma-250', 28000, { gramaje_g: 250, presentacion: 'grano' }),
-            price('labralma-340', 36000, { gramaje_g: 340, presentacion: 'grano' }),
-          ],
-          {
-            proceso: 'LAVADO',
-            notas: 'Chocolate, Cítricos, Panela y Frutos rojos',
-            ubicacion: {
-              id: 1,
-              origen: 'Heliconia - Antioquia',
-              municipio: 'Heliconia',
-              departamento: 'Antioquia',
-              altura_msnm: 1740,
-            },
-          },
-        ),
+      images: [{ id: 1, image_url: 'images/productos/labralma-web.jpg', is_primary: true }],
+      coffee_detail: coffee({
+        process: { id: 1, name: 'Lavado' },
+        tasting_notes: 'Chocolate, Cítricos, Panela y Frutos rojos',
+        origin: {
+          id: 1,
+          region: null,
+          municipality: 'Heliconia',
+          department: 'Antioquia',
+          altitude_masl: 1740,
+          latitude: null,
+          longitude: null,
+        },
+      }),
+      variants: [
+        variant('labralma-250', '250 g grano', 28000),
+        variant('labralma-340', '340 g grano', 36000),
       ],
     }),
-    product(2, 'Mauritania', {
-      informacion_cafe: [
-        coffee(2, 'Lavado', [
-          price('mauritania-lavado', 38000, { gramaje_g: 340, presentacion: 'grano' }),
-        ]),
-        coffee(3, 'Honey', [
-          price('mauritania-honey', 38000, { gramaje_g: 340, presentacion: 'molido' }),
-        ]),
-      ],
+    product(2, 'Mauritania Lavado', {
+      variants: [variant('mauritania-lavado', '340 g grano', 38000)],
     }),
-    product(3, 'Geisha', {
-      informacion_cafe: [coffee(4, 'Geisha', [price('geisha-250', 62000, { gramaje_g: 250 })])],
+    product(3, 'Mauritania Honey', {
+      variants: [variant('mauritania-honey', '340 g molido', 38000)],
     }),
-    product(4, 'Espresso Intenso', {
-      disponible: false,
-      informacion_cafe: [
-        coffee(5, 'Espresso Intenso', [price('espresso-500', 32000, { gramaje_g: 500 }, 0)]),
-      ],
+    product(4, 'Geisha', {
+      variants: [variant('geisha-250', '250 g grano', 62000)],
     }),
-    product(5, 'Taza de cerámica', {
-      categoria: { id: 2, slug: 'accesorios', nombre: 'Accesorios' },
-      precios: [price('taza-300', 32000, { capacidad: '300 ml' })],
+    product(5, 'Espresso Intenso', {
+      is_available: false,
+      variants: [variant('espresso-500', '500 g molido', 32000, 0)],
+    }),
+    product(6, 'Taza de cerámica', {
+      category: { id: 2, slug: 'accesorios', name: 'Accesorios' },
+      coffee_detail: null,
+      variants: [variant('taza-300', '300 ml', 32000)],
     }),
   ],
 };

@@ -139,11 +139,11 @@ describe('ShopComponent', () => {
     expect(restored.items()[0].variant.id).toBe('labralma-340');
   });
 
-  it('should map the API response into one card per coffee profile', () => {
+  it('should map the API response into one card per product', () => {
     expect(products.map((product) => product.name)).toEqual([
       'LabrAlma',
-      'Mauritania · Lavado',
-      'Mauritania · Honey',
+      'Mauritania Lavado',
+      'Mauritania Honey',
       'Geisha',
       'Espresso Intenso',
       'Taza de cerámica',
@@ -151,11 +151,12 @@ describe('ShopComponent', () => {
     expect(products[0].details).toBe('Heliconia - Antioquia · Lavado · 1740 m s. n. m.');
     expect(products[0].notes).toEqual(['Chocolate', 'Cítricos', 'Panela', 'Frutos rojos']);
     expect(products[0].variants.map((variant) => variant.label)).toEqual([
-      '250 g · Grano',
-      '340 g · Grano',
+      '250 g grano',
+      '340 g grano',
     ]);
+    expect(products.at(-1)?.details).toBeUndefined();
     expect(products.at(-1)?.variants[0].label).toBe('300 ml');
-    expect(TEST_CATALOG.items).toHaveLength(5);
+    expect(TEST_CATALOG.items).toHaveLength(6);
   });
 
   it('should not allow adding sold out products', async () => {

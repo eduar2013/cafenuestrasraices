@@ -3,7 +3,7 @@ import { Injectable, InjectionToken, computed, inject } from '@angular/core';
 
 export const CATALOG_API_URL = new InjectionToken<string>('CATALOG_API_URL', {
   providedIn: 'root',
-  factory: () => 'http://127.0.0.1:8000/productos',
+  factory: () => 'http://127.0.0.1:8000/products',
 });
 
 export interface ProductVariant {
@@ -34,48 +34,61 @@ export interface ShopProduct {
   readonly variants: readonly [ProductVariant, ...ProductVariant[]];
 }
 
-// Shape of GET /productos.
+// Shape of GET /products.
 
-export interface ApiPrice {
+export interface ApiNamed {
+  readonly id: number;
+  readonly name: string;
+}
+
+export interface ApiVariant {
   readonly id: number;
   readonly sku: string;
-  readonly imagen_url: string | null;
-  readonly opciones: Readonly<Record<string, string | number | null>> | null;
-  readonly precio: number;
+  readonly variant_name: string;
+  readonly weight: number | null;
+  readonly grind_type: string | null;
+  readonly price: number;
   readonly stock: number;
-  readonly disponible: boolean;
+  readonly is_default: boolean;
+  readonly is_available: boolean;
 }
 
-export interface ApiLocation {
+export interface ApiOrigin {
   readonly id: number;
-  readonly origen: string | null;
-  readonly municipio: string | null;
-  readonly departamento: string | null;
-  readonly altura_msnm: number | null;
+  readonly region: string | null;
+  readonly municipality: string | null;
+  readonly department: string | null;
+  readonly altitude_masl: number | null;
+  readonly latitude: number | null;
+  readonly longitude: number | null;
 }
 
-export interface ApiCoffeeInfo {
+export interface ApiCoffeeDetail {
+  readonly process: ApiNamed | null;
+  readonly variety: ApiNamed | null;
+  readonly roast_level: ApiNamed | null;
+  readonly origin: ApiOrigin | null;
+  readonly tasting_notes: string | null;
+}
+
+export interface ApiImage {
   readonly id: number;
-  readonly nombre: string;
-  readonly imagen_url: string | null;
-  readonly proceso: string | null;
-  readonly variedad: string | null;
-  readonly tostion: string | null;
-  readonly notas: string | null;
-  readonly ubicacion: ApiLocation | null;
-  readonly precios: readonly ApiPrice[];
+  readonly image_url: string;
+  readonly is_primary: boolean;
 }
 
 export interface ApiProduct {
   readonly id: number;
-  readonly nombre: string;
-  readonly descripcion: string | null;
-  readonly imagen_url: string | null;
-  readonly categoria: { readonly id: number; readonly slug: string; readonly nombre: string };
-  readonly activo: boolean;
-  readonly disponible: boolean;
-  readonly informacion_cafe: readonly ApiCoffeeInfo[];
-  readonly precios: readonly ApiPrice[];
+  readonly name: string;
+  readonly slug: string;
+  readonly description: string | null;
+  readonly is_active: boolean;
+  readonly is_available: boolean;
+  readonly category: { readonly id: number; readonly slug: string; readonly name: string };
+  readonly brand: ApiNamed | null;
+  readonly coffee_detail: ApiCoffeeDetail | null;
+  readonly variants: readonly ApiVariant[];
+  readonly images: readonly ApiImage[];
 }
 
 export interface ApiProductList {
@@ -117,74 +130,58 @@ export class CatalogService {
   }
 }
 
-/**
- * Each coffee profile (`informacion_cafe`) becomes its own card, so a product like
- * "Mauritania" with a washed and a honey process shows both. Products without coffee
- * information (e.g. accessories) use their own `precios`.
- */
+/** Each active product with at least one variant becomes a card. */
 export function toShopProducts(response: ApiProductList): readonly ShopProduct[] {
   return response.items
-    .filter((product) => product.activo)
+    .filter((product) => product.is_active)
     .flatMap((product) => {
-      if (product.informacion_cafe.length === 0) {
-        const card = toCard(product, `${product.id}`, product.nombre, product.precios, {
-          image: product.imagen_url,
-        });
-        return card ? [card] : [];
-      }
-      return product.informacion_cafe.flatMap((info) => {
-        const name =
-          info.nombre && info.nombre !== product.nombre
-            ? `${product.nombre} · ${info.nombre}`
-            : product.nombre;
-        const card = toCard(product, `${product.id}-${info.id}`, name, info.precios, {
-          image: info.imagen_url ?? product.imagen_url,
-          details: coffeeDetails(info),
-          notes: splitNotes(info.notas),
-        });
-        return card ? [card] : [];
-      });
+      const card = toCard(product);
+      return card ? [card] : [];
     });
 }
 
-function toCard(
-  product: ApiProduct,
-  id: string,
-  name: string,
-  prices: readonly ApiPrice[],
-  extra: { image: string | null; details?: string; notes?: readonly string[] },
-): ShopProduct | undefined {
-  const variants = prices.map((price): ProductVariant => ({
-    id: price.sku,
-    label: variantLabel(price),
-    price: price.precio,
-    available: price.disponible && price.stock > 0,
+function toCard(product: ApiProduct): ShopProduct | undefined {
+  // The default presentation goes first so it is the one preselected on the card.
+  const sorted = [...product.variants].sort((a, b) => Number(b.is_default) - Number(a.is_default));
+  const variants = sorted.map((variant): ProductVariant => ({
+    id: variant.sku,
+    label: variant.variant_name || variant.sku,
+    price: variant.price,
+    available: variant.is_available && variant.stock > 0,
   }));
   if (variants.length === 0) {
     return undefined;
   }
-  const available = product.disponible && variants.some((variant) => variant.available);
+  const available = product.is_available && variants.some((variant) => variant.available);
+  const detail = product.coffee_detail;
+  const image = product.images.find((item) => item.is_primary) ?? product.images[0];
+  const notes = splitNotes(detail?.tasting_notes ?? null);
   return {
-    id,
-    name,
-    category: { id: product.categoria.slug, label: product.categoria.nombre },
-    description: product.descripcion ?? '',
-    details: extra.details || undefined,
-    notes: extra.notes?.length ? extra.notes : undefined,
+    id: `${product.id}`,
+    name: product.name,
+    category: { id: product.category.slug, label: product.category.name },
+    description: product.description ?? '',
+    details: (detail && coffeeDetails(detail)) || undefined,
+    notes: notes.length ? notes : undefined,
     badge: available ? undefined : 'Agotado',
-    image: extra.image ?? undefined,
+    image: image?.image_url,
     available,
     variants: variants as [ProductVariant, ...ProductVariant[]],
   };
 }
 
-function coffeeDetails(info: ApiCoffeeInfo): string {
-  const altitude = info.ubicacion?.altura_msnm;
+function coffeeDetails(detail: ApiCoffeeDetail): string {
+  const origin = detail.origin;
+  const place =
+    origin?.region ||
+    [origin?.municipality, origin?.department].filter(Boolean).join(' - ') ||
+    undefined;
+  const altitude = origin?.altitude_masl;
   return [
-    info.ubicacion?.origen,
-    info.proceso && capitalize(info.proceso.toLowerCase()),
-    info.variedad,
-    info.tostion && `Tostión ${info.tostion}`,
+    place,
+    detail.process?.name,
+    detail.variety?.name,
+    detail.roast_level && `Tostión ${detail.roast_level.name}`,
     altitude && `${altitude} m s. n. m.`,
   ]
     .filter(Boolean)
@@ -193,21 +190,8 @@ function coffeeDetails(info: ApiCoffeeInfo): string {
 
 function splitNotes(notes: string | null): readonly string[] {
   return (notes ?? '')
+    .replace(/\.\s*$/, '')
     .split(/,|\s+y\s+/)
     .map((note) => note.trim())
     .filter(Boolean);
-}
-
-function variantLabel(price: ApiPrice): string {
-  const { gramaje_g, presentacion, ...rest } = price.opciones ?? {};
-  const parts = [
-    gramaje_g != null ? `${gramaje_g} g` : undefined,
-    typeof presentacion === 'string' ? capitalize(presentacion) : undefined,
-    ...Object.values(rest).map((value) => (value == null ? undefined : `${value}`)),
-  ].filter(Boolean);
-  return parts.length > 0 ? parts.join(' · ') : price.sku;
-}
-
-function capitalize(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1);
 }
