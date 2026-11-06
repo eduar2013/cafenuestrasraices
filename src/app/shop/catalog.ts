@@ -9,6 +9,8 @@ export const CATALOG_API_URL = new InjectionToken<string>('CATALOG_API_URL', {
 export interface ProductVariant {
   readonly id: string;
   readonly label: string;
+  readonly presentation: string | null;
+  readonly weight: number | null;
   readonly price: number;
   readonly available: boolean;
 }
@@ -29,6 +31,7 @@ export interface ShopProduct {
   readonly badge?: string;
   /** Products without a photo show a branded placeholder. */
   readonly image?: string;
+  readonly images: readonly string[];
   readonly imagePosition?: string;
   readonly available: boolean;
   readonly variants: readonly [ProductVariant, ...ProductVariant[]];
@@ -143,18 +146,15 @@ export function toShopProducts(response: ApiProductList): readonly ShopProduct[]
 function toCard(product: ApiProduct): ShopProduct | undefined {
   // The default presentation goes first so it is the one preselected on the card.
   const sorted = [...product.variants].sort((a, b) => Number(b.is_default) - Number(a.is_default));
-  const variants = sorted.map((variant): ProductVariant => ({
-    id: variant.sku,
-    label: variant.variant_name || variant.sku,
-    price: variant.price,
-    available: variant.is_available && variant.stock > 0,
-  }));
+  const variants = sorted.map(toShopVariant);
   if (variants.length === 0) {
     return undefined;
   }
   const available = product.is_available && variants.some((variant) => variant.available);
   const detail = product.coffee_detail;
-  const image = product.images.find((item) => item.is_primary) ?? product.images[0];
+  const images = [...product.images]
+    .sort((left, right) => Number(right.is_primary) - Number(left.is_primary))
+    .map((item) => item.image_url);
   const notes = splitNotes(detail?.tasting_notes ?? null);
   return {
     id: `${product.id}`,
@@ -164,10 +164,41 @@ function toCard(product: ApiProduct): ShopProduct | undefined {
     details: (detail && coffeeDetails(detail)) || undefined,
     notes: notes.length ? notes : undefined,
     badge: available ? undefined : 'Agotado',
-    image: image?.image_url,
+    image: images[0],
+    images,
     available,
     variants: variants as [ProductVariant, ...ProductVariant[]],
   };
+}
+
+function toShopVariant(variant: ApiVariant): ProductVariant {
+  const weight = variant.weight ?? parseWeight(variant.variant_name);
+  const presentation =
+    variant.grind_type?.trim() || parsePresentation(variant.variant_name) || null;
+  const label =
+    [weight !== null ? `${weight} g` : undefined, presentation].filter(Boolean).join(' ') ||
+    variant.variant_name ||
+    variant.sku;
+  return {
+    id: variant.sku,
+    label,
+    presentation,
+    weight,
+    price: variant.price,
+    available: variant.is_available && variant.stock > 0,
+  };
+}
+
+function parseWeight(label: string): number | null {
+  const match = /^\s*(\d+(?:[.,]\d+)?)\s*(?:g|gr|gramos)\b/i.exec(label);
+  return match ? Number(match[1].replace(',', '.')) : null;
+}
+
+function parsePresentation(label: string): string | null {
+  const presentation = label
+    .replace(/^\s*\d+(?:[.,]\d+)?\s*(?:g|gr|gramos)\b\s*/i, '')
+    .trim();
+  return presentation || null;
 }
 
 function coffeeDetails(detail: ApiCoffeeDetail): string {

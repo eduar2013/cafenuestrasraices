@@ -30,15 +30,55 @@ describe('ShopComponent', () => {
     expect(cart.count()).toBe(2);
     expect(cart.items()).toHaveLength(1);
     expect(cart.total()).toBe(56000);
-    element.querySelector<HTMLInputElement>('input[value="labralma-340"]')!.click();
+    const weightGroup = element.querySelector<HTMLElement>(
+      '[role="group"][aria-label="Gramaje de LabrAlma"]',
+    )!;
+    Array.from(weightGroup.querySelectorAll<HTMLInputElement>('input[type="radio"]'))
+      .find((input) => input.value === '340')!
+      .click();
     await fixture.whenStable();
     expect(element.querySelector('.product-price')?.textContent).toContain('36,000');
+    const presentationGroup = element.querySelector<HTMLElement>(
+      '[role="group"][aria-label="Presentación de LabrAlma"]',
+    )!;
+    Array.from(presentationGroup.querySelectorAll<HTMLInputElement>('input[type="radio"]'))
+      .find((input) => input.value === 'molido')!
+      .click();
+    await fixture.whenStable();
+    expect(element.querySelector('.product-price')?.textContent).toContain('38,000');
+    expect(
+      Array.from(weightGroup.querySelectorAll<HTMLInputElement>('input[type="radio"]')).map(
+        (input) => input.value,
+      ),
+    ).toEqual(['250', '340']);
+    expect(
+      Array.from(weightGroup.querySelectorAll<HTMLInputElement>('input[type="radio"]')).find(
+        (input) => input.value === '340',
+      )?.checked,
+    ).toBe(true);
     element.querySelector<HTMLButtonElement>('.primary-button')!.click();
     await fixture.whenStable();
     expect(cart.items()).toHaveLength(2);
-    expect(cart.total()).toBe(92000);
-    expect(element.querySelector('[role="status"]')?.textContent).toContain('340 g');
+    expect(cart.total()).toBe(94000);
+    expect(cart.items().some((item) => item.variant.id === 'labralma-340-molido')).toBe(true);
+    expect(element.querySelector('[role="status"]')?.textContent).toContain('340 g molido');
     expect(element.querySelectorAll('.cart-items li')).toHaveLength(2);
+  });
+
+  it('should show a selected radio when only one option is available', async () => {
+    const fixture = TestBed.createComponent(ShopComponent);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    const presentation = element.querySelector<HTMLElement>(
+      '[role="group"][aria-label="Presentación de Geisha"]',
+    );
+    const weight = element.querySelector<HTMLElement>(
+      '[role="group"][aria-label="Gramaje de Geisha"]',
+    );
+    expect(presentation?.querySelector<HTMLInputElement>('input[type="radio"]')?.value).toBe('grano');
+    expect(presentation?.querySelector<HTMLInputElement>('input[type="radio"]')?.checked).toBe(true);
+    expect(weight?.querySelector<HTMLInputElement>('input[type="radio"]')?.value).toBe('250');
+    expect(weight?.querySelector<HTMLInputElement>('input[type="radio"]')?.checked).toBe(true);
   });
 
   it('should update quantities, remove items at zero and clear the cart', async () => {
@@ -153,6 +193,17 @@ describe('ShopComponent', () => {
     expect(products[0].variants.map((variant) => variant.label)).toEqual([
       '250 g grano',
       '340 g grano',
+      '500 g grano',
+      '250 g molido',
+      '340 g molido',
+    ]);
+    expect(products[0].variants.map((variant) => variant.weight)).toEqual([250, 340, 500, 250, 340]);
+    expect(products[0].variants.map((variant) => variant.presentation)).toEqual([
+      'grano',
+      'grano',
+      'grano',
+      'molido',
+      'molido',
     ]);
     expect(products.at(-1)?.details).toBeUndefined();
     expect(products.at(-1)?.variants[0].label).toBe('300 ml');
@@ -185,11 +236,20 @@ describe('ShopComponent', () => {
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     const dialog = element.querySelector<HTMLDialogElement>('.image-dialog')!;
+    const card = element.querySelector('.product-card')!;
+    const thumbnails = card.querySelectorAll<HTMLButtonElement>('.product-thumbnail');
+    expect(thumbnails).toHaveLength(2);
+    expect(thumbnails[0].getAttribute('aria-pressed')).toBe('true');
+    thumbnails[1].click();
+    await fixture.whenStable();
+    expect(card.querySelector<HTMLImageElement>('.product-photo')?.src).toContain(
+      'labralma-lifestyle.jpg',
+    );
     element.querySelector<HTMLButtonElement>('.product-zoom')!.click();
     await fixture.whenStable();
     expect(dialog.open).toBe(true);
     expect(dialog.querySelector('img')?.getAttribute('src')).toBe(
-      'images/productos/labralma-web.jpg',
+      'images/productos/labralma-lifestyle.jpg',
     );
     expect(dialog.querySelector('figcaption')?.textContent).toContain('LabrAlma');
     const image = dialog.querySelector<HTMLImageElement>('.image-frame img')!;

@@ -74,43 +74,77 @@
         @for (product of products(); track product.id) {
           <article class="product-card">
             <div class="product-media">
-              @if (product.image && !brokenImages().has(product.id)) {
-                <button
-                  type="button"
-                  class="product-zoom"
-                  [attr.aria-label]="'Ampliar foto de ' + product.name"
-                  (click)="openImage(product)"
-                >
-                  <img
-                    class="product-backdrop"
-                    [src]="product.image"
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                  />
-                  <img
-                    class="product-photo"
-                    [src]="product.image"
-                    [alt]="product.name"
-                    loading="lazy"
-                    (error)="imageFailed(product)"
-                  />
-                  <span class="zoom-hint" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18">
-                      <path
-                        d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm4.7 11.2L20 20M10.5 7.5v6M7.5 10.5h6"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
+              <div class="product-stage">
+                @if (selectedImage(product); as image) {
+                  @if (!brokenImages().has(imageKey(product, image))) {
+                    <button
+                      type="button"
+                      class="product-zoom"
+                      [attr.aria-label]="'Ampliar foto de ' + product.name"
+                      (click)="openImage(product)"
+                    >
+                      <img
+                        class="product-backdrop"
+                        [src]="image"
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
                       />
-                    </svg>
-                  </span>
-                </button>
-              } @else {
-                <div class="product-placeholder">
-                  <img src="favicon.png" alt="" />
-                  <span>Foto próximamente</span>
+                      <img
+                        class="product-photo"
+                        [src]="image"
+                        [alt]="product.name"
+                        loading="lazy"
+                        (error)="imageFailed(product, image)"
+                      />
+                      <span class="zoom-hint" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="18" height="18">
+                          <path
+                            d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm4.7 11.2L20 20M10.5 7.5v6M7.5 10.5h6"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  } @else {
+                    <div class="product-placeholder">
+                      <img src="favicon.png" alt="" />
+                      <span>Foto próximamente</span>
+                    </div>
+                  }
+                } @else {
+                  <div class="product-placeholder">
+                    <img src="favicon.png" alt="" />
+                    <span>Foto próximamente</span>
+                  </div>
+                }
+              </div>
+              @if (product.images.length > 1) {
+                <div class="product-thumbnails" role="group" [attr.aria-label]="'Fotos de ' + product.name">
+                  @for (image of product.images; track image; let index = $index) {
+                    <button
+                      class="product-thumbnail"
+                      type="button"
+                      [class.is-active]="selectedImage(product) === image"
+                      [attr.aria-label]="'Ver imagen ' + (index + 1) + ' de ' + product.name"
+                      [attr.aria-pressed]="selectedImage(product) === image"
+                      (click)="selectImage(product, image)"
+                    >
+                      @if (!brokenImages().has(imageKey(product, image))) {
+                        <img
+                          [src]="image"
+                          alt=""
+                          loading="lazy"
+                          (error)="imageFailed(product, image)"
+                        />
+                      } @else {
+                        <span aria-hidden="true">×</span>
+                      }
+                    </button>
+                  }
                 </div>
               }
               @if (product.badge) {
@@ -144,23 +178,45 @@
                   }
                 </ul>
               }
-              @if (product.variants.length > 1) {
-                <fieldset class="variant-picker">
-                  <legend>Presentación</legend>
-                  @for (option of product.variants; track option.id) {
-                    <label class="variant-option">
-                      <input
-                        type="radio"
-                        [name]="'variant-' + product.id"
-                        [value]="option.id"
-                        [checked]="variant(product).id === option.id"
-                        (change)="selectVariant(product, option.id)"
-                      />
-                      <span>{{ option.label }}{{ option.available ? '' : ' (agotado)' }}</span>
-                    </label>
-                  }
-                </fieldset>
-              } @else {
+              @if (presentationOptions(product).length > 0) {
+                <div class="variant-picker" role="group" [attr.aria-label]="'Presentación de ' + product.name">
+                  <span>Presentación</span>
+                  <div class="variant-options">
+                    @for (option of presentationOptions(product); track option) {
+                      <label class="variant-radio-option">
+                        <input
+                          type="radio"
+                          [name]="'presentation-' + product.id"
+                          [value]="option"
+                          [checked]="presentation(product) === option"
+                          (change)="selectPresentation(product, option)"
+                        />
+                        <span>{{ option }}</span>
+                      </label>
+                    }
+                  </div>
+                </div>
+              }
+              @if (weightOptions(product).length > 0) {
+                <div class="variant-picker" role="group" [attr.aria-label]="'Gramaje de ' + product.name">
+                  <span>Gramaje</span>
+                  <div class="variant-options">
+                    @for (option of weightOptions(product); track option) {
+                      <label class="variant-radio-option">
+                        <input
+                          type="radio"
+                          [name]="'weight-' + product.id"
+                          [value]="option"
+                          [checked]="weight(product) === option"
+                          (change)="selectWeight(product, option)"
+                        />
+                        <span>{{ option }} g</span>
+                      </label>
+                    }
+                  </div>
+                </div>
+              }
+              @if (!presentationOptions(product).length && !weightOptions(product).length) {
                 <p class="variant-single">Presentación: {{ variant(product).label }}</p>
               }
               <div class="product-footer">
@@ -239,7 +295,7 @@
           (pointercancel)="endPan()"
         >
           <img
-            [src]="product.image"
+            [src]="selectedImage(product)"
             [alt]="product.name"
             [style.transform]="imageTransform()"
             draggable="false"

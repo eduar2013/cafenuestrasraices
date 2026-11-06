@@ -15,13 +15,20 @@ export const TEST_CATALOG_URL = 'http://test/products';
 
 const coffeeCategory = { id: 1, slug: 'coffee', name: 'Café' };
 
-function variant(sku: string, variant_name: string, price: number, stock = 10): ApiVariant {
+function variant(
+  sku: string,
+  variant_name: string,
+  price: number,
+  stock = 10,
+  weight: number | null = null,
+  grind_type: string | null = null,
+): ApiVariant {
   return {
     id: 0,
     sku,
     variant_name,
-    weight: null,
-    grind_type: null,
+    weight,
+    grind_type,
     price,
     stock,
     is_default: false,
@@ -61,7 +68,10 @@ export const TEST_CATALOG: ApiProductList = {
   total: 6,
   items: [
     product(1, 'LabrAlma', {
-      images: [{ id: 1, image_url: 'images/productos/labralma-web.jpg', is_primary: true }],
+      images: [
+        { id: 1, image_url: 'images/productos/labralma-web.jpg', is_primary: true },
+        { id: 2, image_url: 'images/productos/labralma-lifestyle.jpg', is_primary: false },
+      ],
       coffee_detail: coffee({
         process: { id: 1, name: 'Lavado' },
         tasting_notes: 'Chocolate, Cítricos, Panela y Frutos rojos',
@@ -76,8 +86,11 @@ export const TEST_CATALOG: ApiProductList = {
         },
       }),
       variants: [
-        variant('labralma-250', '250 g grano', 28000),
-        variant('labralma-340', '340 g grano', 36000),
+        variant('labralma-250', '250 g grano', 28000, 10, 250, 'grano'),
+        variant('labralma-340', '340 g grano', 36000, 10, 340, 'grano'),
+        variant('labralma-500', '500 g grano', 48000, 10, 500, 'grano'),
+        variant('labralma-250-molido', '250 g molido', 30000, 10, 250, 'molido'),
+        variant('labralma-340-molido', '340 g molido', 38000, 10, 340, 'molido'),
       ],
     }),
     product(2, 'Mauritania Lavado', {

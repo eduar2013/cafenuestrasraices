@@ -46,7 +46,9 @@ export class ShopComponent implements OnDestroy {
   );
   /** Images that failed to load fall back to the placeholder. */
   readonly brokenImages = signal<ReadonlySet<string>>(new Set());
-  readonly selectedVariants = signal<Readonly<Record<string, string>>>({});
+  readonly selectedImages = signal<Readonly<Record<string, string>>>({});
+  readonly selectedPresentations = signal<Readonly<Record<string, string | null>>>({});
+  readonly selectedWeights = signal<Readonly<Record<string, number | null>>>({});
   readonly message = signal('');
   readonly cartOpen = signal(false);
   /** Product whose add button briefly shows "Añadido". */
@@ -72,14 +74,85 @@ export class ShopComponent implements OnDestroy {
   private addedTimer?: ReturnType<typeof setTimeout>;
 
   variant(product: ShopProduct) {
+    const presentation = this.presentation(product);
+    const weight = this.weight(product);
     return (
-      product.variants.find((variant) => variant.id === this.selectedVariants()[product.id]) ??
+      product.variants.find(
+        (variant) => variant.presentation === presentation && variant.weight === weight,
+      ) ??
       product.variants[0]
     );
   }
 
-  selectVariant(product: ShopProduct, variantId: string): void {
-    this.selectedVariants.update((variants) => ({ ...variants, [product.id]: variantId }));
+  presentationOptions(product: ShopProduct): readonly string[] {
+    return Array.from(
+      new Set(
+        product.variants.flatMap((variant) =>
+          variant.presentation ? [variant.presentation] : [],
+        ),
+      ),
+    );
+  }
+
+  weightOptions(product: ShopProduct): readonly number[] {
+    const presentation = this.presentation(product);
+    return Array.from(
+      new Set(
+        product.variants
+          .filter((variant) => variant.presentation === presentation)
+          .flatMap((variant) => (variant.weight === null ? [] : [variant.weight])),
+      ),
+    ).sort((left, right) => left - right);
+  }
+
+  presentation(product: ShopProduct): string | null {
+    const selected = this.selectedPresentations();
+    return Object.hasOwn(selected, product.id)
+      ? selected[product.id]
+      : product.variants[0].presentation;
+  }
+
+  weight(product: ShopProduct): number | null {
+    const selected = this.selectedWeights();
+    return Object.hasOwn(selected, product.id) ? selected[product.id] : product.variants[0].weight;
+  }
+
+  selectPresentation(product: ShopProduct, presentation: string): void {
+    const currentWeight = this.weight(product);
+    const variant =
+      product.variants.find(
+        (option) => option.presentation === presentation && option.weight === currentWeight,
+      ) ?? product.variants.find((option) => option.presentation === presentation)!;
+    this.selectedPresentations.update((selections) => ({
+      ...selections,
+      [product.id]: variant.presentation,
+    }));
+    this.selectedWeights.update((selections) => ({ ...selections, [product.id]: variant.weight }));
+  }
+
+  selectWeight(product: ShopProduct, weight: number): void {
+    const currentPresentation = this.presentation(product);
+    const variant =
+      product.variants.find(
+        (option) => option.presentation === currentPresentation && option.weight === weight,
+      ) ?? product.variants.find((option) => option.weight === weight)!;
+    this.selectedPresentations.update((selections) => ({
+      ...selections,
+      [product.id]: variant.presentation,
+    }));
+    this.selectedWeights.update((selections) => ({ ...selections, [product.id]: variant.weight }));
+  }
+
+  selectedImage(product: ShopProduct): string | undefined {
+    return this.selectedImages()[product.id] ?? product.images[0] ?? product.image;
+  }
+
+  selectImage(product: ShopProduct, image: string): void {
+    this.selectedImages.update((selections) => ({ ...selections, [product.id]: image }));
+  }
+
+  imageKey(product: ShopProduct, image: string): string {
+    return `${product.id}:${image}`;
   }
 
   openImage(product: ShopProduct): void {
@@ -156,8 +229,9 @@ export class ShopComponent implements OnDestroy {
     }
   }
 
-  imageFailed(product: ShopProduct): void {
-    this.brokenImages.update((ids) => new Set(ids).add(product.id));
+  imageFailed(product: ShopProduct, image: string): void {
+    const key = this.imageKey(product, image);
+    this.brokenImages.update((ids) => new Set(ids).add(key));
   }
 
   add(product: ShopProduct): void {
