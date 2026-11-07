@@ -20,19 +20,26 @@ export interface ProductCategory {
   readonly label: string;
 }
 
+export interface ProductProperty {
+  readonly label: string;
+  readonly value: string;
+}
+
 export interface ShopProduct {
   readonly id: string;
   readonly name: string;
   readonly category: ProductCategory;
   readonly description: string;
-  /** Short line under the name, e.g. origin and process. */
-  readonly details?: string;
+  /** Coffee properties shown as labelled fields: variety, process, roast and altitude. */
+  readonly properties: readonly ProductProperty[];
   readonly notes?: readonly string[];
   readonly badge?: string;
   /** Products without a photo show a branded placeholder. */
   readonly image?: string;
   readonly images: readonly string[];
   readonly imagePosition?: string;
+  /** Coffees can be flipped to read their description and tasting notes. */
+  readonly isCoffee: boolean;
   readonly available: boolean;
   readonly variants: readonly [ProductVariant, ...ProductVariant[]];
 }
@@ -102,12 +109,16 @@ export interface ApiProductList {
 @Injectable({ providedIn: 'root' })
 export class CatalogService {
   private readonly url = inject(CATALOG_API_URL);
-  private readonly resource = httpResource<readonly ShopProduct[]>(() => this.url, {
-    parse: (response) => toShopProducts(response as ApiProductList),
-    defaultValue: [],
-  });
+  // One request feeds both the shop and the origins map.
+  private readonly resource = httpResource<ApiProductList>(() => this.url);
 
-  readonly products = computed(() => (this.resource.hasValue() ? this.resource.value() : []));
+  /** Active products exactly as the API returns them. */
+  readonly apiProducts = computed(() =>
+    this.resource.hasValue()
+      ? this.resource.value().items.filter((product) => product.is_active)
+      : [],
+  );
+  readonly products = computed(() => toShopProducts(this.apiProducts()));
   readonly isLoading = this.resource.isLoading;
   readonly error = this.resource.error;
   readonly categories = computed(() => {
@@ -133,14 +144,23 @@ export class CatalogService {
   }
 }
 
-/** Each active product with at least one variant becomes a card. */
-export function toShopProducts(response: ApiProductList): readonly ShopProduct[] {
-  return response.items
-    .filter((product) => product.is_active)
-    .flatMap((product) => {
-      const card = toCard(product);
-      return card ? [card] : [];
-    });
+/** Each product with at least one variant becomes a card. */
+export function toShopProducts(products: readonly ApiProduct[]): readonly ShopProduct[] {
+  return products.flatMap((product) => {
+    const card = toCard(product);
+    return card ? [card] : [];
+  });
+}
+
+/** Images with the primary one first. */
+export function productImages(product: ApiProduct): readonly string[] {
+  return [...product.images]
+    .sort((left, right) => Number(right.is_primary) - Number(left.is_primary))
+    .map((item) => item.image_url);
+}
+
+export function variantWeight(variant: ApiVariant): number | null {
+  return variant.weight ?? parseWeight(variant.variant_name);
 }
 
 function toCard(product: ApiProduct): ShopProduct | undefined {
@@ -152,27 +172,26 @@ function toCard(product: ApiProduct): ShopProduct | undefined {
   }
   const available = product.is_available && variants.some((variant) => variant.available);
   const detail = product.coffee_detail;
-  const images = [...product.images]
-    .sort((left, right) => Number(right.is_primary) - Number(left.is_primary))
-    .map((item) => item.image_url);
+  const images = productImages(product);
   const notes = splitNotes(detail?.tasting_notes ?? null);
   return {
     id: `${product.id}`,
     name: product.name,
     category: { id: product.category.slug, label: product.category.name },
     description: product.description ?? '',
-    details: (detail && coffeeDetails(detail)) || undefined,
+    properties: detail ? coffeeProperties(detail) : [],
     notes: notes.length ? notes : undefined,
     badge: available ? undefined : 'Agotado',
     image: images[0],
     images,
+    isCoffee: detail !== null,
     available,
     variants: variants as [ProductVariant, ...ProductVariant[]],
   };
 }
 
 function toShopVariant(variant: ApiVariant): ProductVariant {
-  const weight = variant.weight ?? parseWeight(variant.variant_name);
+  const weight = variantWeight(variant);
   const presentation =
     variant.grind_type?.trim() || parsePresentation(variant.variant_name) || null;
   const label =
@@ -195,31 +214,21 @@ function parseWeight(label: string): number | null {
 }
 
 function parsePresentation(label: string): string | null {
-  const presentation = label
-    .replace(/^\s*\d+(?:[.,]\d+)?\s*(?:g|gr|gramos)\b\s*/i, '')
-    .trim();
+  const presentation = label.replace(/^\s*\d+(?:[.,]\d+)?\s*(?:g|gr|gramos)\b\s*/i, '').trim();
   return presentation || null;
 }
 
-function coffeeDetails(detail: ApiCoffeeDetail): string {
-  const origin = detail.origin;
-  const place =
-    origin?.region ||
-    [origin?.municipality, origin?.department].filter(Boolean).join(' - ') ||
-    undefined;
-  const altitude = origin?.altitude_masl;
+function coffeeProperties(detail: ApiCoffeeDetail): readonly ProductProperty[] {
+  const altitude = detail.origin?.altitude_masl;
   return [
-    place,
-    detail.process?.name,
-    detail.variety?.name,
-    detail.roast_level && `Tostión ${detail.roast_level.name}`,
-    altitude && `${altitude} m s. n. m.`,
-  ]
-    .filter(Boolean)
-    .join(' · ');
+    { label: 'Variedad', value: detail.variety?.name },
+    { label: 'Proceso', value: detail.process?.name },
+    { label: 'Tostión', value: detail.roast_level?.name },
+    { label: 'Altura', value: altitude ? `${altitude} m s. n. m.` : undefined },
+  ].flatMap(({ label, value }) => (value ? [{ label, value }] : []));
 }
 
-function splitNotes(notes: string | null): readonly string[] {
+export function splitNotes(notes: string | null): readonly string[] {
   return (notes ?? '')
     .replace(/\.\s*$/, '')
     .split(/,|\s+y\s+/)

@@ -3,22 +3,21 @@
     <header class="origins-heading">
       <p class="eyebrow">De la tierra a tu taza</p>
       <h2 id="origins-title">Explora nuestros orígenes</h2>
-      <p>Selecciona un punto en el mapa y descubre la historia que puede llevar cada café.</p>
-      <p class="demo-notice">Descubre LabrAlma de Heliconia. Los demás cafés están identificados como ejemplos y no representan la oferta actual del local. Las ubicaciones son aproximadas.</p>
+      <p>Selecciona un punto en el mapa y descubre de dónde viene cada uno de nuestros cafés.</p>
     </header>
 
     <div class="origins-layout">
       <div class="origins-explorer">
         <div class="origin-map" role="group" aria-label="Mapa de orígenes de café en Colombia">
           <img src="images/origins/colombia.svg" alt="Mapa de Colombia continental con división por departamentos y Bogotá D.C." width="400" height="520" loading="lazy" />
-          @for (origin of origins; track origin.id) {
+          @for (origin of origins(); track origin.id) {
             <button
               class="map-point"
               type="button"
               [style.left.%]="mapLeft(origin)"
               [style.top.%]="mapTop(origin)"
-              [class.is-selected]="selectedOrigin().id === origin.id"
-              [attr.aria-pressed]="selectedOrigin().id === origin.id"
+              [class.is-selected]="selectedOrigin()?.id === origin.id"
+              [attr.aria-pressed]="selectedOrigin()?.id === origin.id"
               [attr.aria-label]="'Explorar cafés de ' + origin.name"
               [title]="origin.name"
               aria-controls="origin-detail"
@@ -29,70 +28,114 @@
         </div>
         <p class="map-caption">División departamental continental · Ubicaciones aproximadas</p>
         <p class="map-caption">No incluye el archipiélago de San Andrés, Providencia y Santa Catalina.</p>
-        <div class="origin-list" role="group" aria-label="Seleccionar origen por nombre">
-          @for (origin of origins; track origin.id) {
-            <button type="button"
-              [attr.aria-pressed]="selectedOrigin().id === origin.id"
-              aria-controls="origin-detail"
-              (click)="selectOrigin(origin)"
-            >{{ origin.name }}</button>
-          }
-        </div>
+        @if (origins().length > 0) {
+          <div class="origin-list" role="group" aria-label="Seleccionar origen por nombre">
+            @for (origin of origins(); track origin.id) {
+              <button type="button"
+                [attr.aria-pressed]="selectedOrigin()?.id === origin.id"
+                aria-controls="origin-detail"
+                (click)="selectOrigin(origin)"
+              >{{ origin.name }}</button>
+            }
+          </div>
+        }
       </div>
 
       <div id="origin-detail" class="origin-detail" aria-live="polite" aria-atomic="true">
-        <div class="coffee-photo">
-          <img
-            [src]="selectedCoffee().image ?? 'images/carousel/slide-1.jpg'"
-            [alt]="selectedCoffee().image
-              ? (selectedCoffee().imageAlt ?? selectedCoffee().name)
-              : 'Fotografía ilustrativa de café; no corresponde a un producto específico'"
-            loading="lazy"
-          />
-          @if (!selectedCoffee().image) {
-            <span>Imagen ilustrativa</span>
-          }
-        </div>
-        <div class="coffee-info">
-          <p class="eyebrow">{{ selectedOrigin().name }}{{ selectedCoffee().isExample ? ' · Ejemplo' : '' }}</p>
-          <h3>{{ selectedCoffee().name }}</h3>
-          <p class="coffee-location">{{ selectedOrigin().location }}</p>
-          @if (selectedOrigin().coffees.length > 1) {
-            <div class="coffee-options" role="group" aria-label="Cafés de este origen">
-              @for (coffee of selectedOrigin().coffees; track coffee.id) {
-                <button type="button"
-                  [attr.aria-pressed]="selectedCoffee().id === coffee.id"
-                  (click)="selectedCoffee.set(coffee)"
-                >{{ coffee.name }}</button>
-              }
-            </div>
-          }
-          <p class="coffee-description">{{ selectedCoffee().description }}</p>
-          <dl>
-            <div><dt>Variedad</dt><dd>{{ selectedCoffee().variety }}</dd></div>
-            <div><dt>Proceso</dt><dd>{{ selectedCoffee().process }}</dd></div>
-            <div><dt>Tueste</dt><dd>{{ selectedCoffee().roast }}</dd></div>
-            @if (selectedCoffee().altitude; as altitude) {
-              <div><dt>Altura de cultivo</dt><dd>{{ altitude }} m s. n. m.</dd></div>
-            }
-            <div>
-              <dt>{{ selectedCoffee().isExample ? 'Presentación de ejemplo' : 'Presentaciones' }}</dt>
-              <dd>
-                @for (weight of selectedCoffee().presentations ?? [250]; track weight; let last = $last) {
-                  {{ weight }} g{{ last ? '' : ' y ' }}
+        @if (selectedOrigin(); as origin) {
+          @if (selectedCoffee(); as coffee) {
+            <div class="coffee-info">
+              <div class="coffee-header">
+                <div>
+                  <p class="eyebrow">{{ origin.name }}</p>
+                  <h3>{{ coffee.name }}</h3>
+                  <p class="coffee-location">
+                    {{ origin.location }}{{ origin.approximate ? ' · ubicación aproximada' : '' }}
+                  </p>
+                </div>
+                @if (coffee.image) {
+                  <button
+                    type="button"
+                    class="coffee-photo"
+                    [attr.aria-label]="'Ampliar foto de ' + coffee.name"
+                    (click)="photoDialog.showModal()"
+                  >
+                    <img [src]="coffee.image" [alt]="coffee.name" loading="lazy" />
+                  </button>
                 }
-              </dd>
+              </div>
+              @if (origin.coffees.length > 1) {
+                <div class="coffee-options" role="group" aria-label="Cafés de este origen">
+                  @for (option of origin.coffees; track option.id) {
+                    <button type="button"
+                      [attr.aria-pressed]="coffee.id === option.id"
+                      (click)="selectCoffee(option.id)"
+                    >{{ option.name }}</button>
+                  }
+                </div>
+              }
+              @if (coffee.description) {
+                <p class="coffee-description">{{ coffee.description }}</p>
+              }
+              <dl>
+                @if (coffee.variety) {
+                  <div><dt>Variedad</dt><dd>{{ coffee.variety }}</dd></div>
+                }
+                @if (coffee.process) {
+                  <div><dt>Proceso</dt><dd>{{ coffee.process }}</dd></div>
+                }
+                @if (coffee.roast) {
+                  <div><dt>Tueste</dt><dd>{{ coffee.roast }}</dd></div>
+                }
+                @if (coffee.altitude) {
+                  <div><dt>Altura de cultivo</dt><dd>{{ coffee.altitude }} m s. n. m.</dd></div>
+                }
+                @if (coffee.weights.length > 0) {
+                  <div>
+                    <dt>Presentaciones</dt>
+                    <dd>
+                      @for (weight of coffee.weights; track weight; let last = $last) {
+                        {{ weight }} g{{ last ? '' : ' · ' }}
+                      }
+                    </dd>
+                  </div>
+                }
+              </dl>
+              @if (coffee.notes.length > 0) {
+                <h4>Notas en taza</h4>
+                <ul class="tasting-notes">
+                  @for (note of coffee.notes; track $index) {
+                    <li>{{ note }}</li>
+                  }
+                </ul>
+              }
+              <p class="availability">
+                @if (coffee.available) {
+                  <a class="shop-link" routerLink="/tienda">Comprar en la tienda →</a>
+                } @else {
+                  Agotado por ahora. <a class="shop-link" routerLink="/tienda">Ver otros cafés en la tienda</a>
+                }
+              </p>
             </div>
-          </dl>
-          <h4>Notas en taza</h4>
-          <ul class="tasting-notes">
-            @for (note of selectedCoffee().notes; track $index) {
-              <li>{{ note }}</li>
-            }
-          </ul>
-          <p class="availability">Consulta en el local los cafés, presentaciones y precios disponibles.</p>
-        </div>
+          }
+        } @else if (catalog.isLoading()) {
+          <p class="origins-status" role="status">Cargando orígenes…</p>
+        } @else if (catalog.error()) {
+          <div class="origins-status" role="alert">
+            <p>No pudimos cargar los orígenes. Intenta de nuevo en unos minutos.</p>
+            <button type="button" (click)="catalog.reload()">Reintentar</button>
+          </div>
+        } @else {
+          <p class="origins-status">Pronto podrás conocer aquí el origen de nuestros cafés.</p>
+        }
       </div>
     </div>
   </div>
+
+  <dialog #photoDialog class="photo-dialog" (click)="photoDialog.close()">
+    @if (selectedCoffee()?.image; as image) {
+      <img [src]="image" [alt]="selectedCoffee()!.name" />
+      <button type="button" class="photo-dialog-close" aria-label="Cerrar foto">✕</button>
+    }
+  </dialog>
 </section>

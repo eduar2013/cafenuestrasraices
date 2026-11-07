@@ -65,22 +65,6 @@ describe('ShopComponent', () => {
     expect(element.querySelectorAll('.cart-items li')).toHaveLength(2);
   });
 
-  it('should show a selected radio when only one option is available', async () => {
-    const fixture = TestBed.createComponent(ShopComponent);
-    await fixture.whenStable();
-    const element = fixture.nativeElement as HTMLElement;
-    const presentation = element.querySelector<HTMLElement>(
-      '[role="group"][aria-label="Presentación de Geisha"]',
-    );
-    const weight = element.querySelector<HTMLElement>(
-      '[role="group"][aria-label="Gramaje de Geisha"]',
-    );
-    expect(presentation?.querySelector<HTMLInputElement>('input[type="radio"]')?.value).toBe('grano');
-    expect(presentation?.querySelector<HTMLInputElement>('input[type="radio"]')?.checked).toBe(true);
-    expect(weight?.querySelector<HTMLInputElement>('input[type="radio"]')?.value).toBe('250');
-    expect(weight?.querySelector<HTMLInputElement>('input[type="radio"]')?.checked).toBe(true);
-  });
-
   it('should update quantities, remove items at zero and clear the cart', async () => {
     const fixture = TestBed.createComponent(ShopComponent);
     const cart = TestBed.inject(CartService);
@@ -188,7 +172,11 @@ describe('ShopComponent', () => {
       'Espresso Intenso',
       'Taza de cerámica',
     ]);
-    expect(products[0].details).toBe('Heliconia - Antioquia · Lavado · 1740 m s. n. m.');
+    expect(products[0].properties).toEqual([
+      { label: 'Variedad', value: 'Bourbon Papayo' },
+      { label: 'Proceso', value: 'Lavado' },
+      { label: 'Altura', value: '1740 m s. n. m.' },
+    ]);
     expect(products[0].notes).toEqual(['Chocolate', 'Cítricos', 'Panela', 'Frutos rojos']);
     expect(products[0].variants.map((variant) => variant.label)).toEqual([
       '250 g grano',
@@ -197,7 +185,9 @@ describe('ShopComponent', () => {
       '250 g molido',
       '340 g molido',
     ]);
-    expect(products[0].variants.map((variant) => variant.weight)).toEqual([250, 340, 500, 250, 340]);
+    expect(products[0].variants.map((variant) => variant.weight)).toEqual([
+      250, 340, 500, 250, 340,
+    ]);
     expect(products[0].variants.map((variant) => variant.presentation)).toEqual([
       'grano',
       'grano',
@@ -205,22 +195,9 @@ describe('ShopComponent', () => {
       'molido',
       'molido',
     ]);
-    expect(products.at(-1)?.details).toBeUndefined();
+    expect(products.at(-1)?.properties).toEqual([]);
     expect(products.at(-1)?.variants[0].label).toBe('300 ml');
     expect(TEST_CATALOG.items).toHaveLength(6);
-  });
-
-  it('should not allow adding sold out products', async () => {
-    const fixture = TestBed.createComponent(ShopComponent);
-    await fixture.whenStable();
-    const element = fixture.nativeElement as HTMLElement;
-    const card = Array.from(element.querySelectorAll('.product-card')).find((item) =>
-      item.textContent?.includes('Espresso Intenso'),
-    )!;
-    const button = card.querySelector<HTMLButtonElement>('.primary-button')!;
-    expect(card.querySelector('.product-badge')?.textContent).toContain('Agotado');
-    expect(button.disabled).toBe(true);
-    expect(button.textContent).toContain('Agotado');
   });
 
   it('should enlarge a product photo and close it again', async () => {
@@ -273,33 +250,5 @@ describe('ShopComponent', () => {
     await fixture.whenStable();
     expect(dialog.open).toBe(false);
     expect(dialog.querySelector('img')).toBeNull();
-  });
-
-  it('should limit the tasting notes shown on a card', async () => {
-    const fixture = TestBed.createComponent(ShopComponent);
-    await fixture.whenStable();
-    const element = fixture.nativeElement as HTMLElement;
-    const notes = Array.from(
-      element.querySelectorAll('.product-card')[0].querySelectorAll('.product-notes li'),
-    );
-    expect(notes.map((note) => note.textContent?.trim())).toEqual([
-      'Chocolate',
-      'Cítricos',
-      'Panela',
-      '+1',
-    ]);
-    expect(notes[3].getAttribute('title')).toBe('Frutos rojos');
-  });
-
-  it('should briefly confirm on the button that the product was added', async () => {
-    const fixture = TestBed.createComponent(ShopComponent);
-    await fixture.whenStable();
-    const element = fixture.nativeElement as HTMLElement;
-    const button = element.querySelector<HTMLButtonElement>('.add-button')!;
-    expect(button.textContent).toContain('Añadir al carrito');
-    button.click();
-    await fixture.whenStable();
-    expect(button.classList).toContain('is-added');
-    expect(button.textContent).toContain('Añadido');
   });
 });

@@ -3,7 +3,7 @@
 }
 
 .history-section {
-  --history-video-height: 650px;
+  --history-video-height: 480px;
   background-color: #f8f4ec;
   background-image: linear-gradient(180deg, #fbf8f2 0%, #f3ede1 100%);
   border-block: 1px solid #dccdb2;
@@ -80,34 +80,14 @@
 }
 
 .video-embed {
-  background-color: #fff;
+  background-color: #1b140e;
   border: 1px solid #e6dccb;
   border-radius: 0.75rem;
   box-shadow: 0 12px 32px -16px #3d2b1f40;
   display: block;
   height: var(--history-video-height);
+  object-fit: contain;
   width: 100%;
-}
-
-.video-link {
-  color: #75501e;
-  text-decoration: underline;
-  text-underline-offset: 0.25em;
-}
-
-.video-hint {
-  font-size: 0.8rem;
-  line-height: 1.6;
-  margin: 0.75rem 0 0;
-}
-
-.video-link:hover {
-  color: #3d2b1f;
-}
-
-.video-link:focus-visible {
-  outline: 3px solid #75501e;
-  outline-offset: 5px;
 }
 
 @media (max-width: 760px) {

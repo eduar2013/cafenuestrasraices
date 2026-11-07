@@ -1,0 +1,220 @@
+<article class="product-card" [class.is-flipped]="flipped()">
+  <div class="product-media">
+    <div class="product-stage">
+      @if (currentImage(); as image) {
+        @if (!isBroken(image)) {
+          <button
+            type="button"
+            class="product-zoom"
+            [attr.aria-label]="'Ampliar foto de ' + product().name"
+            (click)="zoom.emit(image)"
+          >
+            <img
+              class="product-photo"
+              [src]="image"
+              [alt]="product().name"
+              loading="lazy"
+              (error)="imageFailed(image)"
+            />
+            <span class="zoom-hint" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18">
+                <path
+                  d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm4.7 11.2L20 20M10.5 7.5v6M7.5 10.5h6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+          </button>
+        } @else {
+          <div class="product-placeholder">
+            <img src="favicon.png" alt="" />
+            <span>Foto próximamente</span>
+          </div>
+        }
+      } @else {
+        <div class="product-placeholder">
+          <img src="favicon.png" alt="" />
+          <span>Foto próximamente</span>
+        </div>
+      }
+    </div>
+    @if (product().images.length > 1) {
+      <div class="product-thumbnails" role="group" [attr.aria-label]="'Fotos de ' + product().name">
+        @for (image of product().images; track image; let index = $index) {
+          <button
+            class="product-thumbnail"
+            type="button"
+            [class.is-active]="currentImage() === image"
+            [attr.aria-label]="'Ver imagen ' + (index + 1) + ' de ' + product().name"
+            [attr.aria-pressed]="currentImage() === image"
+            (click)="selectImage(image)"
+          >
+            @if (!isBroken(image)) {
+              <img [src]="image" alt="" loading="lazy" (error)="imageFailed(image)" />
+            } @else {
+              <span aria-hidden="true">×</span>
+            }
+          </button>
+        }
+      </div>
+    }
+    @if (product().badge) {
+      <span class="product-badge">{{ product().badge }}</span>
+    }
+  </div>
+  <div class="product-info">
+    <div class="product-title">
+      <h3>{{ product().name }}</h3>
+      @if (hasStory()) {
+        <!-- One button in a fixed place turns the card both ways. -->
+        <button
+          type="button"
+          class="flip-button"
+          [attr.aria-label]="
+            flipped()
+              ? 'Volver a la información de ' + product().name
+              : 'Ver descripción y notas de ' + product().name
+          "
+          (click)="flip()"
+        >
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+            <path
+              d="M4 12a8 8 0 0 1 13.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 0 1-13.7 5.6L4 15.3M4 20v-4.7h4.7"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {{ flipped() ? 'Volver' : 'Ver más' }}
+        </button>
+      }
+    </div>
+    <div class="product-flip">
+      <div class="product-face product-front" [attr.inert]="flipped() ? '' : null">
+        @if (product().properties.length > 0) {
+          <dl class="product-properties">
+            @for (property of product().properties; track property.label) {
+              <div>
+                <dt>{{ property.label }}</dt>
+                <dd>{{ property.value }}</dd>
+              </div>
+            }
+          </dl>
+        }
+        @if (presentationOptions().length > 0) {
+          <div
+            class="variant-picker"
+            role="group"
+            [attr.aria-label]="'Presentación de ' + product().name"
+          >
+            <span>Presentación</span>
+            <div class="variant-options">
+              @for (option of presentationOptions(); track option) {
+                <label class="variant-radio-option">
+                  <input
+                    type="radio"
+                    [name]="'presentation-' + product().id"
+                    [value]="option"
+                    [checked]="presentation() === option"
+                    (change)="selectPresentation(option)"
+                  />
+                  <span>{{ option }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+        @if (weightOptions().length > 0) {
+          <div
+            class="variant-picker"
+            role="group"
+            [attr.aria-label]="'Gramaje de ' + product().name"
+          >
+            <span>Gramaje</span>
+            <div class="variant-options">
+              @for (option of weightOptions(); track option) {
+                <label class="variant-radio-option">
+                  <input
+                    type="radio"
+                    [name]="'weight-' + product().id"
+                    [value]="option"
+                    [checked]="weight() === option"
+                    (change)="selectWeight(option)"
+                  />
+                  <span>{{ option }} g</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+        @if (!presentationOptions().length && !weightOptions().length) {
+          <p class="variant-single">Presentación: {{ variant().label }}</p>
+        }
+      </div>
+      @if (hasStory()) {
+        <div
+          class="product-face product-back"
+          [attr.inert]="flipped() ? null : ''"
+          [attr.aria-hidden]="!flipped()"
+        >
+          @if (product().description) {
+            <p class="back-description">{{ product().description }}</p>
+          }
+          @if (product().notes?.length) {
+            <h4>Notas en taza</h4>
+            <ul class="back-notes">
+              @for (note of product().notes; track $index) {
+                <li>{{ note }}</li>
+              }
+            </ul>
+          }
+        </div>
+      }
+    </div>
+    <div class="product-footer">
+      <p class="product-price">
+        {{ variant().price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+        <span>COP · precio simulado</span>
+      </p>
+      <button
+        class="primary-button add-button"
+        type="button"
+        [class.is-added]="justAdded()"
+        [disabled]="!variant().available"
+        (click)="add()"
+      >
+        @if (!variant().available) {
+          Agotado
+        } @else if (justAdded()) {
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path
+              d="m5 12.5 4.5 4.5L19 7.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Añadido
+        } @else {
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path
+              d="M6 7h12l-1 13H7L6 7Zm3 0V6a3 3 0 0 1 6 0v1"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Añadir al carrito
+        }
+      </button>
+    </div>
+  </div>
+</article>

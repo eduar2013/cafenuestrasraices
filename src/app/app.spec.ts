@@ -3,6 +3,7 @@ import { App } from './app';
 import { Router, provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { CartService } from './shop/cart';
+import { CatalogService } from './shop/catalog';
 import { flushCatalog, provideCatalogTesting } from './shop/catalog.testing';
 
 describe('App', () => {
@@ -13,6 +14,7 @@ describe('App', () => {
       providers: [provideRouter(routes), provideCatalogTesting()],
     }).compileComponents();
     await TestBed.inject(Router).navigateByUrl('/');
+    await flushCatalog();
   });
 
   it('should create the app', () => {
@@ -103,7 +105,7 @@ describe('App', () => {
     expect(history?.compareDocumentPosition(compiled.querySelector('app-carousel')!)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
-    expect(history?.querySelector('img')?.getAttribute('src')).toBe('images/cafe/image.png');
+    expect(history?.querySelector('img')?.getAttribute('src')).toBe('images/cafe/image.webp');
     expect(history?.querySelector('img')?.getAttribute('alt')).toBe('Logo de Café Nuestras Raíces');
   });
 
@@ -139,7 +141,7 @@ describe('App', () => {
     expect(compiled.querySelector('.shop-preview a')?.getAttribute('href')).toBe('/tienda');
     const router = TestBed.inject(Router);
     await router.navigateByUrl('/tienda');
-    const catalog = await flushCatalog();
+    const catalog = TestBed.inject(CatalogService);
     await fixture.whenStable();
     expect(compiled.querySelector('h1')?.textContent).toBe('Nuestra tienda');
     expect(compiled.querySelector('app-cafe-history')).toBeNull();
@@ -174,22 +176,16 @@ describe('App', () => {
     expect(content?.querySelector('.history-story h2')).toBeNull();
   });
 
-  it('should embed the Instagram reel and keep a safe fallback link', async () => {
+  it('should play the history video from the project files', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    const link = compiled.querySelector('app-cafe-history a');
-    const video = compiled.querySelector('app-cafe-history iframe');
+    const video = compiled.querySelector('app-cafe-history video');
 
-    expect(video?.getAttribute('src')).toBe('https://www.instagram.com/reel/DZvGNztxa6K/embed/');
-    expect(video?.getAttribute('title')).toContain('Café Nuestras Raíces');
-    expect(video?.getAttribute('loading')).toBe('lazy');
-    expect(video?.hasAttribute('allowfullscreen')).toBe(true);
-    expect(link?.getAttribute('href')).toBe(
-      'https://www.instagram.com/cafenuestrasraices/reel/DZvGNztxa6K/',
-    );
-    expect(link?.getAttribute('target')).toBe('_blank');
-    expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
-    expect(link?.textContent).toContain('puedes verlo en Instagram');
+    expect(compiled.querySelector('app-cafe-history iframe')).toBeNull();
+    expect(video?.getAttribute('src')).toBe('videos/historia.mp4#t=0.1');
+    expect(video?.getAttribute('aria-label')).toContain('Café Nuestras Raíces');
+    expect(video?.hasAttribute('controls')).toBe(true);
+    expect(video?.hasAttribute('playsinline')).toBe(true);
   });
 });

@@ -21,13 +21,13 @@ export class CarouselComponent implements OnInit, OnDestroy {
 
   readonly images: CarouselImage[] = [
     {
-      src: 'images/carousel/slide-1.jpg',
+      src: 'images/carousel/slide-1.webp',
       alt: 'Café en grano recién tostado',
       title: 'Tueste artesanal',
       description: 'Granos seleccionados y tostados en pequeños lotes para una taza con carácter.',
     },
     {
-      src: 'images/carousel/slide-2.jpg',
+      src: 'images/carousel/slide-2.webp',
       alt: 'Taza de café servida en mesa rústica',
       title: 'Sabor de origen',
       description: 'Notas dulces y achocolatadas que resaltan la esencia del café de montaña.',
@@ -39,21 +39,21 @@ export class CarouselComponent implements OnInit, OnDestroy {
       description: 'Trabajo directo con productores locales para asegurar calidad y comercio justo.',
     },
     {
-      src: 'images/carousel/slide-4.jpg',
+      src: 'images/carousel/slide-4.webp',
       alt: 'Caficultores recolectando café',
       title: 'Del cafetal a tu mesa',
       description: 'Trazabilidad completa desde la cosecha hasta el empaque final.',
     }
     ,
     {
-      src: 'images/carousel/slide-5.jpg',
+      src: 'images/carousel/slide-5.webp',
       alt: 'Caficultores recolectando café',
       title: 'Del cafetal a tu mesa',
       description: 'Trazabilidad completa desde la cosecha hasta el empaque final.',
     }
     ,
     {
-      src: 'images/carousel/slide-6.jpg',
+      src: 'images/carousel/slide-6.webp',
       alt: 'Caficultores recolectando café',
       title: 'Del cafetal a tu mesa',
       description: 'Trazabilidad completa desde la cosecha hasta el empaque final.',

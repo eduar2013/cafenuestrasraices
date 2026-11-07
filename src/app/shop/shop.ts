@@ -1,4 +1,4 @@
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -11,13 +11,11 @@ import {
 import { RouterLink } from '@angular/router';
 import { CartDrawerComponent } from './cart-drawer/cart-drawer';
 import { CartService } from './cart';
-import { CatalogService, ShopProduct } from './catalog';
+import { CatalogService, ProductVariant, ShopProduct } from './catalog';
+import { ProductCardComponent } from './product-card/product-card';
 
 const TOAST_DURATION = 4000;
-const ADDED_FEEDBACK_DURATION = 1500;
 const MAX_ZOOM = 4;
-/** Tasting notes shown on a card; the rest are summarised as "+N". */
-const MAX_NOTES = 3;
 const ZOOM_STEP = 1.25;
 
 /** Scale and offset (px) of the enlarged photo inside its frame. */
@@ -31,7 +29,7 @@ const NO_ZOOM: ImageZoom = { scale: 1, x: 0, y: 0 };
 
 @Component({
   selector: 'app-shop',
-  imports: [CartDrawerComponent, CurrencyPipe, DecimalPipe, RouterLink],
+  imports: [CartDrawerComponent, DecimalPipe, ProductCardComponent, RouterLink],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
@@ -44,18 +42,11 @@ export class ShopComponent implements OnDestroy {
       ? this.catalog.products()
       : this.catalog.products().filter((product) => product.category.id === this.category()),
   );
-  /** Images that failed to load fall back to the placeholder. */
-  readonly brokenImages = signal<ReadonlySet<string>>(new Set());
-  readonly selectedImages = signal<Readonly<Record<string, string>>>({});
-  readonly selectedPresentations = signal<Readonly<Record<string, string | null>>>({});
-  readonly selectedWeights = signal<Readonly<Record<string, number | null>>>({});
   readonly message = signal('');
   readonly cartOpen = signal(false);
-  /** Product whose add button briefly shows "Añadido". */
-  readonly justAdded = signal<string | undefined>(undefined);
   readonly zoomedProduct = signal<ShopProduct | undefined>(undefined);
+  readonly zoomedImage = signal<string | undefined>(undefined);
   readonly zoom = signal<ImageZoom>(NO_ZOOM);
-  readonly maxNotes = MAX_NOTES;
   readonly maxZoom = MAX_ZOOM;
   readonly zoomStep = ZOOM_STEP;
   readonly imageTransform = computed(
@@ -71,92 +62,10 @@ export class ShopComponent implements OnDestroy {
   private readonly imageDialog = viewChild.required<ElementRef<HTMLDialogElement>>('imageDialog');
 
   private toastTimer?: ReturnType<typeof setTimeout>;
-  private addedTimer?: ReturnType<typeof setTimeout>;
 
-  variant(product: ShopProduct) {
-    const presentation = this.presentation(product);
-    const weight = this.weight(product);
-    return (
-      product.variants.find(
-        (variant) => variant.presentation === presentation && variant.weight === weight,
-      ) ??
-      product.variants[0]
-    );
-  }
-
-  presentationOptions(product: ShopProduct): readonly string[] {
-    return Array.from(
-      new Set(
-        product.variants.flatMap((variant) =>
-          variant.presentation ? [variant.presentation] : [],
-        ),
-      ),
-    );
-  }
-
-  weightOptions(product: ShopProduct): readonly number[] {
-    const presentation = this.presentation(product);
-    return Array.from(
-      new Set(
-        product.variants
-          .filter((variant) => variant.presentation === presentation)
-          .flatMap((variant) => (variant.weight === null ? [] : [variant.weight])),
-      ),
-    ).sort((left, right) => left - right);
-  }
-
-  presentation(product: ShopProduct): string | null {
-    const selected = this.selectedPresentations();
-    return Object.hasOwn(selected, product.id)
-      ? selected[product.id]
-      : product.variants[0].presentation;
-  }
-
-  weight(product: ShopProduct): number | null {
-    const selected = this.selectedWeights();
-    return Object.hasOwn(selected, product.id) ? selected[product.id] : product.variants[0].weight;
-  }
-
-  selectPresentation(product: ShopProduct, presentation: string): void {
-    const currentWeight = this.weight(product);
-    const variant =
-      product.variants.find(
-        (option) => option.presentation === presentation && option.weight === currentWeight,
-      ) ?? product.variants.find((option) => option.presentation === presentation)!;
-    this.selectedPresentations.update((selections) => ({
-      ...selections,
-      [product.id]: variant.presentation,
-    }));
-    this.selectedWeights.update((selections) => ({ ...selections, [product.id]: variant.weight }));
-  }
-
-  selectWeight(product: ShopProduct, weight: number): void {
-    const currentPresentation = this.presentation(product);
-    const variant =
-      product.variants.find(
-        (option) => option.presentation === currentPresentation && option.weight === weight,
-      ) ?? product.variants.find((option) => option.weight === weight)!;
-    this.selectedPresentations.update((selections) => ({
-      ...selections,
-      [product.id]: variant.presentation,
-    }));
-    this.selectedWeights.update((selections) => ({ ...selections, [product.id]: variant.weight }));
-  }
-
-  selectedImage(product: ShopProduct): string | undefined {
-    return this.selectedImages()[product.id] ?? product.images[0] ?? product.image;
-  }
-
-  selectImage(product: ShopProduct, image: string): void {
-    this.selectedImages.update((selections) => ({ ...selections, [product.id]: image }));
-  }
-
-  imageKey(product: ShopProduct, image: string): string {
-    return `${product.id}:${image}`;
-  }
-
-  openImage(product: ShopProduct): void {
+  openImage(product: ShopProduct, image: string): void {
     this.zoomedProduct.set(product);
+    this.zoomedImage.set(image);
     this.zoom.set(NO_ZOOM);
     this.imageDialog().nativeElement.showModal();
   }
@@ -229,20 +138,8 @@ export class ShopComponent implements OnDestroy {
     }
   }
 
-  imageFailed(product: ShopProduct, image: string): void {
-    const key = this.imageKey(product, image);
-    this.brokenImages.update((ids) => new Set(ids).add(key));
-  }
-
-  add(product: ShopProduct): void {
-    const variant = this.variant(product);
-    if (!variant.available) {
-      return;
-    }
+  onAdded(product: ShopProduct, variant: ProductVariant): void {
     this.cart.add(product, variant);
-    this.justAdded.set(product.id);
-    clearTimeout(this.addedTimer);
-    this.addedTimer = setTimeout(() => this.justAdded.set(undefined), ADDED_FEEDBACK_DURATION);
     this.showMessage(
       `${product.name}, ${variant.label}, añadido al carrito. ${this.cart.count()} unidades en total.`,
     );
@@ -255,7 +152,6 @@ export class ShopComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     clearTimeout(this.toastTimer);
-    clearTimeout(this.addedTimer);
   }
 
   private showMessage(text: string): void {

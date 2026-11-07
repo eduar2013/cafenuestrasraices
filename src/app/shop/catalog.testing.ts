@@ -64,6 +64,16 @@ function product(id: number, name: string, extra: Partial<ApiProduct>): ApiProdu
   };
 }
 
+const JERICO = {
+  id: 2,
+  region: 'Finca Mauritania',
+  municipality: 'Jericó',
+  department: 'Antioquia',
+  altitude_masl: 1950,
+  latitude: 5.79,
+  longitude: -75.79,
+};
+
 export const TEST_CATALOG: ApiProductList = {
   total: 6,
   items: [
@@ -74,6 +84,7 @@ export const TEST_CATALOG: ApiProductList = {
       ],
       coffee_detail: coffee({
         process: { id: 1, name: 'Lavado' },
+        variety: { id: 2, name: 'Bourbon Papayo' },
         tasting_notes: 'Chocolate, Cítricos, Panela y Frutos rojos',
         origin: {
           id: 1,
@@ -94,12 +105,31 @@ export const TEST_CATALOG: ApiProductList = {
       ],
     }),
     product(2, 'Mauritania Lavado', {
+      coffee_detail: coffee({
+        process: { id: 1, name: 'Lavado' },
+        variety: { id: 1, name: 'Castillo' },
+        roast_level: { id: 1, name: 'Media' },
+        tasting_notes: 'Frutos amarillos, Panela',
+        origin: JERICO,
+      }),
       variants: [variant('mauritania-lavado', '340 g grano', 38000)],
     }),
     product(3, 'Mauritania Honey', {
+      coffee_detail: coffee({ process: { id: 2, name: 'Honey' }, origin: JERICO }),
       variants: [variant('mauritania-honey', '340 g molido', 38000)],
     }),
     product(4, 'Geisha', {
+      coffee_detail: coffee({
+        origin: {
+          id: 3,
+          region: 'Colombia - Tolima',
+          municipality: null,
+          department: null,
+          altitude_masl: null,
+          latitude: null,
+          longitude: null,
+        },
+      }),
       variants: [variant('geisha-250', '250 g grano', 62000)],
     }),
     product(5, 'Espresso Intenso', {

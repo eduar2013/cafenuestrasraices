@@ -1,138 +1,134 @@
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { CatalogService } from '../shop/catalog';
+import { TEST_CATALOG, flushCatalog, provideCatalogTesting } from '../shop/catalog.testing';
 import { CoffeeOriginsComponent } from './coffee-origins';
+import { toCoffeeOrigins } from './origins';
 
 describe('CoffeeOriginsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CoffeeOriginsComponent],
+      providers: [provideRouter([]), provideCatalogTesting()],
     }).compileComponents();
   });
 
-  it('should identify the sample catalog and show the first coffee by default', async () => {
+  async function render() {
     const fixture = TestBed.createComponent(CoffeeOriginsComponent);
+    await flushCatalog();
     await fixture.whenStable();
-    const element = fixture.nativeElement as HTMLElement;
+    return { fixture, element: fixture.nativeElement as HTMLElement };
+  }
 
-    expect(element.querySelector('.demo-notice')?.textContent).toContain('identificados como ejemplos');
-    expect(element.querySelector('h3')?.textContent).toBe('LabrAlma');
-    expect(element.querySelectorAll('.map-point')).toHaveLength(5);
+  it('should group the catalog coffees by origin', () => {
+    const origins = toCoffeeOrigins(TEST_CATALOG.items);
+
+    expect(origins.map((origin) => origin.name)).toEqual([
+      'Heliconia, Antioquia',
+      'Jericó, Antioquia',
+      'Colombia - Tolima',
+    ]);
+    expect(origins[1].coffees.map((coffee) => coffee.name)).toEqual([
+      'Mauritania Lavado',
+      'Mauritania Honey',
+    ]);
+    expect(origins[1]).toMatchObject({
+      location: 'Finca Mauritania',
+      latitude: 5.79,
+      longitude: -75.79,
+      approximate: false,
+    });
+    expect(origins[0].coffees[0].weights).toEqual([250, 340, 500]);
+  });
+
+  it('should place origins without coordinates at their department centre', () => {
+    const [heliconia, , tolima] = toCoffeeOrigins(TEST_CATALOG.items);
+
+    expect(heliconia).toMatchObject({ latitude: 6.7, longitude: -75.5, approximate: true });
+    // The department is only mentioned in the region text.
+    expect(tolima).toMatchObject({ latitude: 4.0, longitude: -75.2, approximate: true });
+  });
+
+  it('should leave out origins that cannot be placed on the map', () => {
+    const [product] = TEST_CATALOG.items;
+    const nowhere = {
+      ...product,
+      coffee_detail: {
+        ...product.coffee_detail!,
+        origin: { ...product.coffee_detail!.origin!, department: 'Desconocido', region: null },
+      },
+    };
+
+    expect(toCoffeeOrigins([nowhere])).toEqual([]);
+  });
+
+  it('should show one map point per origin and the first coffee by default', async () => {
+    const { element } = await render();
+
+    expect(element.querySelectorAll('.map-point')).toHaveLength(3);
     expect(element.querySelectorAll('.map-point[aria-pressed="true"]')).toHaveLength(1);
+    expect(element.querySelector('h3')?.textContent).toBe('LabrAlma');
+    expect(element.querySelector('.coffee-location')?.textContent).toContain(
+      'ubicación aproximada',
+    );
+    expect(element.querySelector('.coffee-photo img')?.getAttribute('src')).toBe(
+      'images/productos/labralma-web.jpg',
+    );
+    expect(element.textContent).toContain('1740 m s. n. m.');
+    expect(element.querySelector('.shop-link')?.getAttribute('href')).toBe('/tienda');
     expect(element.querySelector('#origin-detail')?.getAttribute('aria-live')).toBe('polite');
-    expect(element.querySelector('.origin-map img')?.getAttribute('alt')).toContain(
-      'división por departamentos',
-    );
-    expect(element.querySelector('.map-caption')?.textContent).toContain(
-      'División departamental continental',
-    );
   });
 
-  it('should update the complete coffee detail for every map point', async () => {
-    const fixture = TestBed.createComponent(CoffeeOriginsComponent);
-    await fixture.whenStable();
-    const element = fixture.nativeElement as HTMLElement;
-    const buttons = element.querySelectorAll<HTMLButtonElement>('.map-point');
-
-    for (const [index, origin] of fixture.componentInstance.origins.entries()) {
-      buttons[index].click();
-      await fixture.whenStable();
-      const detail = element.querySelector('#origin-detail')!;
-
-      expect(detail.querySelector('h3')?.textContent).toBe(origin.coffees[0].name);
-      expect(detail.querySelector('.coffee-location')?.textContent).toBe(origin.location);
-      const coffee = origin.coffees[0];
-      const fields = Array.from(detail.querySelectorAll('dd')).map(
-        (field) => field.textContent?.replace(/\s+/g, ' ').trim(),
-      );
-      expect(fields).toEqual([
-        coffee.variety, coffee.process, coffee.roast,
-        ...(coffee.altitude ? [`${coffee.altitude} m s. n. m.`] : []),
-        (coffee.presentations ?? [250]).map((weight) => `${weight} g`).join(' y '),
-      ]);
-      expect(detail.querySelector('.eyebrow')?.textContent?.includes('Ejemplo')).toBe(
-        coffee.isExample === true,
-      );
-      expect(Array.from(detail.querySelectorAll('.tasting-notes li')).map((note) => note.textContent))
-        .toEqual(origin.coffees[0].notes);
-      expect(buttons[index].getAttribute('aria-pressed')).toBe('true');
-      expect(element.querySelectorAll('.map-point[aria-pressed="true"]')).toHaveLength(1);
-    }
-  });
-
-  it('should support the alternative origin list and several coffees per origin', async () => {
-    const fixture = TestBed.createComponent(CoffeeOriginsComponent);
-    await fixture.whenStable();
-    const element = fixture.nativeElement as HTMLElement;
+  it('should switch origins and the coffees of an origin', async () => {
+    const { fixture, element } = await render();
 
     element.querySelectorAll<HTMLButtonElement>('.origin-list button')[1].click();
     await fixture.whenStable();
+    expect(element.querySelector('h3')?.textContent).toBe('Mauritania Lavado');
+    expect(element.querySelector('.coffee-location')?.textContent?.trim()).toBe('Finca Mauritania');
+    expect(Array.from(element.querySelectorAll('dd')).map((field) => field.textContent)).toEqual([
+      'Castillo',
+      'Lavado',
+      'Media',
+      '1950 m s. n. m.',
+      expect.stringContaining('340 g'),
+    ]);
+
     element.querySelectorAll<HTMLButtonElement>('.coffee-options button')[1].click();
     await fixture.whenStable();
-    expect(element.querySelector('h3')?.textContent).toBe('Dulce montaña');
-    expect(element.querySelectorAll('dd')[1].textContent).toBe('Honey');
+    expect(element.querySelector('h3')?.textContent).toBe('Mauritania Honey');
+    expect(element.querySelector('.tasting-notes')).toBeNull();
 
-    const origins = element.querySelectorAll<HTMLButtonElement>('.origin-list button');
-    origins[2].click();
+    element.querySelectorAll<HTMLButtonElement>('.map-point')[2].click();
     await fixture.whenStable();
-    expect(element.querySelector('h3')?.textContent).toBe('Esencia del Huila');
+    expect(element.querySelector('h3')?.textContent).toBe('Geisha');
     expect(element.querySelector('.coffee-options')).toBeNull();
-    expect(origins[2].getAttribute('aria-pressed')).toBe('true');
-    origins[1].click();
-    await fixture.whenStable();
-    expect(element.querySelector('h3')?.textContent).toBe('Raíces de Antioquia');
+    // Coffees without a photo simply show no thumbnail.
+    expect(element.querySelector('.coffee-photo')).toBeNull();
   });
 
-  it('should show the supplied LabrAlma details without labeling it as an example', async () => {
+  it('should show a message and a retry button when the API fails', async () => {
     const fixture = TestBed.createComponent(CoffeeOriginsComponent);
+    TestBed.tick();
+    TestBed.inject(HttpTestingController)
+      .expectOne(() => true)
+      .flush('error', { status: 500, statusText: 'Server Error' });
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
-    const detail = element.querySelector('#origin-detail')!;
 
-    expect(detail.querySelector('h3')?.textContent).toBe('LabrAlma');
-    expect(detail.querySelector('.coffee-location')?.textContent).toBe('Heliconia, Antioquia');
-    expect(detail.textContent).toContain('Bourbon Papayo');
-    expect(detail.textContent).toContain('1740 m s. n. m.');
-    expect(detail.textContent?.replace(/\s+/g, ' ')).toContain('250 g y 340 g');
-    expect(detail.textContent).toContain('Por confirmar');
-    expect(detail.querySelector('.eyebrow')?.textContent).not.toContain('Ejemplo');
+    expect(element.querySelector('[role="alert"]')?.textContent).toContain(
+      'No pudimos cargar los orígenes',
+    );
+    expect(element.querySelectorAll('.map-point')).toHaveLength(0);
+    expect(TestBed.inject(CatalogService).products()).toEqual([]);
   });
 
-  it('should switch product images and restore the illustration for coffees without a photo', async () => {
-    const fixture = TestBed.createComponent(CoffeeOriginsComponent);
-    await fixture.whenStable();
+  it('should project each origin to the same coordinate system as the SVG', async () => {
+    const { fixture } = await render();
     const component = fixture.componentInstance;
-    const element = fixture.nativeElement as HTMLElement;
-    const image = element.querySelector<HTMLImageElement>('.coffee-photo img')!;
-    const coffee = component.selectedCoffee();
 
-    expect(image.getAttribute('src')).toBe('images/carousel/slide-1.jpg');
-    expect(element.querySelector('.coffee-photo span')?.textContent).toBe('Imagen ilustrativa');
-
-    component.selectedCoffee.set({
-      ...coffee,
-      image: 'images/cafe/labralma.jpg',
-      imageAlt: 'Café LabrAlma Bourbon Papayo de Heliconia',
-    });
-    await fixture.whenStable();
-    expect(image.getAttribute('src')).toBe('images/cafe/labralma.jpg');
-    expect(image.getAttribute('alt')).toBe('Café LabrAlma Bourbon Papayo de Heliconia');
-    expect(element.querySelector('.coffee-photo span')).toBeNull();
-
-    component.selectedCoffee.set({ ...coffee, image: 'images/cafe/otro-cafe.jpg' });
-    await fixture.whenStable();
-    expect(image.getAttribute('src')).toBe('images/cafe/otro-cafe.jpg');
-    expect(image.getAttribute('alt')).toBe(coffee.name);
-
-    component.selectOrigin(component.origins[1]);
-    await fixture.whenStable();
-    expect(image.getAttribute('src')).toBe('images/carousel/slide-1.jpg');
-    expect(image.getAttribute('alt')).toContain('Fotografía ilustrativa');
-    expect(element.querySelector('.coffee-photo span')).not.toBeNull();
-  });
-
-  it('should project each origin to the same coordinate system as the SVG', () => {
-    const component = TestBed.createComponent(CoffeeOriginsComponent).componentInstance;
-
-    for (const origin of component.origins) {
+    for (const origin of component.origins()) {
       expect(component.mapLeft(origin)).toBeCloseTo(((origin.longitude + 80) * 26 + 20) / 4);
       expect(component.mapTop(origin)).toBeCloseTo(((13.5 - origin.latitude) * 26 + 20) / 5.2);
       expect(component.mapLeft(origin)).toBeGreaterThan(0);
