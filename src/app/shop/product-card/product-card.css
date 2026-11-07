@@ -289,6 +289,56 @@
   margin-top: auto;
   padding-top: 0.75rem;
 }
+.price-row {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+.quantity-picker {
+  align-items: center;
+  border: 1px solid #d7c8aa;
+  border-radius: 999px;
+  display: inline-flex;
+  flex: none;
+}
+.quantity-picker button {
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  color: #344e35;
+  font-size: 1.15rem;
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0;
+}
+.quantity-picker button:hover:not(:disabled) {
+  background: #f3ead6;
+}
+.quantity-picker button:disabled {
+  color: #b9ad97;
+  cursor: default;
+}
+.quantity-picker input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  background: none;
+  border: 0;
+  color: #34281e;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  width: 2.2rem;
+}
+.quantity-picker input::-webkit-inner-spin-button,
+.quantity-picker input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.quantity-picker input:focus-visible {
+  outline: 2px solid #75501e;
+  outline-offset: 2px;
+}
 .product-price {
   font-size: 1.25rem;
   font-weight: 700;

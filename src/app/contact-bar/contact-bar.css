@@ -25,14 +25,62 @@
   position: absolute;
 }
 
-.brand-text {
+/* Wordmark in the style of the round sign: serif capitals in gold. */
+.brand {
+  align-items: center;
   color: #e7c778;
+  display: inline-flex;
+  gap: 0.65rem;
+  text-decoration: none;
+}
+.brand-mark {
+  flex: none;
+  height: 38px;
+  transition: transform 0.4s ease;
+  width: 38px;
+}
+.brand:hover .brand-mark {
+  transform: rotate(-8deg);
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  line-height: 1;
+}
+.brand-eyebrow {
+  align-items: center;
+  color: #c49b50;
+  display: flex;
   font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
-  font-size: 1.02rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  margin: 0;
-  text-transform: none;
+  gap: 0.5rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+}
+.brand-eyebrow::after {
+  background: linear-gradient(90deg, #c49b50, transparent);
+  content: '';
+  flex: 1;
+  height: 1px;
+}
+.brand-name {
+  background: linear-gradient(180deg, #fbe3a1 0%, #e7c778 45%, #c99632 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 1.22rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.brand:focus-visible {
+  border-radius: 0.4rem;
+  outline: 2px solid #f7d27b;
+  outline-offset: 4px;
 }
 
 .quick-actions {
@@ -119,6 +167,10 @@
   .shop-cta::after {
     animation: none;
     display: none;
+  }
+
+  .brand-mark {
+    transition: none;
   }
 }
 

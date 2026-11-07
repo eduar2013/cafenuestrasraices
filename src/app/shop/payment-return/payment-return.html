@@ -1,0 +1,26 @@
+<app-contact-bar [showShopLink]="false" />
+<main class="return-page" aria-labelledby="return-title">
+  <div class="return-card">
+    <h1 id="return-title">Resultado de tu pago</h1>
+    @switch (state()) {
+      @case ('confirming') {
+        <p class="return-status" role="status">Confirmando tu pago con Wompi…</p>
+      }
+      @case ('result') {
+        <app-payment-result
+          [status]="status()"
+          [order]="order()"
+          (continue)="keepShopping()"
+          (retry)="retry()"
+        />
+      }
+      @default {
+        <p class="return-status">
+          No encontramos tu pedido en este navegador. Si completaste el pago, te llegará la
+          confirmación al correo.
+        </p>
+        <a class="return-link" routerLink="/tienda">Volver a la tienda</a>
+      }
+    }
+  </div>
+</main>

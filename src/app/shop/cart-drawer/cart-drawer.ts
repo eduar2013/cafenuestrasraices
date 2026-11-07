@@ -12,10 +12,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { CartService, FREE_SHIPPING_FROM, SHIPPING_COST } from '../cart';
+import { CheckoutComponent } from '../checkout/checkout';
+import { PaymentBadgeComponent } from '../payment-badge/payment-badge';
 
 @Component({
   selector: 'app-cart-drawer',
-  imports: [CurrencyPipe],
+  imports: [CheckoutComponent, CurrencyPipe, PaymentBadgeComponent],
   templateUrl: './cart-drawer.html',
   styleUrl: './cart-drawer.css',
   host: { '(document:keydown.escape)': 'close()' },
@@ -27,7 +29,8 @@ export class CartDrawerComponent implements OnDestroy {
   readonly cart = inject(CartService);
   readonly freeShippingFrom = FREE_SHIPPING_FROM;
   readonly shippingCost = SHIPPING_COST;
-  readonly checkoutNotice = signal(false);
+  /** Showing the contact, shipping and payment step instead of the cart. */
+  readonly checkingOut = signal(false);
   readonly shippingProgress = computed(() =>
     Math.min(100, Math.round((this.cart.total() / FREE_SHIPPING_FROM) * 100)),
   );
@@ -56,7 +59,10 @@ export class CartDrawerComponent implements OnDestroy {
       return;
     }
     this.open.set(false);
-    this.checkoutNotice.set(false);
+    // Keep an unfinished checkout, but start from the cart once the order is done.
+    if (this.cart.count() === 0) {
+      this.checkingOut.set(false);
+    }
     this.closed.emit();
   }
 

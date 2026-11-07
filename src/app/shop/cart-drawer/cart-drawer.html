@@ -23,12 +23,19 @@
     </button>
   </header>
 
-  @if (cart.items().length === 0) {
+  @if (checkingOut()) {
+    <app-checkout
+      (back)="checkingOut.set(false)"
+      (finished)="checkingOut.set(false); close()"
+      (paymentOpened)="open.set(false)"
+      (paymentReturned)="open.set(true)"
+    />
+  } @else if (cart.items().length === 0) {
     <div class="cart-empty">
-      <p class="empty-cart">Tu carrito está vacío. Elige una presentación y añade tu café favorito.</p>
-      <button type="button" class="secondary-button" (click)="close()">
-        Explorar productos
-      </button>
+      <p class="empty-cart">
+        Tu carrito está vacío. Elige una presentación y añade tu café favorito.
+      </p>
+      <button type="button" class="secondary-button" (click)="close()">Explorar productos</button>
     </div>
   } @else {
     <div class="shipping-progress">
@@ -74,8 +81,7 @@
               <h3>{{ item.product.name }}</h3>
               <p class="line-total">
                 {{
-                  item.variant.price * item.quantity
-                    | currency: 'COP' : 'symbol-narrow' : '1.0-0'
+                  item.variant.price * item.quantity | currency: 'COP' : 'symbol-narrow' : '1.0-0'
                 }}
               </p>
             </div>
@@ -140,14 +146,10 @@
           <dd>{{ cart.grandTotal() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
         </div>
       </dl>
-      <button type="button" class="checkout-button" (click)="checkoutNotice.set(true)">
+      <button type="button" class="checkout-button" (click)="checkingOut.set(true)">
         Finalizar compra
       </button>
-      @if (checkoutNotice()) {
-        <p class="checkout-notice" role="alert">
-          Esta tienda es una demostración: todavía no procesa pagos ni pedidos.
-        </p>
-      }
+      <app-payment-badge [compact]="true" />
       <div class="cart-secondary-actions">
         <button type="button" class="link-button" (click)="close()">Seguir comprando</button>
         <button class="clear-button link-button" type="button" (click)="cart.clear()">
@@ -155,7 +157,7 @@
         </button>
       </div>
       <p class="cart-note">
-        Envío simulado de {{ shippingCost | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}, gratis desde
+        Envío de {{ shippingCost | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}, gratis desde
         {{ freeShippingFrom | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}. Tu carrito se guarda
         en este navegador.
       </p>

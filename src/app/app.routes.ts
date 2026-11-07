@@ -8,5 +8,13 @@ export const routes: Routes = [
     loadComponent: () => import('./shop/shop').then((module) => module.ShopComponent),
     title: 'Tienda | Café Nuestras Raíces',
   },
+  {
+    path: 'pago/resultado',
+    loadComponent: () =>
+      import('./shop/payment-return/payment-return').then(
+        (module) => module.PaymentReturnComponent,
+      ),
+    title: 'Resultado del pago | Café Nuestras Raíces',
+  },
   { path: '**', redirectTo: '' },
 ];

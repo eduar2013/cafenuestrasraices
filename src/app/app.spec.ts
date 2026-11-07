@@ -72,6 +72,34 @@ describe('App', () => {
     expect(nav.hidden).toBe(true);
   });
 
+  it('should place the menu in the contact bar right after WhatsApp', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const socials = compiled.querySelector('app-contact-bar .quick-social-group')!;
+
+    expect(compiled.querySelectorAll('app-side-nav')).toHaveLength(1);
+    expect(socials.lastElementChild?.tagName).toBe('APP-SIDE-NAV');
+    expect(socials.lastElementChild?.previousElementSibling?.getAttribute('aria-label')).toBe(
+      'WhatsApp',
+    );
+  });
+
+  it('should close the menu when clicking outside of it', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const button = compiled.querySelector<HTMLButtonElement>('app-side-nav button')!;
+    const nav = compiled.querySelector<HTMLElement>('app-side-nav nav')!;
+
+    button.click();
+    await fixture.whenStable();
+    expect(nav.hidden).toBe(false);
+    compiled.querySelector<HTMLElement>('app-cafe-history')!.click();
+    await fixture.whenStable();
+    expect(nav.hidden).toBe(true);
+  });
+
   it('should close on selection or Escape and restore focus on Escape', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();

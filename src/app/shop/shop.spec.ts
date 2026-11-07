@@ -22,7 +22,7 @@ describe('ShopComponent', () => {
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     const cart = TestBed.inject(CartService);
-    expect(element.querySelector('.demo-notice')?.textContent).toContain('Precios simulados');
+    expect(element.querySelector('app-payment-badge')?.textContent).toContain('Pago seguro con');
     expect(element.querySelector('.empty-cart')).not.toBeNull();
     element.querySelector<HTMLButtonElement>('.primary-button')!.click();
     element.querySelector<HTMLButtonElement>('.primary-button')!.click();
@@ -131,6 +131,45 @@ describe('ShopComponent', () => {
     expect(cart.shipping()).toBe(0);
     expect(cart.grandTotal()).toBe(152000);
     expect(element.querySelector('.shipping-progress')?.textContent).toContain('envío gratis');
+  });
+
+  it('should show the contact bar with the menu but without the shop link', async () => {
+    const fixture = TestBed.createComponent(ShopComponent);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('app-contact-bar')).not.toBeNull();
+    expect(element.querySelector('app-contact-bar .shop-cta')).toBeNull();
+    expect(element.querySelector('app-contact-bar a[aria-label="WhatsApp"]')).not.toBeNull();
+    expect(element.querySelector('app-contact-bar app-side-nav button')).not.toBeNull();
+  });
+
+  it('should publish the contact bar height for the sticky toolbar', async () => {
+    const observed: Element[] = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(private readonly callback: () => void) {}
+        observe(element: Element) {
+          observed.push(element);
+          this.callback();
+        }
+        disconnect() {}
+      },
+    );
+    try {
+      const fixture = TestBed.createComponent(ShopComponent);
+      await fixture.whenStable();
+
+      expect(observed[0]?.tagName).toBe('APP-CONTACT-BAR');
+      expect(document.documentElement.style.getPropertyValue('--contact-bar-height')).toMatch(
+        /^\d+px$/,
+      );
+      fixture.destroy();
+    } finally {
+      vi.unstubAllGlobals();
+      document.documentElement.style.removeProperty('--contact-bar-height');
+    }
   });
 
   it('should filter products by category', async () => {

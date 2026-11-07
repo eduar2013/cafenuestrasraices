@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { ProductVariant, ShopProduct, toShopProducts } from '../catalog';
+import { ShopProduct, toShopProducts } from '../catalog';
 import { TEST_CATALOG } from '../catalog.testing';
-import { ProductCardComponent } from './product-card';
+import { MAX_QUANTITY, ProductAddition, ProductCardComponent } from './product-card';
 
 describe('ProductCardComponent', () => {
   const products = toShopProducts(TEST_CATALOG.items);
@@ -10,8 +10,8 @@ describe('ProductCardComponent', () => {
   async function render(product: ShopProduct) {
     const fixture = TestBed.createComponent(ProductCardComponent);
     fixture.componentRef.setInput('product', product);
-    const added: ProductVariant[] = [];
-    fixture.componentInstance.added.subscribe((variant) => added.push(variant));
+    const added: ProductAddition[] = [];
+    fixture.componentInstance.added.subscribe((addition) => added.push(addition));
     await fixture.whenStable();
     return { fixture, element: fixture.nativeElement as HTMLElement, added };
   }
@@ -34,7 +34,9 @@ describe('ProductCardComponent', () => {
     expect(element.querySelector('.product-price')?.textContent).toContain('38,000');
 
     element.querySelector<HTMLButtonElement>('.add-button')!.click();
-    expect(added.map((variant) => variant.id)).toEqual(['labralma-340-molido']);
+    expect(added.map(({ variant, quantity }) => [variant.id, quantity])).toEqual([
+      ['labralma-340-molido', 1],
+    ]);
   });
 
   it('should show a selected radio when only one option is available', async () => {
@@ -108,5 +110,50 @@ describe('ProductCardComponent', () => {
 
     expect(element.querySelector('.flip-button')).toBeNull();
     expect(element.querySelector('.product-back')).toBeNull();
+  });
+
+  it('should add the chosen quantity and start again from one', async () => {
+    const { fixture, element, added } = await render(byName('LabrAlma'));
+    const input = element.querySelector<HTMLInputElement>('.quantity-picker input')!;
+    const [less, more] = element.querySelectorAll<HTMLButtonElement>('.quantity-picker button');
+
+    expect(less.disabled).toBe(true);
+    more.click();
+    more.click();
+    await fixture.whenStable();
+    expect(input.value).toBe('3');
+    less.click();
+    await fixture.whenStable();
+    expect(input.value).toBe('2');
+
+    element.querySelector<HTMLButtonElement>('.add-button')!.click();
+    await fixture.whenStable();
+    expect(added.map(({ quantity }) => quantity)).toEqual([2]);
+    expect(input.value).toBe('1');
+  });
+
+  it('should keep a typed quantity between 1 and the maximum', async () => {
+    const { fixture, element } = await render(byName('LabrAlma'));
+    const input = element.querySelector<HTMLInputElement>('.quantity-picker input')!;
+    const type = async (value: string) => {
+      input.value = value;
+      input.dispatchEvent(new Event('change'));
+      await fixture.whenStable();
+    };
+
+    await type('5');
+    expect(fixture.componentInstance.quantity()).toBe(5);
+    await type('999');
+    expect(input.value).toBe(`${MAX_QUANTITY}`);
+    await type('0');
+    expect(input.value).toBe('1');
+    await type('');
+    expect(input.value).toBe('1');
+  });
+
+  it('should disable the quantity for sold out products', async () => {
+    const { element } = await render(byName('Espresso Intenso'));
+
+    expect(element.querySelector<HTMLInputElement>('.quantity-picker input')!.disabled).toBe(true);
   });
 });

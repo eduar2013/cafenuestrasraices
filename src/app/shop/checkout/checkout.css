@@ -1,0 +1,212 @@
+:host {
+  display: block;
+  padding: 1rem 1.25rem 1.5rem;
+}
+/* Padding and border inside the width, so fields never spill into the next column. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+.back-link {
+  background: none;
+  border: 0;
+  color: #574026;
+  cursor: pointer;
+  font: inherit;
+  min-height: 44px;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+/* Each section is a soft card with a numbered heading. */
+fieldset {
+  background: #fbf7ef;
+  border: 1px solid #eadfca;
+  border-radius: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0.75rem 0;
+  min-width: 0;
+  padding: 0.85rem 0.9rem 0.95rem;
+}
+legend {
+  align-items: center;
+  display: flex;
+  float: left;
+  font-size: 0.95rem;
+  font-weight: 700;
+  gap: 0.45rem;
+  margin-bottom: 0.15rem;
+  padding: 0;
+  width: 100%;
+}
+.step-number {
+  align-items: center;
+  background: #344e35;
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  font-family: system-ui, sans-serif;
+  font-size: 0.72rem;
+  height: 1.3rem;
+  justify-content: center;
+  width: 1.3rem;
+}
+label {
+  color: #7a6548;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  gap: 0.25rem;
+  letter-spacing: 0.06em;
+  min-width: 0;
+  text-transform: uppercase;
+}
+.optional {
+  color: #a8957a;
+  font-weight: 400;
+  text-transform: none;
+}
+input,
+select {
+  background: #fffdf9;
+  border: 1px solid #dccdb2;
+  border-radius: 0.45rem;
+  color: #34281e;
+  font-family: system-ui, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 400;
+  height: 38px;
+  letter-spacing: normal;
+  padding: 0 0.65rem;
+  text-transform: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  width: 100%;
+}
+input::placeholder {
+  color: #b9ab94;
+}
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%237a6548' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-position: right 0.65rem center;
+  background-repeat: no-repeat;
+  background-size: 0.7rem;
+  padding-right: 1.8rem;
+}
+input:hover,
+select:hover {
+  border-color: #c9b896;
+}
+input:focus,
+select:focus {
+  border-color: #b8863b;
+  box-shadow: 0 0 0 3px #b8863b33;
+  outline: none;
+}
+button:focus-visible {
+  outline: 3px solid #75501e;
+  outline-offset: 2px;
+}
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border-color: #a5352a;
+}
+input.ng-invalid.ng-touched:focus,
+select.ng-invalid.ng-touched:focus {
+  box-shadow: 0 0 0 3px #a5352a26;
+}
+.field-error {
+  color: #a5352a;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.field-row {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.contact-row {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+/* City is usually short; department names can be long. */
+.place-row {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+}
+/* Phones zoom into fields with text under 16px: keep it readable there. */
+@media (pointer: coarse) {
+  input,
+  select {
+    font-size: 16px;
+    height: 42px;
+  }
+}
+.checkout-summary {
+  border-top: 1px solid #dccdb2;
+  margin: 0 0 1rem;
+  padding-top: 0.75rem;
+}
+.checkout-summary div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+}
+dt,
+dd {
+  margin: 0;
+}
+.summary-total {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.pay-button {
+  background: #344e35;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  min-height: 50px;
+  transition: background 0.2s ease;
+  width: 100%;
+}
+.pay-button:hover:not(:disabled) {
+  background: #223c24;
+}
+.pay-button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+.checkout-error {
+  background: #f6dcd6;
+  border-radius: 0.5rem;
+  color: #6e2219;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.8rem;
+}
+.checkout-hint {
+  color: #66543b;
+  font-size: 0.8rem;
+  margin: 0.75rem 0 0;
+  text-align: center;
+}
+.checkout-badge {
+  margin-top: 0.75rem;
+}
+@media (max-width: 420px) {
+  .field-row,
+  .contact-row,
+  .place-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

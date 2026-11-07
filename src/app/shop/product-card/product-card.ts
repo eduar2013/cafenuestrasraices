@@ -3,6 +3,13 @@ import { Component, OnDestroy, computed, input, output, signal } from '@angular/
 import { ProductVariant, ShopProduct } from '../catalog';
 
 const ADDED_FEEDBACK_DURATION = 1500;
+/** Most units of one presentation that can be added at once. */
+export const MAX_QUANTITY = 20;
+
+export interface ProductAddition {
+  readonly variant: ProductVariant;
+  readonly quantity: number;
+}
 
 @Component({
   selector: 'app-product-card',
@@ -12,8 +19,8 @@ const ADDED_FEEDBACK_DURATION = 1500;
 })
 export class ProductCardComponent implements OnDestroy {
   readonly product = input.required<ShopProduct>();
-  /** The visitor added the selected presentation; the shop updates the cart. */
-  readonly added = output<ProductVariant>();
+  /** The visitor added units of the selected presentation; the shop updates the cart. */
+  readonly added = output<ProductAddition>();
   /** The visitor wants to see this photo enlarged. */
   readonly zoom = output<string>();
 
@@ -21,6 +28,9 @@ export class ProductCardComponent implements OnDestroy {
   readonly flipped = signal(false);
   /** The add button briefly shows "Añadido". */
   readonly justAdded = signal(false);
+  /** Units to add with the button. */
+  readonly quantity = signal(1);
+  readonly maxQuantity = MAX_QUANTITY;
 
   // `undefined` means "nothing chosen yet": the default variant applies.
   private readonly chosenImage = signal<string | undefined>(undefined);
@@ -105,6 +115,17 @@ export class ProductCardComponent implements OnDestroy {
     );
   }
 
+  changeQuantity(delta: number): void {
+    this.quantity.update((quantity) => clampQuantity(quantity + delta));
+  }
+
+  /** Typed values are kept between 1 and the maximum, and written back to the field. */
+  setQuantity(input: HTMLInputElement): void {
+    const quantity = clampQuantity(input.valueAsNumber);
+    this.quantity.set(quantity);
+    input.value = `${quantity}`;
+  }
+
   flip(): void {
     this.flipped.update((flipped) => !flipped);
   }
@@ -114,7 +135,8 @@ export class ProductCardComponent implements OnDestroy {
     if (!variant.available) {
       return;
     }
-    this.added.emit(variant);
+    this.added.emit({ variant, quantity: this.quantity() });
+    this.quantity.set(1);
     this.justAdded.set(true);
     clearTimeout(this.addedTimer);
     this.addedTimer = setTimeout(() => this.justAdded.set(false), ADDED_FEEDBACK_DURATION);
@@ -128,4 +150,8 @@ export class ProductCardComponent implements OnDestroy {
     this.chosenPresentation.set(variant.presentation);
     this.chosenWeight.set(variant.weight);
   }
+}
+
+function clampQuantity(quantity: number): number {
+  return Number.isFinite(quantity) ? Math.min(MAX_QUANTITY, Math.max(1, Math.round(quantity))) : 1;
 }

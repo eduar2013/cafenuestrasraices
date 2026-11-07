@@ -9,10 +9,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ContactBarComponent } from '../contact-bar/contact-bar';
 import { CartDrawerComponent } from './cart-drawer/cart-drawer';
 import { CartService } from './cart';
-import { CatalogService, ProductVariant, ShopProduct } from './catalog';
-import { ProductCardComponent } from './product-card/product-card';
+import { CatalogService, ShopProduct } from './catalog';
+import { PaymentBadgeComponent } from './payment-badge/payment-badge';
+import { ProductAddition, ProductCardComponent } from './product-card/product-card';
 
 const TOAST_DURATION = 4000;
 const MAX_ZOOM = 4;
@@ -29,7 +31,14 @@ const NO_ZOOM: ImageZoom = { scale: 1, x: 0, y: 0 };
 
 @Component({
   selector: 'app-shop',
-  imports: [CartDrawerComponent, DecimalPipe, ProductCardComponent, RouterLink],
+  imports: [
+    CartDrawerComponent,
+    ContactBarComponent,
+    DecimalPipe,
+    PaymentBadgeComponent,
+    ProductCardComponent,
+    RouterLink,
+  ],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
@@ -138,10 +147,11 @@ export class ShopComponent implements OnDestroy {
     }
   }
 
-  onAdded(product: ShopProduct, variant: ProductVariant): void {
-    this.cart.add(product, variant);
+  onAdded(product: ShopProduct, { variant, quantity }: ProductAddition): void {
+    this.cart.add(product, variant, quantity);
+    const units = quantity > 1 ? `${quantity} × ` : '';
     this.showMessage(
-      `${product.name}, ${variant.label}, añadido al carrito. ${this.cart.count()} unidades en total.`,
+      `${units}${product.name}, ${variant.label}, añadido al carrito. ${this.cart.count()} unidades en total.`,
     );
   }
 

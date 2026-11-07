@@ -44,13 +44,13 @@ export class CartService {
     effect(() => saveEntries(this.state()));
   }
 
-  add(_product: ShopProduct, variant: ProductVariant): void {
+  add(_product: ShopProduct, variant: ProductVariant, quantity = 1): void {
     this.state.update((entries) =>
       entries.some((entry) => entry.id === variant.id)
         ? entries.map((entry) =>
-            entry.id === variant.id ? { ...entry, quantity: entry.quantity + 1 } : entry,
+            entry.id === variant.id ? { ...entry, quantity: entry.quantity + quantity } : entry,
           )
-        : [...entries, { id: variant.id, quantity: 1 }],
+        : [...entries, { id: variant.id, quantity }],
     );
   }
 

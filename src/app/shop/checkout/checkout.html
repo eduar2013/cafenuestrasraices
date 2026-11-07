@@ -1,0 +1,154 @@
+@if (step() === 'result') {
+  <app-payment-result
+    [status]="outcome()"
+    [order]="order()"
+    (continue)="finished.emit()"
+    (retry)="retry()"
+  />
+} @else {
+  <form class="checkout-form" [formGroup]="form" (ngSubmit)="pay()" novalidate>
+    <button type="button" class="back-link" (click)="back.emit()">← Volver al carrito</button>
+
+    <fieldset [disabled]="step() !== 'form' && step() !== 'paying'">
+      <legend><span class="step-number" aria-hidden="true">1</span> Datos de contacto</legend>
+      <label>
+        Nombre completo
+        <input formControlName="full_name" autocomplete="name" placeholder="Ana Gómez" />
+        @if (showError('full_name')) {
+          <span class="field-error">Escribe tu nombre completo.</span>
+        }
+      </label>
+      <div class="field-row contact-row">
+        <label>
+          Correo electrónico
+          <input
+            formControlName="email"
+            type="email"
+            autocomplete="email"
+            placeholder="tucorreo@ejemplo.com"
+          />
+          @if (showError('email')) {
+            <span class="field-error">Escribe un correo válido.</span>
+          }
+        </label>
+        <label>
+          Celular
+          <input
+            formControlName="phone"
+            type="tel"
+            inputmode="numeric"
+            autocomplete="tel-national"
+            placeholder="3001234567"
+          />
+          @if (showError('phone')) {
+            <span class="field-error">10 dígitos, sin espacios.</span>
+          }
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset [disabled]="step() !== 'form' && step() !== 'paying'">
+      <legend><span class="step-number" aria-hidden="true">2</span> Dirección de envío</legend>
+      <label>
+        Dirección
+        <input
+          formControlName="address"
+          autocomplete="address-line1"
+          placeholder="Calle 10 # 20-30"
+        />
+        @if (showError('address')) {
+          <span class="field-error">Escribe la dirección de entrega.</span>
+        }
+      </label>
+      <label>
+        Apartamento, oficina o indicaciones <span class="optional">(opcional)</span>
+        <input
+          formControlName="address_detail"
+          autocomplete="address-line2"
+          placeholder="Apto 301, torre B"
+        />
+      </label>
+      <div class="field-row place-row">
+        <label>
+          Ciudad o municipio
+          <input formControlName="city" autocomplete="address-level2" placeholder="Medellín" />
+          @if (showError('city')) {
+            <span class="field-error">Escribe la ciudad.</span>
+          }
+        </label>
+        <label>
+          Departamento
+          <select formControlName="department" autocomplete="address-level1">
+            <option value="" disabled>Selecciona…</option>
+            @for (department of departments; track department) {
+              <option [value]="department">{{ department }}</option>
+            }
+          </select>
+          @if (showError('department')) {
+            <span class="field-error">Selecciona el departamento.</span>
+          }
+        </label>
+      </div>
+    </fieldset>
+
+    <dl class="checkout-summary">
+      <div>
+        <dt>Subtotal</dt>
+        <dd>{{ cart.total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</dd>
+      </div>
+      <div>
+        <dt>Envío</dt>
+        <dd>
+          @if (cart.shipping() === 0) {
+            Gratis
+          } @else {
+            {{ cart.shipping() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+          }
+        </dd>
+      </div>
+      <div class="summary-total">
+        <dt>Total</dt>
+        <dd>{{ cart.grandTotal() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
+      </div>
+    </dl>
+
+    @if (error()) {
+      <p class="checkout-error" role="alert">{{ error() }}</p>
+    }
+
+    <button
+      type="submit"
+      class="pay-button"
+      [disabled]="
+        step() === 'creating' ||
+        step() === 'redirecting' ||
+        step() === 'confirming' ||
+        cart.items().length === 0
+      "
+    >
+      @switch (step()) {
+        @case ('creating') {
+          Preparando tu pedido…
+        }
+        @case ('redirecting') {
+          Te llevamos a Wompi…
+        }
+        @case ('confirming') {
+          Confirmando tu pago…
+        }
+        @case ('paying') {
+          Volver a abrir el pago
+        }
+        @default {
+          Pagar con Wompi
+        }
+      }
+    </button>
+    @if (step() === 'paying') {
+      <p class="checkout-hint" role="status">
+        Completa el pago en la ventana de Wompi. Si la cerraste, puedes volver a abrirla.
+      </p>
+    }
+    <app-payment-badge class="checkout-badge" />
+  </form>
+}

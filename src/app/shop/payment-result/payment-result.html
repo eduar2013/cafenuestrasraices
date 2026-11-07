@@ -1,0 +1,38 @@
+<div class="payment-result" [class]="'is-' + status().toLowerCase()" role="status">
+  @switch (status()) {
+    @case ('APPROVED') {
+      <p class="result-icon" aria-hidden="true">✓</p>
+      <h3>¡Pago aprobado!</h3>
+      <p>Gracias por tu compra. Te enviaremos la confirmación al correo.</p>
+    }
+    @case ('PENDING') {
+      <p class="result-icon" aria-hidden="true">…</p>
+      <h3>Tu pago está en proceso</h3>
+      <p>
+        Algunos medios, como PSE, tardan unos minutos. Te avisaremos por correo cuando se confirme.
+      </p>
+    }
+    @default {
+      <p class="result-icon" aria-hidden="true">✕</p>
+      <h3>El pago no fue aprobado</h3>
+      <p>No se hizo ningún cobro. Puedes intentarlo de nuevo con otro medio de pago.</p>
+    }
+  }
+  @if (order(); as order) {
+    <dl>
+      <div>
+        <dt>Referencia</dt>
+        <dd>{{ order.reference }}</dd>
+      </div>
+      <div>
+        <dt>Total</dt>
+        <dd>{{ order.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</dd>
+      </div>
+    </dl>
+  }
+  @if (orderExists()) {
+    <button type="button" class="result-button" (click)="continue.emit()">Seguir comprando</button>
+  } @else {
+    <button type="button" class="result-button" (click)="retry.emit()">Intentar de nuevo</button>
+  }
+</div>

@@ -1,0 +1,70 @@
+:host {
+  display: block;
+}
+.payment-result {
+  padding: 1.5rem 0;
+  text-align: center;
+}
+.result-icon {
+  align-items: center;
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  font-size: 1.6rem;
+  height: 3.5rem;
+  justify-content: center;
+  margin: 0;
+  width: 3.5rem;
+}
+.is-approved .result-icon {
+  background: #5d7f3c;
+}
+.is-pending .result-icon {
+  background: #b8863b;
+}
+.is-declined .result-icon,
+.is-voided .result-icon,
+.is-error .result-icon {
+  background: #a5352a;
+}
+h3 {
+  font-size: 1.3rem;
+  margin: 0.75rem 0 0.25rem;
+}
+p {
+  line-height: 1.6;
+}
+dl {
+  border-top: 1px solid #dccdb2;
+  margin: 1rem 0;
+  padding-top: 0.75rem;
+  text-align: left;
+}
+dl div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+}
+dt,
+dd {
+  margin: 0;
+}
+.result-button {
+  background: #344e35;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  min-height: 50px;
+  transition: background 0.2s ease;
+  width: 100%;
+}
+.result-button:hover {
+  background: #223c24;
+}
+.result-button:focus-visible {
+  outline: 3px solid #75501e;
+  outline-offset: 2px;
+}
