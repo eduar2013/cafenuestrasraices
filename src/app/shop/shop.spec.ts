@@ -92,6 +92,10 @@ describe('ShopComponent', () => {
     await fixture.whenStable();
     element.querySelector<HTMLButtonElement>('.clear-button')!.click();
     await fixture.whenStable();
+    // Emptying asks first: nothing is removed until it is confirmed.
+    expect(cart.items()).toHaveLength(2);
+    element.querySelector<HTMLButtonElement>('.confirm-clear-button')!.click();
+    await fixture.whenStable();
     expect(cart.items()).toHaveLength(0);
     expect(cart.total()).toBe(0);
     expect(element.querySelector('.empty-cart')).not.toBeNull();

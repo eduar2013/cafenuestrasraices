@@ -1,43 +1,40 @@
+/* Shared header: the painted shop sign over the door. One row at every width. */
 :host {
   display: block;
   position: sticky;
   top: 0;
   z-index: 1200;
 }
-
 .quick-contact-bar {
   align-items: center;
-  background-color: #000000;
-  border-bottom: 1px solid #000000;
-  border-top: 1px solid #000000;
+  background: var(--wall);
+  border-bottom: var(--filete) solid var(--ink);
+  color: var(--ink);
   display: flex;
-  justify-content: center;
+  font-family: var(--font-text);
+  gap: 16px;
+  justify-content: space-between;
   margin: 0;
-  padding: 0.6rem 1.4rem;
-  position: relative;
+  min-height: 64px;
+  padding: 8px var(--gut);
 }
-
 .quick-contact-group {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  left: 1.4rem;
-  position: absolute;
+  min-width: 0;
 }
-
-/* Wordmark in the style of the round sign: serif capitals in gold. */
 .brand {
   align-items: center;
-  color: #e7c778;
+  color: var(--ink);
   display: inline-flex;
-  gap: 0.65rem;
+  gap: 10px;
+  min-width: 0;
   text-decoration: none;
 }
 .brand-mark {
   flex: none;
-  height: 38px;
-  transition: transform 0.4s ease;
-  width: 38px;
+  height: 40px;
+  transition: transform 0.4s var(--ease);
+  width: 40px;
 }
 .brand:hover .brand-mark {
   transform: rotate(-8deg);
@@ -45,92 +42,54 @@
 .brand-text {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
   line-height: 1;
+  min-width: 0;
 }
+/* "Café" is part of the logo lockup, set small above the painted name. */
 .brand-eyebrow {
-  align-items: center;
-  color: #c49b50;
-  display: flex;
-  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
-  font-size: 0.62rem;
-  font-weight: 600;
-  gap: 0.5rem;
-  letter-spacing: 0.45em;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-}
-.brand-eyebrow::after {
-  background: linear-gradient(90deg, #c49b50, transparent);
-  content: '';
-  flex: 1;
-  height: 1px;
 }
 .brand-name {
-  background: linear-gradient(180deg, #fbe3a1 0%, #e7c778 45%, #c99632 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  font-size: 1.22rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--font-sign);
+  font-size: 1.375rem;
+  line-height: 1.1;
   white-space: nowrap;
 }
 .brand:focus-visible {
-  border-radius: 0.4rem;
-  outline: 2px solid #f7d27b;
+  border-radius: 4px;
+  outline: 3px solid var(--action);
   outline-offset: 4px;
 }
-
 .quick-actions {
   align-items: center;
   display: flex;
-  gap: 1rem;
-  margin-left: auto;
+  flex: none;
+  gap: 12px;
 }
-
 .shop-cta {
   align-items: center;
-  background: linear-gradient(135deg, #f7d27b, #e2b72f);
-  border-radius: 999px;
-  box-shadow: 0 0 0 0 #f2c35c80;
-  color: #211b16;
+  background: var(--action);
+  border-radius: var(--r);
+  color: var(--on-action);
   display: inline-flex;
-  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
-  font-size: 0.9rem;
   font-weight: 700;
-  gap: 0.45rem;
-  letter-spacing: 0.02em;
-  overflow: hidden;
-  padding: 0.4rem 1rem;
-  position: relative;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
   text-decoration: none;
-  transition:
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  transition: background-color var(--m-in) var(--ease);
 }
-
-/* Brillo que recorre el botón para llamar la atención. */
-.shop-cta::after {
-  animation: shop-cta-shine 4s ease-in-out infinite;
-  background: linear-gradient(110deg, transparent 30%, #ffffff99 50%, transparent 70%);
-  content: '';
-  inset: 0;
-  position: absolute;
-  transform: translateX(-120%);
-}
-
 .shop-cta:hover {
-  box-shadow: 0 0 0 4px #f2c35c40;
-  transform: translateY(-1px);
+  background: var(--action-deep);
 }
-
 .shop-cta:focus-visible {
-  outline: 3px solid #f7d27b;
+  outline: 3px solid var(--action);
   outline-offset: 3px;
 }
-
 .shop-cta svg {
   fill: none;
   height: 18px;
@@ -139,85 +98,81 @@
   stroke-width: 1.8;
   width: 18px;
 }
-
-.shop-cta-arrow {
-  transition: transform 0.2s ease;
-}
-
-.shop-cta:hover .shop-cta-arrow {
-  transform: translateX(3px);
-}
-
-@keyframes shop-cta-shine {
-  0%,
-  60% {
-    transform: translateX(-120%);
-  }
-  100% {
-    transform: translateX(120%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shop-cta,
-  .shop-cta-arrow {
-    transition: none;
-  }
-
-  .shop-cta::after {
-    animation: none;
-    display: none;
-  }
-
-  .brand-mark {
-    transition: none;
-  }
-}
-
 .quick-social-group {
+  align-items: center;
   display: inline-flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
+  gap: 6px;
 }
-
 .social-link {
   align-items: center;
-  background-color: #f2c35c;
+  border: var(--filete) solid var(--ink);
   border-radius: 50%;
-  color: #1f2a30;
+  color: var(--ink);
   display: inline-flex;
-  height: 32px;
+  height: 40px;
   justify-content: center;
   text-decoration: none;
-  width: 32px;
+  transition: background-color var(--m-in) var(--ease);
+  width: 40px;
 }
-
 .social-link:hover {
-  background-color: #d89f2f;
+  background: var(--wall-shade);
 }
-
+.social-link:focus-visible {
+  outline: 3px solid var(--action);
+  outline-offset: 2px;
+}
 .social-link svg {
   fill: currentColor;
-  height: 17px;
-  width: 17px;
+  height: 18px;
+  width: 18px;
 }
-
-@media (max-width: 900px) {
+@media (max-width: 767px) {
   .quick-contact-bar {
-    flex-direction: column;
-    gap: 0.7rem;
-    padding: 0.65rem 1rem;
+    gap: 8px;
+    min-height: 56px;
+    padding: 6px 12px;
   }
-
-  .quick-contact-group {
-    justify-content: center;
-    left: auto;
-    position: static;
+  .brand-mark {
+    height: 34px;
+    width: 34px;
   }
-
-  .quick-actions {
-    flex-wrap: wrap;
+  .brand-name {
+    font-size: 1.125rem;
+  }
+  /* On phones Facebook and Instagram live in the footer; WhatsApp, the shop and the menu stay. */
+  .social-link:not([aria-label='WhatsApp']) {
+    display: none;
+  }
+  .shop-cta {
+    padding: 0 12px;
+  }
+}
+/* Narrow phones: the shop button keeps its icon; its name stays for screen readers. */
+@media (max-width: 459px) {
+  .shop-cta {
     justify-content: center;
-    margin-left: 0;
+    padding: 0;
+    width: 44px;
+  }
+  .shop-cta span {
+    clip: rect(0 0 0 0);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+}
+@media (max-width: 340px) {
+  .brand-eyebrow {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark,
+  .shop-cta,
+  .social-link {
+    transition: none;
   }
 }

@@ -1,8 +1,6 @@
-.top-banner {
-  display: flex;
-  width: 100%;
+:host {
+  display: block;
 }
-
-app-cafe-info {
-  width: 100%;
+.top-banner {
+  display: block;
 }

@@ -1,46 +1,45 @@
-<article class="product-card" [class.is-flipped]="flipped()">
+<article class="product-card" [class.is-out]="!product().available">
   <div class="product-media">
-    <div class="product-stage">
-      @if (currentImage(); as image) {
-        @if (!isBroken(image)) {
-          <button
-            type="button"
-            class="product-zoom"
-            [attr.aria-label]="'Ampliar foto de ' + product().name"
-            (click)="zoom.emit(image)"
-          >
-            <img
-              class="product-photo"
-              [src]="image"
-              [alt]="product().name"
-              loading="lazy"
-              (error)="imageFailed(image)"
-            />
-            <span class="zoom-hint" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18">
-                <path
-                  d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm4.7 11.2L20 20M10.5 7.5v6M7.5 10.5h6"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </span>
-          </button>
-        } @else {
-          <div class="product-placeholder">
-            <img src="favicon.png" alt="" />
-            <span>Foto próximamente</span>
-          </div>
-        }
+    @if (currentImage(); as image) {
+      @if (!isBroken(image)) {
+        <button
+          type="button"
+          class="product-zoom"
+          [attr.aria-label]="'Ampliar foto de ' + product().name"
+          (click)="zoom.emit(image)"
+        >
+          <img
+            class="product-photo"
+            [src]="image"
+            [alt]="product().name"
+            width="600"
+            height="450"
+            loading="lazy"
+            [style.object-position]="product().imagePosition ?? 'center'"
+            (error)="imageFailed(image)"
+          />
+          <span class="zoom-hint" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path
+                d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm4.7 11.2L20 20M10.5 7.5v6M7.5 10.5h6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </button>
       } @else {
         <div class="product-placeholder">
-          <img src="favicon.png" alt="" />
-          <span>Foto próximamente</span>
+          <img src="images/cafe/logo-tienda.webp" alt="" width="120" height="120" />
         </div>
       }
-    </div>
+    } @else {
+      <div class="product-placeholder">
+        <img src="images/cafe/logo-tienda.webp" alt="" width="120" height="120" />
+      </div>
+    }
     @if (product().images.length > 1) {
       <div class="product-thumbnails" role="group" [attr.aria-label]="'Fotos de ' + product().name">
         @for (image of product().images; track image; let index = $index) {
@@ -53,9 +52,7 @@
             (click)="selectImage(image)"
           >
             @if (!isBroken(image)) {
-              <img [src]="image" alt="" loading="lazy" (error)="imageFailed(image)" />
-            } @else {
-              <span aria-hidden="true">×</span>
+              <img [src]="image" alt="" width="40" height="40" loading="lazy" (error)="imageFailed(image)" />
             }
           </button>
         }
@@ -65,68 +62,66 @@
       <span class="product-badge">{{ product().badge }}</span>
     }
   </div>
+
   <div class="product-info">
     <div class="product-title">
-      <h3>{{ product().name }}</h3>
-      @if (hasStory()) {
-        <!-- One button in a fixed place turns the card both ways. -->
-        <button
-          type="button"
-          class="flip-button"
-          [attr.aria-label]="
-            flipped()
-              ? 'Volver a la información de ' + product().name
-              : 'Ver descripción y notas de ' + product().name
-          "
-          (click)="flip()"
-        >
-          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-            <path
-              d="M4 12a8 8 0 0 1 13.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 0 1-13.7 5.6L4 15.3M4 20v-4.7h4.7"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          {{ flipped() ? 'Volver' : 'Ver más' }}
-        </button>
+      <h3 tabindex="-1">{{ product().name }}</h3>
+      @if (product().producer) {
+        <p class="product-producer">{{ product().producer }}</p>
       }
     </div>
-    <div class="product-flip">
-      <div class="product-face product-front" [attr.inert]="flipped() ? '' : null">
-        @if (product().properties.length > 0) {
-          <dl class="product-properties">
-            @for (property of product().properties; track property.label) {
-              <div>
-                <dt>{{ property.label }}</dt>
-                <dd>{{ property.value }}</dd>
-              </div>
-            }
-          </dl>
+    @if (originLine()) {
+      <p class="product-origin">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path
+            d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+          <circle cx="12" cy="10" r="2.2" fill="currentColor" />
+        </svg>
+        <span><span class="visually-hidden">Origen: </span>{{ originLine() }}</span>
+      </p>
+    }
+    @if (product().process || leadNotes().length) {
+      <dl class="product-lines">
+        @if (product().process) {
+          <div>
+            <dt>Proceso</dt>
+            <dd>{{ product().process }}</dd>
+          </div>
         }
+        @if (leadNotes().length) {
+          <div>
+            <dt>Notas</dt>
+            <dd>{{ leadNotes().join(', ') }}</dd>
+          </div>
+        }
+      </dl>
+    }
+
+    @if (presentationOptions().length > 0 || weightOptions().length > 0) {
+      <div class="variant-row">
         @if (presentationOptions().length > 0) {
           <div
             class="variant-picker"
             role="group"
             [attr.aria-label]="'Presentación de ' + product().name"
           >
-            <span>Presentación</span>
-            <div class="variant-options">
-              @for (option of presentationOptions(); track option) {
-                <label class="variant-radio-option">
-                  <input
-                    type="radio"
-                    [name]="'presentation-' + product().id"
-                    [value]="option"
-                    [checked]="presentation() === option"
-                    (change)="selectPresentation(option)"
-                  />
-                  <span>{{ option }}</span>
-                </label>
-              }
-            </div>
+            @for (option of presentationOptions(); track option) {
+              <label class="variant-option">
+                <input
+                  type="radio"
+                  [name]="'presentation-' + product().id"
+                  [value]="option"
+                  [checked]="presentation() === option"
+                  (change)="selectPresentation(option)"
+                />
+                <span>{{ option }}</span>
+              </label>
+            }
           </div>
         }
         @if (weightOptions().length > 0) {
@@ -135,86 +130,63 @@
             role="group"
             [attr.aria-label]="'Gramaje de ' + product().name"
           >
-            <span>Gramaje</span>
-            <div class="variant-options">
-              @for (option of weightOptions(); track option) {
-                <label class="variant-radio-option">
-                  <input
-                    type="radio"
-                    [name]="'weight-' + product().id"
-                    [value]="option"
-                    [checked]="weight() === option"
-                    (change)="selectWeight(option)"
-                  />
-                  <span>{{ option }} g</span>
-                </label>
-              }
-            </div>
+            @for (option of weightOptions(); track option) {
+              <label class="variant-option">
+                <input
+                  type="radio"
+                  [name]="'weight-' + product().id"
+                  [value]="option"
+                  [checked]="weight() === option"
+                  (change)="selectWeight(option)"
+                />
+                <span>{{ option }} g</span>
+              </label>
+            }
           </div>
         }
-        @if (!presentationOptions().length && !weightOptions().length) {
-          <p class="variant-single">Presentación: {{ variant().label }}</p>
-        }
       </div>
-      @if (hasStory()) {
-        <div
-          class="product-face product-back"
-          [attr.inert]="flipped() ? null : ''"
-          [attr.aria-hidden]="!flipped()"
-        >
-          @if (product().description) {
-            <p class="back-description">{{ product().description }}</p>
-          }
-          @if (product().notes?.length) {
-            <h4>Notas en taza</h4>
-            <ul class="back-notes">
-              @for (note of product().notes; track $index) {
-                <li>{{ note }}</li>
-              }
-            </ul>
-          }
-        </div>
-      }
-    </div>
+    } @else {
+      <p class="variant-single">{{ variant().label }}</p>
+    }
+
     <div class="product-footer">
-      <div class="price-row">
-        <p class="product-price">
-          {{ variant().price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
-          <span>COP</span>
-        </p>
-        <div
-          class="quantity-picker"
-          role="group"
-          [attr.aria-label]="'Cantidad de ' + product().name"
+      <p class="product-price">
+        {{ variant().price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+        <span>COP</span>
+      </p>
+      <div class="quantity-picker" role="group" [attr.aria-label]="'Cantidad de ' + product().name">
+        <button
+          type="button"
+          aria-label="Quitar una unidad"
+          [disabled]="!variant().available || quantity() <= 1"
+          (click)="changeQuantity(-1)"
         >
-          <button
-            type="button"
-            aria-label="Quitar una unidad"
-            [disabled]="!variant().available || quantity() <= 1"
-            (click)="changeQuantity(-1)"
-          >
-            −
-          </button>
-          <input
-            #quantityInput
-            type="number"
-            inputmode="numeric"
-            min="1"
-            [max]="maxQuantity"
-            aria-label="Cantidad"
-            [value]="quantity()"
-            [disabled]="!variant().available"
-            (change)="setQuantity(quantityInput)"
-          />
-          <button
-            type="button"
-            aria-label="Agregar una unidad"
-            [disabled]="!variant().available || quantity() >= maxQuantity"
-            (click)="changeQuantity(1)"
-          >
-            +
-          </button>
-        </div>
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <label class="visually-hidden" [for]="'quantity-' + product().id">Cantidad</label>
+        <input
+          #quantityInput
+          type="number"
+          inputmode="numeric"
+          min="1"
+          [id]="'quantity-' + product().id"
+          [max]="maxQuantity"
+          [value]="quantity()"
+          [disabled]="!variant().available"
+          (change)="setQuantity(quantityInput)"
+        />
+        <button
+          type="button"
+          aria-label="Agregar una unidad"
+          [disabled]="!variant().available || quantity() >= maxQuantity"
+          (click)="changeQuantity(1)"
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M6 12h12M12 6v12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+          </svg>
+        </button>
       </div>
       <button
         class="primary-button add-button"
@@ -231,39 +203,45 @@
               d="m5 12.5 4.5 4.5L19 7.5"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
+              stroke-width="2.2"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
           </svg>
           Añadido
         } @else {
-          <!-- Shopping cart holding one large coffee bean. -->
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-            <g
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M2.5 4h2.2l2.4 10.3a1 1 0 0 0 1 .7h9a1 1 0 0 0 1-.8L20.5 7h-2" />
-              <path d="M7.4 7H5.6" />
-            </g>
-            <g fill="currentColor">
-              <g transform="translate(13.1 9.6) rotate(-12) scale(2.25)">
-                <path
-                  d="M-2.1 -.15A2.1 1.4 0 0 1 2.1 -.15C1.2 -.75.6 -.65 0 -.15S-1.2.45-2.1 -.15Z"
-                />
-                <path d="M2.1 .2A2.1 1.4 0 0 1 -2.1 .2C-1.2.8-.6.7 0 .2S1.2-.4 2.1 .2Z" />
-              </g>
-              <circle cx="9.5" cy="19" r="1.5" />
-              <circle cx="16.5" cy="19" r="1.5" />
-            </g>
-          </svg>
           Añadir al carrito
         }
       </button>
     </div>
+
+    @if (hasSheet()) {
+      <details class="product-sheet">
+        <summary>
+          {{ product().isCoffee ? 'Ficha del café' : 'Detalles' }}
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </summary>
+        @if (sheet().length > 0) {
+          <dl class="sheet-lines">
+            @for (property of sheet(); track property.label) {
+              <div>
+                <dt>{{ property.label }}</dt>
+                <dd>{{ property.value }}</dd>
+              </div>
+            }
+          </dl>
+        }
+        @if ((product().notes?.length ?? 0) > 3) {
+          <p class="sheet-notes">
+            <strong>Todas las notas:</strong> {{ product().notes!.join(', ') }}
+          </p>
+        }
+        @if (product().description) {
+          <p class="sheet-description">{{ product().description }}</p>
+        }
+      </details>
+    }
   </div>
 </article>

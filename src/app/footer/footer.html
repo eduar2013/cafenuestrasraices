@@ -8,24 +8,29 @@
     <nav aria-labelledby="footer-links-title">
       <h2 id="footer-links-title">Enlaces de interés</h2>
       <ul>
-        <li><a routerLink="/" fragment="historia">Nuestra historia</a></li>
-        <li><a routerLink="/" fragment="origenes">Orígenes del café</a></li>
-        <li><a routerLink="/" fragment="productos">Nuestros productos</a></li>
-        <li><a routerLink="/tienda">Tienda</a></li>
         <li><a routerLink="/" fragment="ubicacion">Ubicación y horarios</a></li>
+        <li><a routerLink="/" fragment="origenes">Orígenes del café</a></li>
+        <li><a routerLink="/" fragment="historia">Nuestra historia</a></li>
+        <li><a routerLink="/" fragment="productos">Lo que ofrecemos</a></li>
+        <li><a routerLink="/tienda">Tienda</a></li>
       </ul>
     </nav>
 
     <nav aria-labelledby="footer-social-title">
-      <h2 id="footer-social-title">Síguenos</h2>
+      <h2 id="footer-social-title">Escríbenos y síguenos</h2>
       <p class="external-hint">Los enlaces externos se abren en una nueva pestaña.</p>
       <ul>
+        <li>
+          <a href="https://wa.me/573207803402" target="_blank" rel="noopener noreferrer"
+            >WhatsApp 320 780 3402 <svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M10 8h6v6" /></svg></a
+          >
+        </li>
         <li>
           <a
             href="https://www.instagram.com/cafenuestrasraices"
             target="_blank"
             rel="noopener noreferrer"
-            >Instagram <span aria-hidden="true">↗</span></a
+            >Instagram <svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M10 8h6v6" /></svg></a
           >
         </li>
         <li>
@@ -33,7 +38,7 @@
             href="https://www.facebook.com/cafenuestrasraices"
             target="_blank"
             rel="noopener noreferrer"
-            >Facebook <span aria-hidden="true">↗</span></a
+            >Facebook <svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M10 8h6v6" /></svg></a
           >
         </li>
       </ul>
@@ -44,17 +49,18 @@
       <p>Calle 72 Sur #46 A 35<br />Sabaneta, Antioquia</p>
       <p>Lunes a domingo<br />8:00 a.m. – 9:00 p.m.</p>
       <a
+        class="footer-cta"
         href="https://www.google.com/maps/search/?api=1&query=Calle+72+Sur+%2346A-35,+Sabaneta"
         target="_blank"
         rel="noopener noreferrer"
       >
-        Cómo llegar <span class="external-hint">(nueva pestaña)</span>
+        Cómo llegar <span class="visually-hidden">(nueva pestaña)</span>
       </a>
     </div>
   </div>
 
   <div class="footer-bottom">
     <p>© {{ year }} Café Nuestras Raíces.</p>
-    <a routerLink="/" fragment="inicio">Volver al inicio <span aria-hidden="true">↑</span></a>
+    <a routerLink="/" fragment="inicio">Volver al inicio</a>
   </div>
 </footer>

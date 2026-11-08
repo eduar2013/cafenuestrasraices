@@ -78,38 +78,32 @@ describe('ProductCardComponent', () => {
     expect(zoomed).toEqual(['images/productos/labralma-lifestyle.jpg']);
   });
 
-  it('should flip coffee cards to show the description and tasting notes', async () => {
-    const { fixture, element } = await render(byName('LabrAlma'));
-    const card = element.querySelector('.product-card')!;
-    const back = element.querySelector('.product-back')!;
-    const button = element.querySelector<HTMLButtonElement>('.product-title .flip-button')!;
+  it('should show origin, process and three tasting notes on the card itself', async () => {
+    const { element } = await render(byName('LabrAlma'));
+    const lines = element.querySelector('.product-lines')!.textContent!;
 
-    expect(button.textContent).toContain('Ver más');
-    expect(back.hasAttribute('inert')).toBe(true);
-    expect(
-      Array.from(back.querySelectorAll('.back-notes li')).map((note) => note.textContent),
-    ).toEqual(['Chocolate', 'Cítricos', 'Panela', 'Frutos rojos']);
-
-    button.click();
-    await fixture.whenStable();
-    expect(card.classList).toContain('is-flipped');
-    expect(button.textContent).toContain('Volver');
-    expect(back.hasAttribute('inert')).toBe(false);
-    expect(element.querySelector('.product-front')!.hasAttribute('inert')).toBe(true);
-    // Photo, price and add button stay usable on both sides.
-    expect(element.querySelector('.add-button')!.closest('[inert]')).toBeNull();
-
-    button.click();
-    await fixture.whenStable();
-    expect(card.classList).not.toContain('is-flipped');
-    expect(button.textContent).toContain('Ver más');
+    expect(element.querySelector('.product-origin')?.textContent).toContain('Heliconia, Antioquia');
+    expect(lines).toContain('Lavado');
+    expect(lines).toContain('Chocolate, Cítricos, Panela');
+    expect(lines).not.toContain('Frutos rojos');
   });
 
-  it('should not offer the flip for products that are not coffee', async () => {
+  it('should keep the rest of the coffee sheet folded inside the card', async () => {
+    const { element } = await render(byName('LabrAlma'));
+    const sheet = element.querySelector<HTMLDetailsElement>('.product-sheet')!;
+
+    expect(sheet.open).toBe(false);
+    expect(sheet.textContent).toContain('Bourbon Papayo');
+    expect(sheet.textContent).toContain('1740 m s. n. m.');
+    expect(sheet.textContent).toContain('Frutos rojos');
+    expect(sheet.textContent).not.toContain('Proceso');
+  });
+
+  it('should not show a coffee sheet for products that are not coffee', async () => {
     const { element } = await render(byName('Taza de cerámica'));
 
-    expect(element.querySelector('.flip-button')).toBeNull();
-    expect(element.querySelector('.product-back')).toBeNull();
+    expect(element.querySelector('.product-sheet')).toBeNull();
+    expect(element.querySelector('.product-lines')).toBeNull();
   });
 
   it('should add the chosen quantity and start again from one', async () => {

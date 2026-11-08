@@ -24,8 +24,6 @@ export class ProductCardComponent implements OnDestroy {
   /** The visitor wants to see this photo enlarged. */
   readonly zoom = output<string>();
 
-  /** Turned over to show the description and tasting notes. */
-  readonly flipped = signal(false);
   /** The add button briefly shows "Añadido". */
   readonly justAdded = signal(false);
   /** Units to add with the button. */
@@ -79,10 +77,22 @@ export class ProductCardComponent implements OnDestroy {
       ),
     ).sort((left, right) => left - right),
   );
-  readonly hasStory = computed(() => {
-    const product = this.product();
-    return product.isCoffee && (!!product.description || !!product.notes?.length);
-  });
+  /** Up to three tasting notes are read on the card itself. */
+  readonly leadNotes = computed(() => this.product().notes?.slice(0, 3) ?? []);
+  /** Origin line: place and farm. */
+  readonly originLine = computed(() =>
+    [this.product().origin, this.product().farm].filter(Boolean).join(' · '),
+  );
+  /** Technical sheet: the properties not already on the card (process is). */
+  readonly sheet = computed(() =>
+    this.product().properties.filter((property) => property.label !== 'Proceso'),
+  );
+  readonly hasSheet = computed(
+    () =>
+      this.sheet().length > 0 ||
+      !!this.product().description ||
+      (this.product().notes?.length ?? 0) > 3,
+  );
 
   isBroken(image: string): boolean {
     return this.brokenImages().has(image);
@@ -124,10 +134,6 @@ export class ProductCardComponent implements OnDestroy {
     const quantity = clampQuantity(input.valueAsNumber);
     this.quantity.set(quantity);
     input.value = `${quantity}`;
-  }
-
-  flip(): void {
-    this.flipped.update((flipped) => !flipped);
   }
 
   add(): void {

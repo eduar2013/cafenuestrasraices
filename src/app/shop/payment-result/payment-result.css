@@ -2,88 +2,103 @@
   display: block;
 }
 .payment-result {
-  padding: 1.5rem 0;
+  color: var(--ink);
+  font-family: var(--font-text);
+  padding: 24px 0;
   text-align: center;
 }
 .result-icon {
   align-items: center;
+  border: var(--filete) solid var(--ink);
   border-radius: 50%;
-  color: #fff;
   display: inline-flex;
-  font-size: 1.6rem;
-  height: 3.5rem;
+  height: 60px;
   justify-content: center;
-  margin: 0;
-  width: 3.5rem;
+  width: 60px;
 }
 .is-approved .result-icon {
-  background: #5d7f3c;
+  background: var(--state);
+  color: var(--on-state);
 }
 .is-pending .result-icon {
-  background: #b8863b;
+  background: #fff;
+  color: var(--ink);
 }
 .is-declined .result-icon,
 .is-voided .result-icon,
 .is-error .result-icon {
-  background: #a5352a;
+  background: var(--ink);
+  color: var(--wall);
 }
 h3 {
-  font-size: 1.3rem;
-  margin: 0.75rem 0 0.25rem;
+  font-family: var(--font-sign);
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 12px 0 6px;
+  text-shadow: var(--sign-shadow);
 }
 p {
+  color: var(--muted);
   line-height: 1.6;
+  margin: 0;
 }
 dl {
-  border-top: 1px solid #dccdb2;
-  margin: 1rem 0;
-  padding-top: 0.75rem;
+  border-top: var(--filete) solid var(--ink);
+  margin: 16px 0;
+  padding-top: 12px;
   text-align: left;
 }
 dl div {
   display: flex;
   justify-content: space-between;
-  padding: 0.2rem 0;
+  padding: 3px 0;
 }
 dt,
 dd {
   margin: 0;
 }
+dd {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
 .result-button {
-  background: #344e35;
+  background: var(--action);
   border: 0;
-  border-radius: 999px;
-  color: #fff;
+  border-radius: var(--r);
+  color: var(--on-action);
   cursor: pointer;
   font: inherit;
   font-weight: 700;
-  min-height: 50px;
-  transition: background 0.2s ease;
+  min-height: 52px;
+  transition: background-color var(--m-in) var(--ease);
   width: 100%;
 }
 .result-button:hover {
-  background: #223c24;
+  background: var(--action-deep);
 }
 .result-button:focus-visible {
-  outline: 3px solid #75501e;
+  outline: 3px solid var(--action);
   outline-offset: 2px;
 }
+/* The pickup code, painted like a ticket. */
 .pickup {
-  border: 2px dashed #75501e;
-  border-radius: 12px;
-  margin: 1rem 0;
-  padding: 1rem;
+  background: #fff;
+  border: var(--filete) dashed var(--ink);
+  border-radius: var(--r);
+  margin: 16px 0;
+  padding: 16px;
 }
 .pickup h4 {
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
   margin: 0;
 }
 .pickup-code {
-  color: #344e35;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  margin: 0.25rem 0 0.5rem;
+  color: var(--ink);
+  font-family: var(--font-sign);
+  font-size: 2.25rem;
+  letter-spacing: 0.08em;
+  margin: 4px 0 8px;
 }
 .pickup-qr {
   display: block;
@@ -93,6 +108,6 @@ dd {
   width: 100%;
 }
 .pickup-help {
-  font-size: 0.9rem;
-  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  margin-top: 8px;
 }

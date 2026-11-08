@@ -1,60 +1,370 @@
+/* Inicio: "La visita". Four painted steps, each one a section of the page.
+   Tokens live in src/styles.css; the system is described in DESIGN.md. */
+
 :host,
 app-navbar,
-app-carousel {
+app-carousel,
+app-cafe-history,
+app-coffee-origins {
   display: block;
 }
-
-[id] {
-  scroll-margin-top: 7rem;
+:host {
+  background: var(--wall);
+  color: var(--ink);
+  font-family: var(--font-text);
+  line-height: 1.5;
 }
-
+[id] {
+  scroll-margin-top: calc(var(--contact-bar-height, 64px) + 12px);
+}
 [tabindex='-1']:focus-visible {
-  outline: 3px solid #75501e;
+  outline: 3px solid var(--action);
   outline-offset: -3px;
 }
-
-.shop-preview {
-  background: linear-gradient(135deg, #f8e8c5, #ecce94);
-  color: #3d2b1f;
-  font-family: Georgia, 'Times New Roman', serif;
-  padding: 4rem 1.5rem;
-  text-align: center;
+.wrap {
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 0 var(--gut);
 }
-
-.eyebrow {
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-h2 {
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  margin: 1rem 0;
-}
-
 p {
-  line-height: 1.7;
+  margin: 0;
+}
+h1,
+h2 {
+  margin: 0;
+  text-wrap: balance;
+}
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 
-.demo-note {
-  font-size: 0.9rem;
-}
+/* ---------- Buttons ---------- */
 
-a {
-  background: #34281e;
-  border-radius: 0.5rem;
-  color: #fff5dc;
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 1rem 1.5rem;
+.btn {
+  align-items: center;
+  border-radius: var(--r);
+  display: inline-flex;
+  font-weight: 700;
+  justify-content: center;
+  min-height: var(--btn-h);
+  padding: 0 20px;
   text-decoration: none;
+  transition:
+    background-color var(--m-in) var(--ease),
+    color var(--m-in) var(--ease);
 }
-
-a:hover {
-  background: #57402c;
+.btn--primary {
+  background: var(--action);
+  color: var(--on-action);
 }
-
+.btn--primary:hover {
+  background: var(--action-deep);
+}
+.btn--secondary {
+  border: var(--filete) solid var(--action);
+  color: var(--action);
+}
+.btn--secondary:hover {
+  background: var(--action);
+  color: var(--on-action);
+}
 a:focus-visible {
-  outline: 3px solid #75501e;
-  outline-offset: 4px;
+  outline: 3px solid var(--action);
+  outline-offset: 2px;
+}
+
+/* ---------- First viewport ---------- */
+
+.visit-hero {
+  padding: 32px 0 64px;
+}
+.hero-grid {
+  align-items: stretch;
+  display: grid;
+  gap: 48px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+.sign {
+  font-family: var(--font-sign);
+  font-size: clamp(3.5rem, 7vw, 5.75rem);
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  text-shadow: var(--sign-shadow);
+}
+h1 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin-top: 16px;
+  max-width: 22ch;
+}
+.hero-lead {
+  color: var(--muted);
+  font-size: 1.0625rem;
+  margin-top: 12px;
+  max-width: 48ch;
+}
+.visit-steps {
+  border-top: var(--filete) solid var(--ink);
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+}
+.visit-steps li {
+  border-bottom: 1px solid var(--line);
+}
+.visit-steps a {
+  align-items: center;
+  border-radius: 4px;
+  color: var(--ink);
+  column-gap: 14px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  min-height: 56px;
+  padding: 10px 8px;
+  text-decoration: none;
+  transition: background-color var(--m-in) var(--ease);
+}
+.visit-steps a:hover {
+  background: var(--wall-shade);
+}
+.step-n {
+  font-family: var(--font-sign);
+  font-size: 2rem;
+  line-height: 1;
+  text-align: center;
+  text-shadow: var(--sign-shadow);
+}
+.step-text {
+  display: flex;
+  flex-direction: column;
+}
+.step-text strong {
+  font-size: 1.125rem;
+}
+.step-text span {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+/* The shop photo hangs inside an ink filete; the open-now plate sits on its foot. */
+.hero-photo {
+  background: var(--wall);
+  border: var(--filete) solid var(--ink);
+  border-radius: var(--r);
+  margin: 0;
+  padding: 5px;
+  position: relative;
+}
+.hero-photo img {
+  border-radius: 2px;
+  display: block;
+  height: 100%;
+  min-height: 360px;
+  object-fit: cover;
+  width: 100%;
+}
+.hero-photo figcaption {
+  bottom: 20px;
+  left: 20px;
+  position: absolute;
+}
+.status {
+  align-items: center;
+  background: var(--wall);
+  border: var(--filete) solid var(--ink);
+  border-radius: var(--r);
+  display: inline-flex;
+  font-weight: 700;
+  gap: 10px;
+  padding: 10px 14px;
+}
+/* Open = filled ink dot, closed = hollow ink ring. Status is not an action, so no green. */
+.status-dot {
+  border: var(--filete) solid var(--ink);
+  border-radius: 50%;
+  box-sizing: border-box;
+  height: 12px;
+  width: 12px;
+}
+.status.is-open .status-dot {
+  background: var(--ink);
+}
+
+/* ---------- Steps ---------- */
+
+.step {
+  border-top: var(--filete) solid var(--ink);
+  padding: 56px 0 72px;
+}
+.step-head {
+  align-items: flex-start;
+  display: grid;
+  gap: 8px 20px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  margin-bottom: 32px;
+}
+.step-head .step-n {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+}
+.step-head h2 {
+  font-family: var(--font-sign);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.05;
+  text-shadow: var(--sign-shadow);
+}
+.step-head p {
+  color: var(--muted);
+  font-size: 1.0625rem;
+  margin-top: 8px;
+  max-width: 56ch;
+}
+.step-cta {
+  align-self: center;
+}
+
+/* Prueba: the bar's methods, painted as a menu board. */
+.methods {
+  display: grid;
+  gap: 0 32px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* Tasting is the reason the place exists: the methods are painted at sign scale. */
+.methods li {
+  border-top: var(--filete) solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 0 8px;
+}
+.method-name {
+  font-family: var(--font-sign);
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  line-height: 1.05;
+  text-shadow: var(--sign-shadow);
+}
+.method-detail {
+  color: var(--muted);
+  font-size: 1.0625rem;
+  max-width: 28ch;
+}
+
+/* Llévalo: real coffees from the catalog, each line opening its card in the shop. */
+.take-home {
+  border-top: var(--filete) solid var(--ink);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  column-gap: 32px;
+}
+.take-home li {
+  border-bottom: 1px solid var(--line);
+}
+.take-home a {
+  align-items: center;
+  border-radius: 4px;
+  color: var(--ink);
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 64px;
+  padding: 12px 8px;
+  text-decoration: none;
+  transition:
+    background-color var(--m-in) var(--ease),
+    color var(--m-in) var(--ease);
+}
+.take-name {
+  font-family: var(--font-sign);
+  font-size: 1.375rem;
+  line-height: 1.15;
+}
+.take-meta {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  grid-column: 1;
+}
+.take-price {
+  font-family: var(--font-sign);
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  white-space: nowrap;
+  word-spacing: -0.22em;
+}
+.take-home a:hover {
+  background: var(--action);
+  color: var(--on-action);
+}
+.take-home a:hover .take-meta {
+  color: var(--on-action);
+}
+.take-status {
+  color: var(--muted);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1023px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero-photo img {
+    aspect-ratio: 16 / 10;
+    min-height: 0;
+  }
+  .methods {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 28px;
+  }
+}
+@media (max-width: 639px) {
+  .visit-hero {
+    padding: 20px 0 40px;
+  }
+  .step {
+    padding: 40px 0 48px;
+  }
+  .step-head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .step-cta {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .methods,
+  .take-home {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero-actions .btn {
+    flex: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .visit-steps a,
+  .take-home a {
+    transition: none;
+  }
 }

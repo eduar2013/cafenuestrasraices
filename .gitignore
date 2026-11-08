@@ -42,3 +42,13 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# taste-skill: datos temporales de sus revisiones de diseño
+.taste-skill/
+
+# Herramientas de diseño para el asistente (skills): se reinstalan, no son parte de la app
+.agents/
+.claude/skills/
+.claude/agents/
+.claude/settings.local.json
+skills-lock.json

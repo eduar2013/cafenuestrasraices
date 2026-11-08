@@ -1,19 +1,32 @@
 <div class="payment-result" [class]="'is-' + status().toLowerCase()" role="status">
   @switch (status()) {
     @case ('APPROVED') {
-      <p class="result-icon" aria-hidden="true">✓</p>
+      <span class="result-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28">
+          <path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
       <h3>¡Pago aprobado!</h3>
       <p>Gracias por tu compra. Te enviaremos la confirmación al correo.</p>
     }
     @case ('PENDING') {
-      <p class="result-icon" aria-hidden="true">…</p>
+      <span class="result-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28">
+          <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.4" />
+          <path d="M12 8v4.5l3 2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+        </svg>
+      </span>
       <h3>Tu pago está en proceso</h3>
       <p>
         Algunos medios, como PSE, tardan unos minutos. Te avisaremos por correo cuando se confirme.
       </p>
     }
     @default {
-      <p class="result-icon" aria-hidden="true">✕</p>
+      <span class="result-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28">
+          <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+        </svg>
+      </span>
       <h3>El pago no fue aprobado</h3>
       <p>No se hizo ningún cobro. Puedes intentarlo de nuevo con otro medio de pago.</p>
     }

@@ -1,328 +1,305 @@
+/* Step 3 (Elige): the map of origins. The step heading lives in the home page. */
 :host {
   display: block;
 }
-
 .origins-section {
-  background: linear-gradient(145deg, #f8f5ed, #e9eddf);
-  color: #34281e;
-  font-family: Georgia, 'Times New Roman', serif;
-  padding: 4.5rem 1.5rem;
+  color: var(--ink);
+  font-family: var(--font-text);
 }
-
 .origins-container {
-  margin: auto;
-  max-width: 1120px;
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 0 var(--gut);
 }
-
-.origins-heading {
-  margin-bottom: 2.5rem;
-  text-align: center;
-}
-
-.eyebrow {
-  color: #46603b;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  margin: 0.75rem 0;
-}
-
-.origins-heading > p {
-  line-height: 1.7;
-}
-
 .origins-layout {
   align-items: start;
   display: grid;
-  gap: 3rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
 }
+button {
+  cursor: pointer;
+  font: inherit;
+}
+
+/* ---------- Map ---------- */
 
 .origin-map {
   aspect-ratio: 400 / 520;
-  background: radial-gradient(ellipse, #fffaf0, #e3e8da);
-  border: 1px solid #b7bfa6;
-  border-radius: 1.5rem;
-  margin: auto;
-  max-width: 420px;
+  background: #fff;
+  border: var(--filete) solid var(--ink);
+  border-radius: var(--r);
+  margin: 0 auto;
+  max-width: 440px;
   position: relative;
 }
-
+/* The departments read as stone so the green pins carry the only colour. */
 .origin-map > img {
   display: block;
+  filter: grayscale(1) brightness(1.18) contrast(0.9);
   height: 100%;
   width: 100%;
 }
-
 .map-point {
   align-items: center;
   background: transparent;
   border: 0;
   border-radius: 50%;
-  cursor: pointer;
   display: flex;
-  height: 24px;
+  height: 32px;
   justify-content: center;
   padding: 0;
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 24px;
+  width: 32px;
 }
-
 .map-point span {
-  background: #344e35;
-  border: 3px solid #fff9e9;
+  background: var(--action);
+  border: 3px solid #fff;
   border-radius: 50%;
-  box-shadow: 0 2px 6px #0004;
-  height: 14px;
-  width: 14px;
+  box-shadow: 0 0 0 var(--filete) var(--ink);
+  height: 16px;
+  transition: transform var(--m-in) var(--ease);
+  width: 16px;
 }
-
-.map-point.is-selected span {
-  background: #6e341b;
-  box-shadow: 0 0 0 6px #6e341b35;
-}
-
 .map-point:hover span {
-  box-shadow: 0 0 0 6px #344e3535;
+  transform: scale(1.2);
 }
-
+.map-point.is-selected span {
+  background: var(--ink);
+  transform: scale(1.3);
+}
+.map-point:focus-visible {
+  outline: 3px solid var(--action);
+  outline-offset: 2px;
+}
 .map-country {
   bottom: 18%;
-  font-size: 0.9rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 700;
   left: 35%;
-  letter-spacing: 0.1em;
   pointer-events: none;
   position: absolute;
 }
-
 .map-caption {
-  color: #5f6756;
-  font-size: 0.8rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin: 10px 0 0;
   text-align: center;
 }
-
-.origin-list,
-.coffee-options {
+.origin-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.origin-list {
+  gap: 6px;
   justify-content: center;
-  margin-top: 1.25rem;
+  margin-top: 16px;
 }
-
 .origin-list button,
-.coffee-options button,
-.origins-status button {
-  background: #fffaf0;
-  border: 1px solid #79856c;
-  border-radius: 1.5rem;
-  color: #344e35;
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.9rem;
+.coffee-options button {
+  background: transparent;
+  border: var(--filete) solid var(--ink);
+  border-radius: var(--r);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
   min-height: 44px;
-  padding: 0.5rem 1rem;
+  padding: 0 14px;
+  transition:
+    background-color var(--m-in) var(--ease),
+    box-shadow var(--m-paint) var(--ease);
 }
-
-button[aria-pressed='true']:not(.map-point),
 .origin-list button:hover,
 .coffee-options button:hover {
-  background: #344e35;
-  color: #fffaf0;
+  background: var(--wall-shade);
+}
+.origin-list button[aria-pressed='true'],
+.coffee-options button[aria-pressed='true'] {
+  background: var(--state);
+  box-shadow:
+    inset 0 0 0 3px var(--state),
+    inset 0 0 0 4.5px var(--ink);
 }
 
-button:focus-visible {
-  outline: 3px solid #6e341b;
-  outline-offset: 3px;
-}
+/* ---------- Detail ---------- */
 
 .origin-detail {
-  background: #fffcf6;
-  border: 1px solid #dfd5bf;
-  border-radius: 1.25rem;
-  box-shadow: 0 12px 36px #34281e12;
-  overflow: hidden;
+  background: #fff;
+  border: var(--filete) solid var(--ink);
+  border-radius: var(--r);
+  min-height: 320px;
+  padding: 24px;
 }
-
 .coffee-header {
   align-items: flex-start;
   display: flex;
-  gap: 1rem;
+  gap: 20px;
   justify-content: space-between;
 }
-
-.coffee-header .eyebrow {
-  margin-top: 0;
+.coffee-header h3 {
+  font-family: var(--font-sign);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0;
+  text-shadow: var(--sign-shadow);
 }
-
+.coffee-origin {
+  font-weight: 700;
+  margin: 6px 0 0;
+}
+.coffee-location {
+  color: var(--muted);
+  margin: 2px 0 0;
+}
 .coffee-photo {
-  background: none;
-  border: 0;
-  border-radius: 0.75rem;
+  background: #f1f1ec;
+  border: var(--filete) solid var(--ink);
+  border-radius: var(--r);
   cursor: zoom-in;
   flex: none;
-  height: 200px;
-  padding: 0;
-  width: 150px;
+  height: 128px;
+  padding: 4px;
+  width: 104px;
 }
-
 .coffee-photo img {
   display: block;
-  filter: drop-shadow(0 6px 8px #2a1d1240);
   height: 100%;
+  mix-blend-mode: multiply;
   object-fit: contain;
-  transition: transform 0.2s ease;
   width: 100%;
 }
-
-.coffee-photo:hover img {
-  transform: scale(1.05);
+.coffee-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
 }
+.coffee-description {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 16px 0 0;
+}
+.origin-detail dl {
+  margin: 16px 0 0;
+}
+.origin-detail dl > div {
+  border-top: 1px solid var(--line);
+  column-gap: 12px;
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  padding: 8px 0;
+}
+.origin-detail dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.origin-detail dd {
+  margin: 0;
+}
+.origin-detail h4 {
+  font-size: 0.875rem;
+  margin: 16px 0 8px;
+}
+.tasting-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tasting-notes li {
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  padding: 4px 12px;
+}
+.availability {
+  margin: 20px 0 0;
+}
+.shop-link {
+  align-items: center;
+  background: var(--action);
+  border-radius: var(--r);
+  color: var(--on-action);
+  display: inline-flex;
+  font-weight: 700;
+  min-height: var(--btn-h);
+  padding: 0 20px;
+  text-decoration: none;
+  transition: background-color var(--m-in) var(--ease);
+}
+.shop-link:hover {
+  background: var(--action-deep);
+}
+.shop-link:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--action);
+  outline-offset: 2px;
+}
+.origins-status {
+  color: var(--muted);
+}
+.origins-status button {
+  background: transparent;
+  border: var(--filete) solid var(--action);
+  border-radius: var(--r);
+  color: var(--action);
+  font-weight: 700;
+  margin-top: 12px;
+  min-height: 44px;
+  padding: 0 18px;
+}
+
+/* ---------- Photo dialog ---------- */
 
 .photo-dialog {
   background: transparent;
   border: 0;
-  cursor: zoom-out;
   max-height: 100dvh;
   max-width: 100vw;
-  overflow: visible;
-  padding: 1rem;
+  padding: 16px;
 }
-
 .photo-dialog::backdrop {
-  background: #1b140ee6;
+  background: #141414e6;
 }
-
 .photo-dialog img {
   display: block;
-  max-height: calc(100dvh - 2rem);
+  max-height: calc(100dvh - 6rem);
   max-width: min(100%, 48rem);
   object-fit: contain;
 }
-
 .photo-dialog-close {
-  background: #fffcf6;
+  align-items: center;
+  background: var(--wall);
   border: 0;
-  border-radius: 50%;
-  color: #34281e;
-  cursor: pointer;
+  border-radius: var(--r);
+  color: var(--ink);
+  display: inline-flex;
   height: 44px;
-  position: absolute;
-  right: 0;
-  top: -0.5rem;
+  justify-content: center;
+  margin-top: 12px;
   width: 44px;
 }
 
-
-
-.origins-status {
-  color: #655136;
-  padding: 3rem 1.5rem;
-  text-align: center;
-}
-
-.shop-link {
-  color: #344e35;
-  font-weight: 600;
-  text-underline-offset: 0.2em;
-}
-
-.shop-link:hover {
-  color: #223c24;
-}
-
-.shop-link:focus-visible {
-  outline: 3px solid #6e341b;
-  outline-offset: 3px;
-}
-
-
-
-
-.coffee-info {
-  padding: 1.5rem;
-}
-
-h3 {
-  font-size: 1.6rem;
-  margin: 0.5rem 0;
-}
-
-.coffee-location,
-.coffee-description,
-.availability {
-  line-height: 1.7;
-}
-
-.coffee-options {
-  margin-top: 1rem;
-}
-
-dl {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-dt {
-  color: #66553e;
-  font-size: 0.85rem;
-}
-
-dd {
-  margin: 0.35rem 0 0;
-}
-
-h4 {
-  margin-bottom: 0.75rem;
-}
-
-.tasting-notes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  list-style: none;
-  padding: 0;
-}
-
-.tasting-notes li {
-  background: #f3e4c5;
-  border-radius: 1rem;
-  padding: 0.4rem 0.75rem;
-}
-
-.availability {
-  border-top: 1px solid #dfd5bf;
-  font-size: 0.85rem;
-  margin: 1.25rem 0 0;
-  padding-top: 1rem;
-}
-
-@media (max-width: 760px) {
-  .origins-section {
-    padding: 3rem 1.25rem;
-  }
-
+@media (max-width: 767px) {
   .origins-layout {
-    gap: 2rem;
     grid-template-columns: minmax(0, 1fr);
   }
-
-  .coffee-info {
-    padding: 1.25rem;
+  .origin-detail {
+    padding: 18px;
   }
-
-  .coffee-photo {
-    height: 150px;
-    width: 112px;
+  .origin-detail dl > div {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-point span,
+  .origin-list button,
+  .coffee-options button,
+  .shop-link {
+    transition: none;
   }
 }

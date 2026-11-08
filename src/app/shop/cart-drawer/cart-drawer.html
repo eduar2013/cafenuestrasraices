@@ -19,7 +19,9 @@
       aria-label="Cerrar carrito"
       (click)="close()"
     >
-      ✕
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+      </svg>
     </button>
   </header>
 
@@ -143,19 +145,33 @@
         </div>
         <div class="cart-total" aria-live="polite">
           <dt>{{ cart.freeShippingRemaining() === 0 ? 'Total' : 'Total sin envío' }}</dt>
-          <dd>{{ cart.total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
+          <dd>{{ cart.total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}<span class="cur">COP</span></dd>
         </div>
       </dl>
       <button type="button" class="checkout-button" (click)="checkingOut.set(true)">
         Finalizar compra
       </button>
       <app-payment-badge [compact]="true" />
-      <div class="cart-secondary-actions">
-        <button type="button" class="link-button" (click)="close()">Seguir comprando</button>
-        <button class="clear-button link-button" type="button" (click)="cart.clear()">
-          Vaciar carrito
-        </button>
-      </div>
+      @if (confirmingClear()) {
+        <div class="clear-confirm" role="group" aria-labelledby="clear-question">
+          <p id="clear-question">¿Quitar todos los productos del carrito?</p>
+          <div class="clear-confirm-actions">
+            <button type="button" class="confirm-clear-button" (click)="clearCart()">
+              Sí, vaciar
+            </button>
+            <button type="button" class="link-button" (click)="confirmingClear.set(false)">
+              No, mantener
+            </button>
+          </div>
+        </div>
+      } @else {
+        <div class="cart-secondary-actions">
+          <button type="button" class="link-button" (click)="close()">Seguir comprando</button>
+          <button class="clear-button link-button" type="button" (click)="confirmingClear.set(true)">
+            Vaciar carrito
+          </button>
+        </div>
+      }
       <p class="cart-note">
         El envío se cotiza según tu ciudad con transportadoras como Coordinadora y Servientrega.
         Gratis desde {{ freeShippingFrom | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}. Tu

@@ -30,6 +30,8 @@ export class CartDrawerComponent implements OnDestroy {
   readonly freeShippingFrom = FREE_SHIPPING_FROM;
   /** Showing the contact, shipping and payment step instead of the cart. */
   readonly checkingOut = signal(false);
+  /** "Vaciar carrito" asks once before removing everything. */
+  readonly confirmingClear = signal(false);
   readonly shippingProgress = computed(() =>
     Math.min(100, Math.round((this.cart.total() / FREE_SHIPPING_FROM) * 100)),
   );
@@ -63,6 +65,11 @@ export class CartDrawerComponent implements OnDestroy {
       this.checkingOut.set(false);
     }
     this.closed.emit();
+  }
+
+  clearCart(): void {
+    this.cart.clear();
+    this.confirmingClear.set(false);
   }
 
   ngOnDestroy(): void {

@@ -1,4 +1,4 @@
-import { DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DOCUMENT, DecimalPipe } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -11,7 +11,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { ContactBarComponent } from '../contact-bar/contact-bar';
 import { CartDrawerComponent } from './cart-drawer/cart-drawer';
-import { CartService } from './cart';
+import { CartService, FREE_SHIPPING_FROM } from './cart';
 import { CatalogService, ShopProduct } from './catalog';
 import { PaymentBadgeComponent } from './payment-badge/payment-badge';
 import { ProductAddition, ProductCardComponent } from './product-card/product-card';
@@ -34,6 +34,7 @@ const NO_ZOOM: ImageZoom = { scale: 1, x: 0, y: 0 };
   imports: [
     CartDrawerComponent,
     ContactBarComponent,
+    CurrencyPipe,
     DecimalPipe,
     PaymentBadgeComponent,
     ProductCardComponent,
@@ -46,11 +47,32 @@ export class ShopComponent implements OnDestroy {
   readonly cart = inject(CartService);
   readonly catalog = inject(CatalogService);
   readonly category = signal<string>('todos');
-  readonly products = computed(() =>
-    this.category() === 'todos'
-      ? this.catalog.products()
-      : this.catalog.products().filter((product) => product.category.id === this.category()),
+  readonly process = signal<string>('todos');
+  readonly origin = signal<string>('todos');
+  /** Processes and origins present in the catalog, for the filters. */
+  readonly processes = computed(() => distinct(this.catalog.products().map((p) => p.process)));
+  readonly origins = computed(() => distinct(this.catalog.products().map((p) => p.origin)));
+  readonly filtered = computed(
+    () =>
+      this.category() !== 'todos' || this.process() !== 'todos' || this.origin() !== 'todos',
   );
+  readonly products = computed(() =>
+    this.catalog
+      .products()
+      .filter(
+        (product) =>
+          (this.category() === 'todos' || product.category.id === this.category()) &&
+          (this.process() === 'todos' || product.process === this.process()) &&
+          (this.origin() === 'todos' || product.origin === this.origin()),
+      ),
+  );
+  /** The painted board lists coffees first, the rest after. */
+  readonly board = computed(() =>
+    [...this.catalog.products()].sort((a, b) => Number(b.isCoffee) - Number(a.isCoffee)),
+  );
+  readonly freeShippingFrom = FREE_SHIPPING_FROM;
+  /** Placeholder cards shown while the catalog loads. */
+  readonly skeletonSlots = [1, 2, 3, 4];
   readonly message = signal('');
   readonly cartOpen = signal(false);
   readonly zoomedProduct = signal<ShopProduct | undefined>(undefined);
@@ -68,6 +90,7 @@ export class ShopComponent implements OnDestroy {
     readonly zoom: ImageZoom;
   };
 
+  private readonly document = inject(DOCUMENT);
   private readonly imageDialog = viewChild.required<ElementRef<HTMLDialogElement>>('imageDialog');
 
   private toastTimer?: ReturnType<typeof setTimeout>;
@@ -155,6 +178,33 @@ export class ShopComponent implements OnDestroy {
     );
   }
 
+  clearFilters(): void {
+    this.category.set('todos');
+    this.process.set('todos');
+    this.origin.set('todos');
+  }
+
+  boardMeta(product: ShopProduct): string {
+    return [product.process, product.origin].filter(Boolean).join(' · ');
+  }
+
+  /** Lowest price among the product's presentations, for the board. */
+  fromPrice(product: ShopProduct): number {
+    return Math.min(...product.variants.map((variant) => variant.price));
+  }
+
+  /** A board line jumps to its card: filters that would hide it are cleared first. */
+  showProduct(product: ShopProduct): void {
+    if (!this.products().includes(product)) {
+      this.clearFilters();
+    }
+    setTimeout(() => {
+      const card = this.document.getElementById(`cafe-${product.id}`);
+      card?.scrollIntoView({ block: 'start' });
+      card?.querySelector<HTMLElement>('h3')?.focus({ preventScroll: true });
+    });
+  }
+
   openCart(): void {
     this.message.set('');
     this.cartOpen.set(true);
@@ -169,6 +219,12 @@ export class ShopComponent implements OnDestroy {
     clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => this.message.set(''), TOAST_DURATION);
   }
+}
+
+function distinct(values: readonly (string | undefined)[]): readonly string[] {
+  return Array.from(new Set(values.filter((value): value is string => !!value))).sort((a, b) =>
+    a.localeCompare(b, 'es'),
+  );
 }
 
 /** Keeps the zoomed photo covering its frame so no empty space shows at the edges. */

@@ -1,30 +1,73 @@
-<section class="offers-section">
+<section class="offers-section" aria-labelledby="offers-title">
   <div class="offers-header">
-    <h2 class="offers-title">Lo que ofrecemos</h2>
-    <h3 class="offers-subtitle">Nuestros productos</h3>
-    <p class="offers-description">
-      Desde café de origen hasta bebidas especiales — todo preparado con amor y granos seleccionados.
-    </p>
+    <div>
+      <h2 id="offers-title" class="offers-title">Lo que ofrecemos</h2>
+      <p class="offers-description">
+        Desde café de origen hasta bebidas especiales, todo preparado con granos seleccionados.
+      </p>
+    </div>
+    <div class="carousel-controls">
+      <button
+        type="button"
+        class="btn-control"
+        [attr.aria-label]="paused() ? 'Reanudar el carrusel' : 'Pausar el carrusel'"
+        (click)="togglePause()"
+      >
+        @if (paused()) {
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+          </svg>
+        }
+      </button>
+      <button type="button" class="btn-control" aria-label="Anterior" (click)="prev()">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button type="button" class="btn-control" aria-label="Siguiente" (click)="next()">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
   </div>
 
-  <div class="carousel-wrapper" (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
-    <button (click)="prev()" class="btn-control">&#10094;</button>
-    
-    <div class="carousel-track-container">
-      <div class="carousel-track" [style.transform]="'translateX(calc(-' + currentIndex() + ' * ((100% - 3rem) / 3 + 1.5rem)))'">
-        
-        @for (img of images; track img.src) {
-          <div class="carousel-item">
-            <img [src]="img.src" [alt]="img.alt" />
-            <div class="carousel-card">
-              <h3 class="carousel-card-title">{{ img.title }}</h3>
-              <p class="carousel-card-description">{{ img.description }}</p>
-            </div>
+  <div
+    class="carousel-track-container"
+    (mouseenter)="pauseAutoSlide()"
+    (mouseleave)="resumeAutoSlide()"
+    (focusin)="pauseAutoSlide()"
+    (focusout)="resumeAutoSlide()"
+  >
+    <div
+      class="carousel-track"
+      [style.--per]="perView()"
+      [style.transform]="
+        'translateX(calc(-' +
+        currentIndex() +
+        ' * ((100% - ' +
+        (perView() - 1) +
+        ' * 1.5rem) / ' +
+        perView() +
+        ' + 1.5rem)))'
+      "
+    >
+      @for (img of images; track img.src; let index = $index) {
+        <article
+          class="carousel-item"
+          [attr.aria-hidden]="index < currentIndex() || index >= currentIndex() + perView()"
+        >
+          <img [src]="img.src" [alt]="img.alt" loading="lazy" />
+          <div class="carousel-card">
+            <h3 class="carousel-card-title">{{ img.title }}</h3>
+            <p class="carousel-card-description">{{ img.description }}</p>
           </div>
-        }
-      </div>
+        </article>
+      }
     </div>
-
-    <button (click)="next()" class="btn-control">&#10095;</button>
   </div>
 </section>

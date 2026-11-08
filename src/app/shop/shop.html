@@ -1,104 +1,237 @@
 <app-contact-bar [showShopLink]="false" />
-<main class="shop-page" aria-labelledby="shop-title">
-  <div class="shop-container">
-    <a class="back-link" routerLink="/">← Volver al inicio</a>
-    <header class="shop-header">
-      <img
-        class="shop-logo"
-        src="images/cafe/logo-tienda.webp"
-        alt="Café Nuestras Raíces"
-        width="480"
-        height="478"
-      />
-      <h1 id="shop-title">Nuestra tienda</h1>
-      <p>Cafés de especialidad colombianos, tostados con cuidado para disfrutar en casa.</p>
-      <app-payment-badge class="header-badge" />
-    </header>
-
-    <div class="shop-toolbar">
-      <div class="category-filters" role="group" aria-label="Filtrar por categoría">
-        <button
-          type="button"
-          class="filter-chip"
-          [attr.aria-pressed]="category() === 'todos'"
-          (click)="category.set('todos')"
-        >
-          Todos
-        </button>
-        @for (option of catalog.categories(); track option.id) {
-          <button
-            type="button"
-            class="filter-chip"
-            [attr.aria-pressed]="category() === option.id"
-            (click)="category.set(option.id)"
-          >
-            {{ option.label }}
-          </button>
-        }
+<main class="shop-page" id="top" aria-labelledby="shop-title">
+  <section class="shop-hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <nav class="crumbs" aria-label="Ruta">
+          <a routerLink="/">Inicio</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Tienda</span>
+        </nav>
+        <p class="sign" aria-hidden="true">Tienda</p>
+        <h1 id="shop-title">Café de especialidad colombiano para preparar en casa</h1>
+        <p class="hero-lead">
+          Bolsas en grano o molido y los equipos para prepararlo. Te lo enviamos o lo recoges en
+          nuestra tienda de Sabaneta.
+        </p>
+        <p class="hero-fact">
+          <svg class="fact-mark" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path
+              d="M2.5 6.5h11v9h-11zM13.5 9.5h4l3 3v3h-7M6.5 18.5a1.6 1.6 0 1 0 0-.1M16.5 18.5a1.6 1.6 0 1 0 0-.1"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Envío gratis desde {{ freeShippingFrom | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+        </p>
+        <figure class="hero-photo">
+          <img
+            src="images/cafe/sede_1-1200.webp"
+            srcset="
+              images/cafe/sede_1-800.webp   800w,
+              images/cafe/sede_1-1200.webp 1200w,
+              images/cafe/sede_1.webp      1600w
+            "
+            sizes="(min-width: 1024px) 46vw, 100vw"
+            alt="Barra de Café Nuestras Raíces con la repisa de bolsas de café detrás"
+            width="1600"
+            height="900"
+            fetchpriority="high"
+          />
+        </figure>
       </div>
-      <button
-        #cartToggle
-        type="button"
-        class="cart-toggle"
-        aria-haspopup="dialog"
-        aria-controls="cart-drawer"
-        [attr.aria-label]="'Abrir carrito, ' + cart.count() + ' productos'"
-        (click)="openCart()"
-      >
-        <!-- Shopping cart holding one large coffee bean. -->
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-          <g
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M2.5 4h2.2l2.4 10.3a1 1 0 0 0 1 .7h9a1 1 0 0 0 1-.8L20.5 7h-2" />
-            <path d="M7.4 7H5.6" />
-          </g>
-          <g fill="currentColor">
-            <g transform="translate(13.1 9.6) rotate(-12) scale(2.25)">
-              <path
-                d="M-2.1 -.15A2.1 1.4 0 0 1 2.1 -.15C1.2 -.75.6 -.65 0 -.15S-1.2.45-2.1 -.15Z"
-              />
-              <path d="M2.1 .2A2.1 1.4 0 0 1 -2.1 .2C-1.2.8-.6.7 0 .2S1.2-.4 2.1 .2Z" />
-            </g>
-            <circle cx="9.5" cy="19" r="1.5" />
-            <circle cx="16.5" cy="19" r="1.5" />
-          </g>
-        </svg>
-        <span class="cart-toggle-label">Carrito</span>
-        @if (cart.count() > 0) {
-          <span class="cart-badge">{{ cart.count() }}</span>
+
+      <section class="board" aria-labelledby="board-title">
+        <h2 id="board-title" class="board-title">Hoy tenemos</h2>
+        <p class="board-lead">Toca uno para verlo y agregarlo al carrito.</p>
+        @if (board().length === 0) {
+          <ol class="board-list" aria-hidden="true">
+            @for (slot of skeletonSlots; track slot) {
+              <li class="board-row is-skeleton"><span></span></li>
+            }
+          </ol>
+        } @else {
+          <ol class="board-list">
+            @for (product of board(); track product.id) {
+              <li class="board-row" [class.is-out]="!product.available">
+                <a routerLink="/tienda" [fragment]="'cafe-' + product.id" (click)="showProduct(product)">
+                  <span class="board-name">{{ product.name }}</span>
+                  <span class="board-meta">
+                    {{ boardMeta(product) }}
+                    @if (product.notes?.length) {
+                      <span class="board-notes">{{ product.notes!.slice(0, 2).join(', ') }}</span>
+                    }
+                  </span>
+                  <span class="board-price">
+                    @if (!product.available) {
+                      Agotado
+                    } @else {
+                      {{ fromPrice(product) | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                    }
+                  </span>
+                </a>
+              </li>
+            }
+          </ol>
         }
-      </button>
+        <app-payment-badge class="board-badge" />
+      </section>
     </div>
+  </section>
 
-    <section aria-labelledby="catalog-title">
-      <div class="catalog-heading">
-        <h2 id="catalog-title">Nuestros productos</h2>
-        <p class="result-count">{{ products().length }} productos</p>
+  <section class="catalog" id="catalogo" aria-labelledby="catalog-title">
+    <div class="wrap">
+      <div class="catalog-head">
+        <h2 id="catalog-title">Cafés y equipos de preparación</h2>
+        <p class="result-count" aria-live="polite">{{ products().length }} productos</p>
       </div>
+
+      <div class="shop-toolbar">
+        <div class="filters">
+          @if (catalog.categories().length > 1) {
+            <div class="filter-group" role="group" aria-label="Filtrar por categoría">
+              <button
+                type="button"
+                class="filter-chip"
+                [attr.aria-pressed]="category() === 'todos'"
+                (click)="category.set('todos')"
+              >
+                Todo
+              </button>
+              @for (option of catalog.categories(); track option.id) {
+                <button
+                  type="button"
+                  class="filter-chip"
+                  [attr.aria-pressed]="category() === option.id"
+                  (click)="category.set(option.id)"
+                >
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          }
+          @if (processes().length > 1) {
+            <div class="filter-group" role="group" aria-label="Filtrar por proceso">
+              <span class="filter-label" aria-hidden="true">Proceso</span>
+              <button
+                type="button"
+                class="filter-chip"
+                [attr.aria-pressed]="process() === 'todos'"
+                (click)="process.set('todos')"
+              >
+                Todos
+              </button>
+              @for (option of processes(); track option) {
+                <button
+                  type="button"
+                  class="filter-chip"
+                  [attr.aria-pressed]="process() === option"
+                  (click)="process.set(option)"
+                >
+                  {{ option }}
+                </button>
+              }
+            </div>
+          }
+          @if (origins().length > 1) {
+            <label class="filter-select">
+              <span class="filter-label">Origen</span>
+              <select [value]="origin()" (change)="origin.set($any($event.target).value)">
+                <option value="todos">Todos los orígenes</option>
+                @for (option of origins(); track option) {
+                  <option [value]="option">{{ option }}</option>
+                }
+              </select>
+            </label>
+          }
+        </div>
+        <button
+          #cartToggle
+          type="button"
+          class="cart-toggle"
+          aria-haspopup="dialog"
+          aria-controls="cart-drawer"
+          [attr.aria-label]="'Abrir carrito, ' + cart.count() + ' productos'"
+          (click)="openCart()"
+        >
+          <!-- Shopping cart holding one large coffee bean. -->
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <g
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M2.5 4h2.2l2.4 10.3a1 1 0 0 0 1 .7h9a1 1 0 0 0 1-.8L20.5 7h-2" />
+              <path d="M7.4 7H5.6" />
+            </g>
+            <g fill="currentColor">
+              <g transform="translate(13.1 9.6) rotate(-12) scale(2.25)">
+                <path
+                  d="M-2.1 -.15A2.1 1.4 0 0 1 2.1 -.15C1.2 -.75.6 -.65 0 -.15S-1.2.45-2.1 -.15Z"
+                />
+                <path d="M2.1 .2A2.1 1.4 0 0 1 -2.1 .2C-1.2.8-.6.7 0 .2S1.2-.4 2.1 .2Z" />
+              </g>
+              <circle cx="9.5" cy="19" r="1.5" />
+              <circle cx="16.5" cy="19" r="1.5" />
+            </g>
+          </svg>
+          <span class="cart-toggle-label">Ver carrito</span>
+          @if (cart.count() > 0) {
+            <span class="cart-badge">{{ cart.count() }}</span>
+          }
+        </button>
+      </div>
+
       @if (catalog.isLoading() && catalog.products().length === 0) {
-        <p class="catalog-status" role="status">Cargando productos…</p>
+        <div class="product-grid" aria-busy="true">
+          <p class="visually-hidden" role="status">Cargando productos…</p>
+          @for (slot of skeletonSlots; track slot) {
+            <div class="skeleton-card" aria-hidden="true">
+              <span class="skeleton-photo"></span>
+              <span class="skeleton-line"></span>
+              <span class="skeleton-line is-short"></span>
+            </div>
+          }
+        </div>
       } @else if (catalog.error()) {
         <div class="catalog-status" role="alert">
           <p>No pudimos cargar los productos. Intenta de nuevo en unos minutos.</p>
-          <button type="button" class="filter-chip" (click)="catalog.reload()">Reintentar</button>
+          <button type="button" class="btn btn--secondary" (click)="catalog.reload()">
+            Cargar de nuevo
+          </button>
+        </div>
+      } @else if (products().length === 0) {
+        <div class="catalog-status">
+          <p>
+            {{
+              filtered()
+                ? 'Ningún producto coincide con estos filtros.'
+                : 'No hay productos por ahora.'
+            }}
+          </p>
+          @if (filtered()) {
+            <button type="button" class="btn btn--secondary" (click)="clearFilters()">
+              Ver todos los productos
+            </button>
+          }
         </div>
       }
       <div class="product-grid">
         @for (product of products(); track product.id) {
           <app-product-card
+            [id]="'cafe-' + product.id"
             [product]="product"
             (added)="onAdded(product, $event)"
             (zoom)="openImage(product, $event)"
           />
         }
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
   <div class="shop-toast" role="status" [class.is-visible]="message()">
     <span>{{ message() }}</span>
@@ -167,7 +300,9 @@
         aria-label="Cerrar foto"
         (click)="imageDialog.close()"
       >
-        ✕
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+        </svg>
       </button>
     }
   </dialog>

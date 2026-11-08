@@ -1,14 +1,165 @@
 <div id="inicio" tabindex="-1">
-  <app-navbar id="ubicacion" tabindex="-1"></app-navbar>
   <app-contact-bar></app-contact-bar>
-  <app-cafe-history id="historia" tabindex="-1"></app-cafe-history>
-  <app-coffee-origins id="origenes" tabindex="-1"></app-coffee-origins>
-  <app-carousel id="productos" tabindex="-1"></app-carousel>
-  <section class="shop-preview" id="tienda" tabindex="-1" aria-labelledby="shop-preview-title">
-    <p class="eyebrow">De nuestro local a tu casa</p>
-    <h2 id="shop-preview-title">Lleva a Café Nuestras Raíces contigo</h2>
-    <p>Explora los cafés y elige tu presentación favorita en nuestra tienda.</p>
-    <p class="demo-note">Compra en línea y paga de forma segura con Wompi.</p>
-    <a routerLink="/tienda">Explorar la tienda</a>
+
+  <!-- First viewport: what the place is and how a visit works. -->
+  <section class="visit-hero" aria-labelledby="home-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="sign" aria-hidden="true">Tu visita</p>
+        <h1 id="home-title">Prueba cafés de toda Colombia en Sabaneta</h1>
+        <p class="hero-lead">
+          Una barra con cafés de distintas regiones y varios métodos de preparación. Llegas,
+          pruebas, eliges y te lo llevas.
+        </p>
+        <ol class="visit-steps" aria-label="Cómo es la visita">
+          <li>
+            <a routerLink="/" fragment="llega">
+              <span class="step-n" aria-hidden="true">1</span>
+              <span class="step-text">
+                <strong>Llega</strong>
+                <span>Calle 72 Sur #46 A 35 · lunes a domingo, 8:00 a.m. – 9:00 p.m.</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/" fragment="prueba">
+              <span class="step-n" aria-hidden="true">2</span>
+              <span class="step-text">
+                <strong>Prueba</strong>
+                <span>Espresso, V60, Chemex, prensa francesa, AeroPress, sifón y moka</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/" fragment="elige">
+              <span class="step-n" aria-hidden="true">3</span>
+              <span class="step-text">
+                <strong>Elige</strong>
+                <span>Mira en el mapa de dónde viene cada café</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/" fragment="tienda">
+              <span class="step-n" aria-hidden="true">4</span>
+              <span class="step-text">
+                <strong>Llévalo</strong>
+                <span>En el local o en la tienda en línea, con envío o retiro</span>
+              </span>
+            </a>
+          </li>
+        </ol>
+        <div class="hero-actions">
+          <a
+            class="btn btn--primary"
+            href="https://www.google.com/maps/search/?api=1&query=Calle+72+Sur+%2346A-35,+Sabaneta"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Cómo llegar <span class="visually-hidden">(se abre en una nueva pestaña)</span>
+          </a>
+          <a class="btn btn--secondary" routerLink="/tienda">Ver la tienda</a>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <img
+          src="images/cafe/sede_1-1200.webp"
+          srcset="
+            images/cafe/sede_1-800.webp   800w,
+            images/cafe/sede_1-1200.webp 1200w,
+            images/cafe/sede_1.webp      1600w
+          "
+          sizes="(min-width: 1024px) 52vw, 100vw"
+          alt="Barra de Café Nuestras Raíces con murales de cafetales y mesas de madera"
+          width="1600"
+          height="900"
+          fetchpriority="high"
+        />
+        <figcaption>
+          <span class="status" [class.is-open]="isOpen()">
+            <span class="status-dot" aria-hidden="true"></span>
+            {{ isOpen() ? 'Abierto ahora · hasta las 9:00 p.m.' : 'Cerrado ahora · abrimos a las 8:00 a.m.' }}
+          </span>
+        </figcaption>
+      </figure>
+    </div>
   </section>
+
+  <section class="step" id="llega" aria-labelledby="llega-title">
+    <div class="wrap step-head">
+      <span class="step-n" aria-hidden="true">1</span>
+      <div>
+        <h2 id="llega-title">Llega</h2>
+        <p>Estamos en Sabaneta, Antioquia. Abrimos de lunes a domingo.</p>
+      </div>
+    </div>
+    <app-navbar id="ubicacion" tabindex="-1"></app-navbar>
+  </section>
+
+  <section class="step" id="prueba" tabindex="-1" aria-labelledby="prueba-title">
+    <div class="wrap step-head">
+      <span class="step-n" aria-hidden="true">2</span>
+      <div>
+        <h2 id="prueba-title">Prueba</h2>
+        <p>Pregunta en la barra qué orígenes hay hoy y en qué método quieres probarlos.</p>
+      </div>
+    </div>
+    <div class="wrap">
+      <ul class="methods">
+        @for (method of methods; track method.name) {
+          <li>
+            <span class="method-name">{{ method.name }}</span>
+            <span class="method-detail">{{ method.detail }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="elige" aria-labelledby="elige-title">
+    <div class="wrap step-head">
+      <span class="step-n" aria-hidden="true">3</span>
+      <div>
+        <h2 id="elige-title">Elige de dónde viene tu café</h2>
+        <p>Toca un punto del mapa para ver los cafés de cada región, su proceso y sus notas.</p>
+      </div>
+    </div>
+    <app-coffee-origins id="origenes" tabindex="-1"></app-coffee-origins>
+  </section>
+
+  <section class="step shop-preview" id="tienda" tabindex="-1" aria-labelledby="shop-preview-title">
+    <div class="wrap step-head">
+      <span class="step-n" aria-hidden="true">4</span>
+      <div>
+        <h2 id="shop-preview-title">Llévalo a casa</h2>
+        <p>Compra en línea y paga seguro con Wompi. Te lo enviamos o lo recoges en el local.</p>
+      </div>
+      <a class="btn btn--primary step-cta" routerLink="/tienda">Ver la tienda</a>
+    </div>
+    <div class="wrap">
+      @if (coffees().length > 0) {
+        <ul class="take-home">
+          @for (coffee of coffees(); track coffee.id) {
+            <li>
+              <a routerLink="/tienda" [fragment]="'cafe-' + coffee.id">
+                <span class="take-name">{{ coffee.name }}</span>
+                <span class="take-meta">
+                  {{ coffee.origin ?? '' }}{{ coffee.origin && coffee.process ? ' · ' : '' }}{{ coffee.process ?? '' }}
+                </span>
+                <span class="take-price">
+                  {{ fromPrice(coffee) | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      } @else if (catalog.isLoading()) {
+        <p class="take-status" role="status">Cargando cafés…</p>
+      }
+    </div>
+  </section>
+
+  <!-- After the four steps: the place told by its people, and what it offers. -->
+  <app-cafe-history id="historia" tabindex="-1"></app-cafe-history>
+  <app-carousel id="productos" tabindex="-1"></app-carousel>
 </div>

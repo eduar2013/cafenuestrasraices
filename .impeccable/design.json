@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-08T12:00:00Z",
+  "title": "Design System: Café Nuestras Raíces",
+  "extensions": {
+    "colorMeta": {
+      "action": {
+        "role": "primary",
+        "displayName": "Bottle Green Enamel",
+        "canonical": "#2d4a37",
+        "tonalRamp": [
+          "#0f1a13",
+          "#1f3627",
+          "#2d4a37",
+          "#44664f",
+          "#5f826b",
+          "#86a38f",
+          "#b4c8ba",
+          "#e2ebe4"
+        ]
+      },
+      "action-deep": {
+        "role": "primary",
+        "displayName": "Deep Bottle Green",
+        "canonical": "#1f3627",
+        "tonalRamp": [
+          "#0a120d",
+          "#142219",
+          "#1f3627",
+          "#2d4a37",
+          "#44664f",
+          "#6d8b77",
+          "#a5bbab",
+          "#dbe5de"
+        ]
+      },
+      "state": {
+        "role": "secondary",
+        "displayName": "Lime Stone",
+        "canonical": "#e3ddd0",
+        "tonalRamp": [
+          "#3b372e",
+          "#5a5446",
+          "#7d7663",
+          "#a39b86",
+          "#c4bca8",
+          "#e3ddd0",
+          "#efeae0",
+          "#f8f6f1"
+        ]
+      },
+      "error": {
+        "role": "tertiary",
+        "displayName": "Muted Brick Red",
+        "canonical": "#9a2a1d",
+        "tonalRamp": [
+          "#3d100b",
+          "#5e1a12",
+          "#9a2a1d",
+          "#b94a3b",
+          "#d07a6d",
+          "#e3a89f",
+          "#f0d0ca",
+          "#f9ecea"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Black Enamel",
+        "canonical": "#141414",
+        "tonalRamp": [
+          "#141414",
+          "#2a2a28",
+          "#45453f",
+          "#6f6f67",
+          "#9a9a92",
+          "#c4c4bc",
+          "#e4e4dc",
+          "#fafaf6"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Worn Enamel",
+        "canonical": "#45453f",
+        "tonalRamp": [
+          "#1c1c19",
+          "#2f2f2b",
+          "#45453f",
+          "#5e5e57",
+          "#7c7c74",
+          "#a3a39b",
+          "#cbcbc3",
+          "#ecece6"
+        ]
+      },
+      "wall": {
+        "role": "neutral",
+        "displayName": "Lime-Wash Wall",
+        "canonical": "#fafaf6",
+        "tonalRamp": [
+          "#2b2b27",
+          "#4a4a44",
+          "#6e6e66",
+          "#96968d",
+          "#bdbdb4",
+          "#dcdcd4",
+          "#efefe8",
+          "#fafaf6"
+        ]
+      },
+      "wall-shade": {
+        "role": "neutral",
+        "displayName": "Wall Shade",
+        "canonical": "#efefe8",
+        "tonalRamp": [
+          "#28281f",
+          "#45453c",
+          "#67675d",
+          "#8e8e84",
+          "#b5b5ab",
+          "#d6d6ce",
+          "#efefe8",
+          "#f8f8f4"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#474747",
+          "#6b6b6b",
+          "#929292",
+          "#b9b9b9",
+          "#dcdcdc",
+          "#f2f2f2",
+          "#ffffff"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Pencil Rule",
+        "canonical": "#14141426",
+        "tonalRamp": [
+          "#141414",
+          "#141414cc",
+          "#14141499",
+          "#14141466",
+          "#14141440",
+          "#14141426",
+          "#14141414",
+          "#1414140a"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "sign-display": {
+        "displayName": "Sign Display",
+        "purpose": "The shop's page sign, one per page, aria-hidden when a real h1 follows."
+      },
+      "sign-display-home": {
+        "displayName": "Sign Display Home",
+        "purpose": "The home page sign ('Tu visita'), aria-hidden above the real h1."
+      },
+      "sign-numeral": {
+        "displayName": "Sign Numeral",
+        "purpose": "The painted number heading each home step; 2rem in the first-viewport step list."
+      },
+      "sign-section": {
+        "displayName": "Sign Section",
+        "purpose": "Home section headings: step h2s, history, carousel."
+      },
+      "sign-board": {
+        "displayName": "Sign Board",
+        "purpose": "The board heading."
+      },
+      "sign-method": {
+        "displayName": "Sign Method",
+        "purpose": "Brewing-method names on the Prueba menu board."
+      },
+      "sign-title": {
+        "displayName": "Sign Title",
+        "purpose": "Coffee names on cards and the street address on the location card; related steps head the cart, drawer, result and footer brand."
+      },
+      "sign-row": {
+        "displayName": "Sign Row",
+        "purpose": "Names on ruled rows and small cards: board rows, take-home list, carousel titles, header brand name."
+      },
+      "sign-price": {
+        "displayName": "Sign Price",
+        "purpose": "Prices and totals, tabular figures, word-spacing -0.22em, followed by a muted currency code on display totals."
+      },
+      "sign-price-row": {
+        "displayName": "Sign Price Row",
+        "purpose": "Prices on board rows and the take-home list, tabular figures, word-spacing -0.22em."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The real page h1 under the sign, max 24ch."
+      },
+      "body-large": {
+        "displayName": "Body Large",
+        "purpose": "Step names in the first-viewport list (700) and the history story (line-height 1.65, max 60ch)."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Muted leads under signs and step headings, method details, location values; 48-56ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Ruled-row values, control labels, chips and fields."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Meta lines, breadcrumbs, field labels, map captions, tasting-note pills, footer bottom line."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Ruled-row terms, filter labels, state tags. Sentence case, no tracking."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "The muted currency code after display totals."
+      }
+    },
+    "shadows": [
+      {
+        "name": "painted-letter",
+        "value": "0.05em 0.05em 0 #14141433",
+        "purpose": "text-shadow on sign lettering for signs, numerals, headings and card names; never on prices, row names or running text."
+      },
+      {
+        "name": "chosen-filete",
+        "value": "inset 0 0 0 3px #e3ddd0, inset 0 0 0 4.5px #141414",
+        "purpose": "Inner ink line on a selected chip, option or delivery row, over a stone fill."
+      },
+      {
+        "name": "pin-ring",
+        "value": "0 0 0 2px #141414",
+        "purpose": "Ink ring around a green map pin (over a 3px white border)."
+      },
+      {
+        "name": "toast-float",
+        "value": "0 10px 30px -10px #14141466",
+        "purpose": "The add-to-cart toast."
+      },
+      {
+        "name": "dropdown-float",
+        "value": "0 16px 32px -16px #14141466",
+        "purpose": "The menu dropdown under the header."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 3px solid #2d4a37; outline-offset: 2px",
+        "purpose": "Keyboard focus on all controls; wall outline on the ink footer."
+      },
+      {
+        "name": "field-focus-halo",
+        "value": "outline: 3px solid #2d4a3740",
+        "purpose": "Soft halo around a focused text field, with a green border."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default easing for every state change."
+      },
+      {
+        "name": "m-in",
+        "value": "160ms",
+        "purpose": "Hover fills and colour changes."
+      },
+      {
+        "name": "m-paint",
+        "value": "320ms",
+        "purpose": "The chosen filete painting in on a selected control."
+      },
+      {
+        "name": "drawer",
+        "value": "340ms",
+        "purpose": "Cart drawer slide and backdrop fade."
+      },
+      {
+        "name": "carousel-slide",
+        "value": "700ms",
+        "purpose": "Carousel track slide, with the default ease."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition-duration: 0.01ms",
+        "purpose": "Under prefers-reduced-motion, transitions collapse and smooth scroll turns off."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "checkout-narrow",
+        "value": "420px"
+      },
+      {
+        "name": "header-icon-only",
+        "value": "460px"
+      },
+      {
+        "name": "footer-one-column",
+        "value": "560px"
+      },
+      {
+        "name": "tablet",
+        "value": "640px"
+      },
+      {
+        "name": "header-compact",
+        "value": "768px"
+      },
+      {
+        "name": "footer-two-column",
+        "value": "900px"
+      },
+      {
+        "name": "desktop",
+        "value": "1024px"
+      },
+      {
+        "name": "container-max",
+        "value": "1280px"
+      }
+    ],
+    "strokes": [
+      {
+        "name": "filete",
+        "value": "2px solid #141414",
+        "purpose": "The frame on every hung object and control outline, and the rule that opens each page section and underlines the header."
+      },
+      {
+        "name": "rule",
+        "value": "1px solid #14141426",
+        "purpose": "Hairlines between ruled rows, board rows, step-list rows and cart items, and between sub-blocks of a step."
+      },
+      {
+        "name": "filete-on-ink",
+        "value": "2px solid #fafaf6",
+        "purpose": "Outlined buttons on the ink footer."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The add-to-cart and every forward action; the only solid green on the page.",
+      "html": "<button class=\"ds-btn-primary\">Agregar al carrito</button>",
+      "css": ".ds-btn-primary { background: #2d4a37; color: #ffffff; border: 0; border-radius: 6px; min-height: 48px; padding: 0 18px; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { background: #1f3627; } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Lesser actions such as retry or keep shopping: green outline, fills on hover.",
+      "html": "<button class=\"ds-btn-secondary\">Seguir comprando</button>",
+      "css": ".ds-btn-secondary { background: transparent; color: #2d4a37; border: 2px solid #2d4a37; border-radius: 6px; min-height: 44px; padding: 0 18px; font-family: 'Albert Sans', system-ui, sans-serif; font-weight: 700; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-secondary:hover { background: #2d4a37; color: #ffffff; } .ds-btn-secondary:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Round Button",
+      "kind": "button",
+      "refersTo": "button-round",
+      "description": "Header social links and menu toggle: ink-outlined circle, wall shade on hover.",
+      "html": "<div style=\"display:flex;gap:6px\"><a href=\"#\" class=\"ds-btn-round\" aria-label=\"WhatsApp\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z\"/></svg></a><button class=\"ds-btn-round\" aria-label=\"Menú\" aria-expanded=\"false\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"fill:none;stroke:currentColor;stroke-width:2\"><path d=\"M4 7h16M4 12h16M4 17h16\"/></svg></button></div>",
+      "css": ".ds-btn-round { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; background: transparent; color: #141414; border: 2px solid #141414; border-radius: 50%; cursor: pointer; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-round svg { width: 18px; height: 18px; fill: currentColor; } .ds-btn-round:hover { background: #efefe8; } .ds-btn-round[aria-expanded='true'] { background: #e3ddd0; } .ds-btn-round:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Ink-framed filter; the chosen one turns stone with an inner ink filete.",
+      "html": "<div style=\"display:flex;gap:6px\"><button class=\"ds-chip\" aria-pressed=\"true\">Lavado</button><button class=\"ds-chip\" aria-pressed=\"false\">Honey</button><button class=\"ds-chip\" aria-pressed=\"false\">Natural</button></div>",
+      "css": ".ds-chip { background: transparent; color: #141414; border: 2px solid #141414; border-radius: 6px; box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 3px transparent; min-height: 44px; padding: 0 14px; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-chip:hover { background: #efefe8; } .ds-chip[aria-pressed='true'] { background: #e3ddd0; box-shadow: inset 0 0 0 3px #e3ddd0, inset 0 0 0 4.5px #141414; } .ds-chip:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Checkout field: wall fill, soft ink border, green on focus, red when invalid.",
+      "html": "<label class=\"ds-field\">Nombre completo<input class=\"ds-input\" placeholder=\"Como aparece en tu documento\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 4px; color: #141414; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 700; } .ds-input { box-sizing: border-box; width: 100%; height: 44px; padding: 0 12px; background: #fafaf6; color: #141414; border: 2px solid #14141466; border-radius: 6px; font: 400 0.9375rem 'Albert Sans', system-ui, sans-serif; transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-input::placeholder { color: #6f6f67; } .ds-input:hover { border-color: #141414; } .ds-input:focus { border-color: #2d4a37; outline: 3px solid #2d4a3740; outline-offset: 0; } .ds-input[aria-invalid='true'] { border-color: #9a2a1d; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "card-product",
+      "description": "A coffee's own painted sign: framed photo, Shrikhand name, ruled lines, price and add button at the foot.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-photo\"></div><div class=\"ds-card-body\"><h3 class=\"ds-card-name\">Mauritania Honey</h3><p class=\"ds-card-producer\">Finca Mauritania</p><dl class=\"ds-lines\"><div><dt>Proceso</dt><dd>Honey</dd></div><div><dt>Notas</dt><dd>Miel, frutos rojos</dd></div></dl><div class=\"ds-card-foot\"><p class=\"ds-price\">$50.000<span>COP</span></p><button class=\"ds-card-add\">Agregar</button></div></div></article>",
+      "css": ".ds-card { max-width: 320px; background: #ffffff; color: #141414; border: 2px solid #141414; border-radius: 6px; padding: 5px; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-card-photo { aspect-ratio: 4 / 3; background: #efefe8; border-radius: 3px; } .ds-card-body { padding: 14px 10px 6px; } .ds-card-name { margin: 0; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-weight: 400; font-size: 1.625rem; line-height: 1.1; text-shadow: 0.05em 0.05em 0 #14141433; } .ds-card-producer { margin: 2px 0 0; color: #45453f; font-size: 0.875rem; font-weight: 600; } .ds-lines { margin: 10px 0 0; } .ds-lines > div { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: 12px; padding: 6px 0; border-top: 1px solid #14141426; } .ds-lines > div:last-child { border-bottom: 1px solid #14141426; } .ds-lines dt { color: #45453f; font-size: 0.8125rem; font-weight: 700; } .ds-lines dd { margin: 0; font-size: 0.9375rem; } .ds-card-foot { display: grid; gap: 10px; margin-top: 14px; } .ds-price { margin: 0; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.75rem; line-height: 1; word-spacing: -0.22em; font-variant-numeric: tabular-nums; } .ds-price span { margin-left: 6px; color: #45453f; font: 700 0.75rem 'Albert Sans', sans-serif; } .ds-card-add { min-height: 48px; background: #2d4a37; color: #ffffff; border: 0; border-radius: 6px; font: 700 1rem 'Albert Sans', sans-serif; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-card-add:hover { background: #1f3627; } .ds-card-add:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Board Row",
+      "kind": "nav",
+      "refersTo": "board-row",
+      "description": "A painted line on the board that jumps to its card; fills green on hover.",
+      "html": "<ol class=\"ds-board\"><li><a href=\"#\" class=\"ds-board-row\"><span class=\"ds-board-name\">Oiba's Coffee</span><span class=\"ds-board-meta\">Lavado · Santander — Caramelo, panela</span><span class=\"ds-board-price\">$49.000</span></a></li><li class=\"is-out\"><a href=\"#\" class=\"ds-board-row\"><span class=\"ds-board-name\">Micos Coffee</span><span class=\"ds-board-meta\">Natural · Risaralda</span><span class=\"ds-board-price\">Agotado</span></a></li></ol>",
+      "css": ".ds-board { list-style: none; margin: 0; padding: 0; max-width: 520px; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-board li { border-bottom: 1px solid #14141426; } .ds-board li:first-child { border-top: 1px solid #14141426; } .ds-board-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; align-items: center; min-height: 44px; padding: 10px; border-radius: 4px; color: #141414; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-board-name { font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.375rem; line-height: 1.15; } .ds-board-meta { grid-column: 1; color: #45453f; font-size: 0.875rem; line-height: 1.35; } .ds-board-price { grid-column: 2; grid-row: 1 / span 2; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.25rem; word-spacing: -0.22em; white-space: nowrap; } .ds-board-row:hover { background: #2d4a37; color: #ffffff; } .ds-board-row:hover .ds-board-meta, .ds-board-row:hover .ds-board-price { color: #ffffff; } .ds-board-row:focus-visible { outline: 3px solid #2d4a37; outline-offset: 0; } .is-out .ds-board-name { text-decoration: line-through; text-decoration-thickness: 3px; } .is-out .ds-board-price { background: #e3ddd0; color: #141414; border-radius: 3px; padding: 2px 8px; font: 700 0.8125rem 'Albert Sans', sans-serif; }"
+    },
+    {
+      "name": "Checkout Step Panel",
+      "kind": "card",
+      "refersTo": "panel-step",
+      "description": "A white panel hung on the wall with a painted step number.",
+      "html": "<fieldset class=\"ds-step\"><legend><span class=\"ds-step-number\">1</span> Tus datos</legend><p class=\"ds-step-hint\">Te escribimos solo sobre este pedido.</p></fieldset>",
+      "css": ".ds-step { max-width: 420px; margin: 0; background: #ffffff; border: 2px solid #141414; border-radius: 6px; padding: 14px 14px 16px; font-family: 'Albert Sans', system-ui, sans-serif; color: #141414; } .ds-step legend { display: flex; align-items: center; gap: 10px; float: left; width: 100%; padding: 0; font-weight: 700; } .ds-step-number { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #141414; color: #fafaf6; border-radius: 4px; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-weight: 400; } .ds-step-hint { clear: both; margin: 12px 0 0; color: #45453f; font-size: 0.875rem; }"
+    },
+    {
+      "name": "Header",
+      "kind": "nav",
+      "refersTo": "header",
+      "description": "Sticky shared header: wall ground, 2px ink bottom rule, Shrikhand brand name, green Tienda button.",
+      "html": "<header class=\"ds-header\"><a href=\"#\" class=\"ds-brand\"><span class=\"ds-brand-name\">Nuestras Raíces</span></a><a href=\"#\" class=\"ds-shop\">Tienda</a></header>",
+      "css": ".ds-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; padding: 8px 16px; background: #fafaf6; color: #141414; border-bottom: 2px solid #141414; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-brand { color: #141414; text-decoration: none; } .ds-brand-name { font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.375rem; line-height: 1.1; white-space: nowrap; } .ds-brand:focus-visible { border-radius: 4px; outline: 3px solid #2d4a37; outline-offset: 4px; } .ds-shop { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; background: #2d4a37; color: #ffffff; border-radius: 6px; font-weight: 700; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-shop:hover { background: #1f3627; } .ds-shop:focus-visible { outline: 3px solid #2d4a37; outline-offset: 3px; }"
+    },
+    {
+      "name": "Visit Step List",
+      "kind": "nav",
+      "refersTo": "visit-steps",
+      "description": "The home page's navigation: painted numerals, step names and muted details on pencil rules.",
+      "html": "<ol class=\"ds-steps\"><li><a href=\"#\"><span class=\"ds-step-n\" aria-hidden=\"true\">1</span><span class=\"ds-step-t\"><strong>Llega</strong><span>Lunes a domingo, 8:00 a.m. – 9:00 p.m.</span></span></a></li><li><a href=\"#\"><span class=\"ds-step-n\" aria-hidden=\"true\">2</span><span class=\"ds-step-t\"><strong>Prueba</strong><span>Espresso, V60, Chemex, prensa francesa</span></span></a></li></ol>",
+      "css": ".ds-steps { list-style: none; margin: 0; padding: 0; max-width: 480px; border-top: 2px solid #141414; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-steps li { border-bottom: 1px solid #14141426; } .ds-steps a { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; align-items: center; min-height: 56px; padding: 10px 8px; border-radius: 4px; color: #141414; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-steps a:hover { background: #efefe8; } .ds-steps a:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; } .ds-step-n { font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 2rem; line-height: 1; text-align: center; text-shadow: 0.05em 0.05em 0 #14141433; } .ds-step-t { display: flex; flex-direction: column; } .ds-step-t strong { font-size: 1.125rem; } .ds-step-t span { color: #45453f; font-size: 0.9375rem; }"
+    },
+    {
+      "name": "Status Plate",
+      "kind": "custom",
+      "refersTo": "status-plate",
+      "description": "Open/closed plate on the shop photo: filled ink dot when open, hollow ink ring when closed. Never green.",
+      "html": "<div style=\"display:flex;gap:12px\"><span class=\"ds-status is-open\"><span class=\"ds-status-dot\"></span>Abierto ahora</span><span class=\"ds-status\"><span class=\"ds-status-dot\"></span>Cerrado</span></div>",
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fafaf6; color: #141414; border: 2px solid #141414; border-radius: 6px; font: 700 1rem 'Albert Sans', system-ui, sans-serif; } .ds-status-dot { box-sizing: border-box; width: 12px; height: 12px; border: 2px solid #141414; border-radius: 50%; } .ds-status.is-open .ds-status-dot { background: #141414; }"
+    },
+    {
+      "name": "Footer",
+      "kind": "custom",
+      "refersTo": "footer",
+      "description": "Black enamel footer, the one inverted surface: ink ground, wall text, outlined wall button.",
+      "html": "<footer class=\"ds-footer\"><p class=\"ds-footer-brand\">Nuestras Raíces</p><p>Calle 72 Sur #46 A 35, Sabaneta</p><a href=\"#\" class=\"ds-footer-link\">Instagram</a> <a href=\"#\" class=\"ds-footer-cta\">Cómo llegar</a></footer>",
+      "css": ".ds-footer { max-width: 420px; padding: 32px 24px 20px; background: #141414; color: #fafaf6; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-footer p { margin: 0 0 12px; color: #d9d9d2; line-height: 1.6; } .ds-footer .ds-footer-brand { color: #fafaf6; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.75rem; line-height: 1.1; } .ds-footer-link { color: #fafaf6; text-decoration: underline; text-decoration-color: #fafaf666; text-underline-offset: 0.25em; } .ds-footer-link:hover { text-decoration-color: #fafaf6; } .ds-footer-cta { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; color: #fafaf6; border: 2px solid #fafaf6; border-radius: 6px; font-weight: 700; text-decoration: none; } .ds-footer-cta:hover { background: #fafaf6; color: #141414; } .ds-footer a:focus-visible { border-radius: 2px; outline: 3px solid #fafaf6; outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Painted Wall of the Paisa Local",
+    "overview": "The system is rotulación popular: the hand-painted lettering on the walls of neighbourhood shops in Antioquia, made sober. The ground is a lime-wash white wall. Every coffee gets its own painted sign: its name and price in a sign-painter's script with a soft painted shadow. Everything else is set in a plain, warm sans that never competes with the lettering. Painted signs carry the character; a quiet text face carries the information.\n\nThe palette is held back on purpose. Black enamel does the lettering, the prices and the filete, the thin painted line that frames objects on the wall. One deep green marks everything you can act on. A pale stone with an inner ink filete marks what you have chosen. A muted red appears only when something is wrong. Hierarchy comes from size alone, never from extra colours or uppercase tracking.\n\nDensity is comfortable and comparative: coffees sit side by side on the same ruled lines, so origin, process, notes and price can be compared at a glance, and the add button is visible on every card without opening anything. Long pages are divided like a wall of painted signs: large painted numerals and headings, separated by 2px ink rules. Confirmed rejections: the cream-and-serif artisan grid and the white third-wave product grid; chivas, hats and flags used as decoration; painted lettering in running paragraphs; flip cards.",
+    "keyCharacteristics": [
+      "Lime-wash wall ground on every route, white panels hung on it inside a 2px ink filete.",
+      "Shrikhand sign lettering only on names, prices, totals, numerals and signs; Albert Sans for everything else.",
+      "One action colour (deep green), one chosen-state treatment (stone + inner filete), one error colour.",
+      "Flat surfaces; depth comes from the filete and the painted letter shadow.",
+      "The same measurement lines on every card so coffees compare row by row.",
+      "One inverted surface: the footer, painted in black enamel."
+    ],
+    "rules": [
+      {
+        "name": "The One Green Rule",
+        "body": "Deep green is reserved for things you can act on. If tapping it does nothing, it is not green. The open/closed status is information, so it is painted in ink: a filled dot for open, a hollow ring for closed.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stone Means Chosen Rule",
+        "body": "Stone with ink text is the only \"selected\" signal. It never decorates and never signals an error.",
+        "section": "colors"
+      },
+      {
+        "name": "The Red Means Wrong Rule",
+        "body": "The muted red appears only on errors. Prices are ink, not red.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sign Lettering Rule",
+        "body": "Shrikhand is used only on coffee names, method names, prices and totals, signs and headings, numerals, the street address, the brand name and the pickup code. Never in paragraphs, buttons, labels or form text.",
+        "section": "typography"
+      },
+      {
+        "name": "The Painted Shadow Rule",
+        "body": "Sign lettering on page signs, numerals, headings and card names carries a soft painted shadow (0.05em 0.05em, ink at 20%, no blur). Prices, row names and running text carry none.",
+        "section": "typography"
+      },
+      {
+        "name": "The Size Alone Rule",
+        "body": "Hierarchy comes from size and weight. No uppercase tracked labels, no eyebrows above headings, no colour coding of levels.",
+        "section": "typography"
+      },
+      {
+        "name": "The Filete Rule",
+        "body": "Every framed object takes the same 2px ink line. Depth is shown by framing, never by drop shadows on cards or panels.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do frame every hung object (card, panel, photo, map, field group) in the 2px ink filete with 6px corners.",
+      "Do open each page section with a 2px ink rule and a painted numeral or Shrikhand heading.",
+      "Do keep deep green for actions only: buttons, link hover, focus rings, progress, map pins.",
+      "Do mark every chosen state with stone fill plus the inner ink filete (3px stone gap, 1.5px ink).",
+      "Do set coffee names, prices and totals in Shrikhand with tabular figures, followed by a muted currency code on display totals.",
+      "Do keep the same ruled lines, in the same order, on every product card.",
+      "Do show sold-out coffees with a struck name and a stone Agotado tag instead of hiding them.",
+      "Do honour reduced motion: transitions collapse, smooth scroll turns off."
+    ],
+    "donts": [
+      "Don't add another accent colour or reintroduce the earlier cobalt, yellow and bright red enamels.",
+      "Don't use the error red for prices, sale tags or emphasis.",
+      "Don't paint status or information green; open/closed is ink.",
+      "Don't set paragraphs, buttons or form labels in Shrikhand.",
+      "Don't put drop shadows on cards or panels; only floating objects (toast, menu dropdown) cast one.",
+      "Don't use chivas, hats or flags as decoration, or flip cards.",
+      "Don't add uppercase tracked labels or eyebrows above headings; hierarchy is by size alone.",
+      "Don't carry over the old site look (cream grounds, Georgia/Playfair, gold) into new surfaces."
+    ]
+  }
+}

@@ -32,6 +32,13 @@ export interface ShopProduct {
   readonly description: string;
   /** Coffee properties shown as labelled fields: variety, process, roast and altitude. */
   readonly properties: readonly ProductProperty[];
+  /** Where the coffee grows, e.g. "Jericó, Antioquia". */
+  readonly origin?: string;
+  /** Farm or region inside the origin, e.g. "Finca Mauritania". */
+  readonly farm?: string;
+  /** Producer brand, only when the product name does not already say it. */
+  readonly producer?: string;
+  readonly process?: string;
   readonly notes?: readonly string[];
   readonly badge?: string;
   /** Products without a photo show a branded placeholder. */
@@ -171,15 +178,25 @@ function toCard(product: ApiProduct): ShopProduct | undefined {
     return undefined;
   }
   const available = product.is_available && variants.some((variant) => variant.available);
-  const detail = product.coffee_detail;
+  // Only coffees carry process, origin and notes: equipment records sometimes arrive with a
+  // stray coffee_detail from the admin (e.g. a dripper marked "Lavado").
+  const detail = product.category.slug === 'coffee' ? product.coffee_detail : null;
   const images = productImages(product);
   const notes = splitNotes(detail?.tasting_notes ?? null);
+  const origin = detail?.origin;
+  const place = [origin?.municipality, origin?.department].filter(Boolean).join(', ');
+  const brand = product.brand?.name?.trim();
   return {
     id: `${product.id}`,
     name: product.name,
     category: { id: product.category.slug, label: product.category.name },
     description: product.description ?? '',
     properties: detail ? coffeeProperties(detail) : [],
+    origin: place || undefined,
+    farm: origin?.region?.trim() || undefined,
+    producer:
+      brand && !product.name.toLowerCase().includes(brand.toLowerCase()) ? brand : undefined,
+    process: detail?.process?.name || undefined,
     notes: notes.length ? notes : undefined,
     badge: available ? undefined : 'Agotado',
     image: images[0],

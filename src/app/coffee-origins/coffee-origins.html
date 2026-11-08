@@ -1,10 +1,5 @@
-<section class="origins-section" aria-labelledby="origins-title">
+<section class="origins-section" aria-label="Mapa de orígenes del café">
   <div class="origins-container">
-    <header class="origins-heading">
-      <p class="eyebrow">De la tierra a tu taza</p>
-      <h2 id="origins-title">Explora nuestros orígenes</h2>
-      <p>Selecciona un punto en el mapa y descubre de dónde viene cada uno de nuestros cafés.</p>
-    </header>
 
     <div class="origins-layout">
       <div class="origins-explorer">
@@ -26,8 +21,7 @@
           }
           <span class="map-country" aria-hidden="true">Colombia</span>
         </div>
-        <p class="map-caption">División departamental continental · Ubicaciones aproximadas</p>
-        <p class="map-caption">No incluye el archipiélago de San Andrés, Providencia y Santa Catalina.</p>
+        <p class="map-caption">Colombia continental. Las ubicaciones son aproximadas.</p>
         @if (origins().length > 0) {
           <div class="origin-list" role="group" aria-label="Seleccionar origen por nombre">
             @for (origin of origins(); track origin.id) {
@@ -47,8 +41,8 @@
             <div class="coffee-info">
               <div class="coffee-header">
                 <div>
-                  <p class="eyebrow">{{ origin.name }}</p>
                   <h3>{{ coffee.name }}</h3>
+                  <p class="coffee-origin">{{ origin.name }}</p>
                   <p class="coffee-location">
                     {{ origin.location }}{{ origin.approximate ? ' · ubicación aproximada' : '' }}
                   </p>
@@ -111,7 +105,7 @@
               }
               <p class="availability">
                 @if (coffee.available) {
-                  <a class="shop-link" routerLink="/tienda">Comprar en la tienda →</a>
+                  <a class="shop-link" routerLink="/tienda">Comprar en la tienda</a>
                 } @else {
                   Agotado por ahora. <a class="shop-link" routerLink="/tienda">Ver otros cafés en la tienda</a>
                 }
@@ -135,7 +129,7 @@
   <dialog #photoDialog class="photo-dialog" (click)="photoDialog.close()">
     @if (selectedCoffee()?.image; as image) {
       <img [src]="image" [alt]="selectedCoffee()!.name" />
-      <button type="button" class="photo-dialog-close" aria-label="Cerrar foto">✕</button>
+      <button type="button" class="photo-dialog-close" aria-label="Cerrar foto"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg></button>
     }
   </dialog>
 </section>

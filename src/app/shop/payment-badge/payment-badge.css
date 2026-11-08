@@ -3,33 +3,31 @@
 }
 .payment-badge {
   align-items: center;
-  background: #f4f8f1;
-  border: 1px solid #c9d8be;
-  border-radius: 0.75rem;
-  color: #2f4a30;
+  border-top: 1px solid var(--line, #14141426);
+  color: var(--ink, #141414);
   display: flex;
-  font-family: system-ui, sans-serif;
-  gap: 0.6rem;
-  padding: 0.55rem 0.8rem;
+  font-family: var(--font-text, system-ui, sans-serif);
+  gap: 10px;
+  padding: 12px 0 2px;
   text-align: left;
 }
 .lock {
-  color: #3f6b40;
+  color: var(--ink, #141414);
   flex: none;
 }
 .badge-text {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 2px;
   min-width: 0;
 }
 .badge-title {
   align-items: center;
   display: inline-flex;
   flex-wrap: wrap;
-  font-size: 0.85rem;
-  font-weight: 600;
-  gap: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  gap: 6px;
 }
 .wompi-logo {
   display: block;
@@ -40,13 +38,12 @@
   letter-spacing: 0.02em;
 }
 .badge-detail {
-  color: #4f5f4a;
-  font-size: 0.76rem;
+  color: var(--muted, #45453f);
+  font-size: 0.8125rem;
   line-height: 1.4;
 }
 :host(.is-compact) .payment-badge {
-  background: none;
-  border: 0;
+  border-top: 0;
   justify-content: center;
-  padding: 0.25rem 0;
+  padding: 4px 0;
 }

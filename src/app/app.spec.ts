@@ -33,11 +33,12 @@ describe('App', () => {
     expect(nav?.getAttribute('aria-label')).toBe('Navegación por secciones');
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
       '/#inicio',
+      '/#ubicacion',
+      '/#prueba',
+      '/#origenes',
       '/#historia',
       '/#productos',
-      '/#origenes',
       '/tienda',
-      '/#ubicacion',
     ]);
     for (const link of links) {
       const href = link.getAttribute('href')!;
@@ -147,7 +148,8 @@ describe('App', () => {
     expect(footer.querySelector('h2')?.textContent).toBe('Enlaces de interés');
     expect(footer.textContent).toContain(String(new Date().getFullYear()));
     const links = Array.from(footer.querySelectorAll('a'));
-    expect(links.length).toBe(9);
+    // 5 section links, WhatsApp, Instagram, Facebook, "Cómo llegar" and "Volver al inicio".
+    expect(links.length).toBe(10);
     for (const link of links) {
       const href = link.getAttribute('href')!;
       if (href.startsWith('/#')) {
@@ -171,7 +173,7 @@ describe('App', () => {
     await router.navigateByUrl('/tienda');
     const catalog = TestBed.inject(CatalogService);
     await fixture.whenStable();
-    expect(compiled.querySelector('h1')?.textContent).toBe('Nuestra tienda');
+    expect(compiled.querySelector('h1')?.textContent).toBe('Café de especialidad colombiano para preparar en casa');
     expect(compiled.querySelector('app-cafe-history')).toBeNull();
     const [product] = catalog.products();
     TestBed.inject(CartService).add(product, product.variants[0]);

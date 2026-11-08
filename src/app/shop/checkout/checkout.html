@@ -178,6 +178,29 @@
       }
     </fieldset>
 
+    <details class="order-review">
+      <summary>
+        Tu pedido ({{ cart.count() }})
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </summary>
+      <ul class="order-items">
+        @for (item of cart.items(); track item.variant.id) {
+          <li>
+            <span class="order-item-name">
+              {{ item.quantity }} × {{ item.product.name }}
+              <span class="order-item-variant">{{ item.variant.label }}</span>
+            </span>
+            <span class="order-item-total">
+              {{ item.variant.price * item.quantity | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+            </span>
+          </li>
+        }
+      </ul>
+      <button type="button" class="edit-order" (click)="back.emit()">Cambiar el pedido</button>
+    </details>
+
     <dl class="checkout-summary">
       <div>
         <dt>Subtotal</dt>
@@ -203,7 +226,7 @@
       </div>
       <div class="summary-total">
         <dt>Total</dt>
-        <dd>{{ total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
+        <dd>{{ total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}<span class="cur">COP</span></dd>
       </div>
     </dl>
 
@@ -250,5 +273,23 @@
       </p>
     }
     <app-payment-badge class="checkout-badge" />
+    <a
+      class="help-link"
+      href="https://wa.me/573207803402?text=Hola%2C%20tengo%20una%20pregunta%20sobre%20mi%20pedido%20en%20la%20tienda"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path
+          d="M4.5 19.5 5.6 16A8 8 0 1 1 8.4 18.6L4.5 19.5Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linejoin="round"
+        />
+      </svg>
+      ¿Dudas con tu pedido? Escríbenos por WhatsApp
+      <span class="visually-hidden">(se abre en una nueva pestaña)</span>
+    </a>
   </form>
 }

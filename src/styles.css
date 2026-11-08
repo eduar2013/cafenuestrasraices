@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
-  background-color: #f5ecd3;
+  background-color: #fafaf6;
+  color: #141414;
+  font-family: 'Albert Sans', system-ui, sans-serif;
   margin: 0;
   min-height: 100%;
 }
@@ -14,4 +16,65 @@ html {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Rotulación popular: hand-painted sign lettering, self-hosted. */
+@font-face {
+  font-family: 'Shrikhand';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/shrikhand-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Albert Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/albert-sans-latin.woff2') format('woff2');
+}
+
+/* Site tokens: a painted wall, sober. Lime-wash ground, black enamel for lettering and
+   filete, one deep green for everything you can act on, stone for the chosen state.
+   Global: every route and component inherits them (see DESIGN.md). */
+:root {
+  --wall: #fafaf6;
+  --wall-shade: #efefe8;
+  --ink: #141414;
+  --muted: #45453f;
+  --line: #14141426;
+  --line-strong: #141414;
+  --action: #2d4a37;
+  --action-deep: #1f3627;
+  --on-action: #ffffff;
+  --price: #141414;
+  --state: #e3ddd0;
+  --on-state: #141414;
+  --error: #9a2a1d;
+  --font-sign: 'Shrikhand', 'Albert Sans', system-ui, sans-serif;
+  --font-text: 'Albert Sans', system-ui, sans-serif;
+  /* Painted shadow under sign lettering. */
+  --sign-shadow: 0.05em 0.05em 0 #14141433;
+  --filete: 2px;
+  --r: 6px;
+  --btn-h: 48px;
+  --gut: 16px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --m-in: 160ms;
+  --m-paint: 320ms;
+}
+@media (min-width: 640px) {
+  :root {
+    --gut: 32px;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --gut: 56px;
+  }
+}
+
+::selection {
+  background: #d6e0d8;
+  color: #141414;
 }

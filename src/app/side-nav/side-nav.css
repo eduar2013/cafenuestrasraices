@@ -2,68 +2,68 @@
   display: inline-flex;
   position: relative;
 }
-
-/* Same gold circle as the social links next to it. */
 .nav-toggle {
   align-items: center;
-  background-color: #f2c35c;
-  border: 0;
+  background: transparent;
+  border: var(--filete) solid var(--ink);
   border-radius: 50%;
-  color: #1f2a30;
+  color: var(--ink);
   cursor: pointer;
   display: inline-flex;
-  height: 32px;
+  height: 40px;
   justify-content: center;
   padding: 0;
-  width: 32px;
+  transition: background-color var(--m-in) var(--ease);
+  width: 40px;
 }
-
-.nav-toggle:hover,
+.nav-toggle:hover {
+  background: var(--wall-shade);
+}
+/* Stone means chosen: only the open menu is painted stone. */
 .nav-toggle[aria-expanded='true'] {
-  background-color: #d89f2f;
+  background: var(--state);
 }
-
-/* Dropdown under the button, aligned to its right edge. */
+/* Dropdown under the button, aligned to its right edge: a small painted board. */
 nav {
-  background-color: #211b16;
-  border: 1px solid #c49b50;
-  border-radius: 0.75rem;
-  box-shadow: 0 12px 28px #0006;
-  font-family: Georgia, 'Times New Roman', serif;
-  min-width: 11rem;
-  padding: 0.5rem;
+  background: #fff;
+  border: var(--filete) solid var(--ink);
+  border-radius: var(--r);
+  box-shadow: 0 16px 32px -16px #14141466;
+  font-family: var(--font-text);
+  min-width: 13rem;
+  padding: 6px;
   position: absolute;
   right: 0;
-  top: calc(100% + 0.6rem);
+  top: calc(100% + 10px);
   z-index: 10;
 }
-
 ul {
   display: grid;
-  gap: 0.25rem;
+  gap: 2px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
-
 a {
   align-items: center;
-  border-radius: 0.4rem;
-  color: #f7d27b;
+  border-radius: 4px;
+  color: var(--ink);
   display: flex;
+  font-weight: 600;
   min-height: 44px;
-  padding: 0 0.85rem;
+  padding: 0 12px;
   text-decoration: none;
 }
-
-a:hover,
-a:focus-visible {
-  background-color: #f7d27b;
-  color: #211b16;
+a:hover {
+  background: var(--wall-shade);
 }
-
 a:focus-visible,
 .nav-toggle:focus-visible {
-  outline: 2px solid #fff;
+  outline: 3px solid var(--action);
   outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-toggle {
+    transition: none;
+  }
 }
