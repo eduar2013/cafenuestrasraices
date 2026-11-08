@@ -1,0 +1,142 @@
+:host {
+  display: block;
+}
+.desk {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+.desk-card {
+  background: #fffaf2;
+  border: 1px solid #dccdb2;
+  border-radius: 16px;
+  max-width: 480px;
+  padding: 1.5rem;
+  width: 100%;
+}
+h1 {
+  color: #344e35;
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+}
+.desk-form {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+label {
+  font-weight: 700;
+}
+input {
+  border: 1px solid #b9a888;
+  border-radius: 10px;
+  font: inherit;
+  min-height: 48px;
+  min-width: 0;
+  padding: 0 0.75rem;
+}
+.desk-search input {
+  flex: 1;
+  font-size: 1.25rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.desk-row {
+  display: flex;
+  gap: 0.5rem;
+}
+.desk-button {
+  background: #344e35;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  min-height: 48px;
+  padding: 0 1.25rem;
+}
+.desk-button:hover {
+  background: #223c24;
+}
+.desk-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+.desk-button:focus-visible,
+.desk-link:focus-visible,
+input:focus-visible {
+  outline: 3px solid #75501e;
+  outline-offset: 2px;
+}
+.desk-deliver {
+  width: 100%;
+}
+.desk-status {
+  border-radius: 10px;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  text-align: center;
+}
+.is-ready {
+  background: #e3ecd6;
+  color: #2f4a1c;
+}
+.is-delivered {
+  background: #efe6d5;
+  color: #5b4320;
+}
+.is-unpaid,
+.desk-message,
+.desk-warning {
+  background: #f6dcd8;
+  border-radius: 10px;
+  color: #7d2318;
+  padding: 0.75rem;
+}
+dl {
+  margin: 0 0 1rem;
+}
+dl div {
+  border-bottom: 1px solid #eadfcb;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+}
+dt {
+  color: #6b5a4e;
+}
+dd {
+  font-weight: 700;
+  margin: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+.desk-items {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+.desk-items li {
+  padding: 0.3rem 0;
+}
+.desk-qty {
+  font-weight: 700;
+}
+.desk-hint {
+  color: #6b5a4e;
+  font-size: 0.9rem;
+}
+.desk-link {
+  background: none;
+  border: 0;
+  color: #75501e;
+  cursor: pointer;
+  font: inherit;
+  margin-top: 1rem;
+  padding: 0;
+  text-decoration: underline;
+}

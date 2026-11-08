@@ -134,16 +134,16 @@
         <div>
           <dt>Envío</dt>
           <dd>
-            @if (cart.shipping() === 0) {
+            @if (cart.freeShippingRemaining() === 0) {
               Gratis
             } @else {
-              {{ cart.shipping() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+              Se calcula con tu dirección
             }
           </dd>
         </div>
         <div class="cart-total" aria-live="polite">
-          <dt>Total</dt>
-          <dd>{{ cart.grandTotal() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
+          <dt>{{ cart.freeShippingRemaining() === 0 ? 'Total' : 'Total sin envío' }}</dt>
+          <dd>{{ cart.total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
         </div>
       </dl>
       <button type="button" class="checkout-button" (click)="checkingOut.set(true)">
@@ -157,9 +157,9 @@
         </button>
       </div>
       <p class="cart-note">
-        Envío de {{ shippingCost | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}, gratis desde
-        {{ freeShippingFrom | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}. Tu carrito se guarda
-        en este navegador.
+        El envío se cotiza según tu ciudad con transportadoras como Coordinadora y Servientrega.
+        Gratis desde {{ freeShippingFrom | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}. Tu
+        carrito se guarda en este navegador.
       </p>
     </footer>
   }

@@ -115,21 +115,22 @@ describe('ShopComponent', () => {
     expect(document.activeElement).toBe(toggle);
   });
 
-  it('should charge simulated shipping until the free shipping threshold', async () => {
+  it('should show how much is missing for free shipping', async () => {
     const fixture = TestBed.createComponent(ShopComponent);
     const cart = TestBed.inject(CartService);
     const geisha = products.find((product) => product.name === 'Geisha')!;
     cart.add(products[0], products[0].variants[0]);
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
-    expect(cart.shipping()).toBe(9000);
-    expect(cart.grandTotal()).toBe(37000);
+    expect(cart.freeShippingRemaining()).toBe(92000);
     expect(element.querySelector('.shipping-progress')?.textContent).toContain('92,000');
+    expect(element.querySelector('.cart-summary')?.textContent).toContain(
+      'Se calcula con tu dirección',
+    );
     cart.add(geisha, geisha.variants[0]);
     cart.add(geisha, geisha.variants[0]);
     await fixture.whenStable();
-    expect(cart.shipping()).toBe(0);
-    expect(cart.grandTotal()).toBe(152000);
+    expect(cart.freeShippingRemaining()).toBe(0);
     expect(element.querySelector('.shipping-progress')?.textContent).toContain('envío gratis');
   });
 

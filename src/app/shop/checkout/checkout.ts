@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnDestroy, inject, output, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, computed, inject, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CartService } from '../cart';
 import { PaymentBadgeComponent } from '../payment-badge/payment-badge';
@@ -11,8 +11,13 @@ import {
   CheckoutShipping,
   Order,
   OrderStatus,
+  PICKUP_OPTION_ID,
+  PickupInfo,
+  ShippingQuote,
   WompiTransaction,
 } from '../checkout';
+
+const ADDRESS_FIELDS = ['address', 'address_detail', 'city', 'department'] as const;
 
 export const DEPARTMENTS = [
   'Amazonas',
@@ -76,6 +81,22 @@ export class CheckoutComponent implements OnDestroy {
   /** Final outcome shown to the buyer. */
   readonly outcome = signal<OrderStatus>('PENDING');
 
+  /** Shipping options for the current address; undefined until it is complete. */
+  readonly quote = signal<ShippingQuote | undefined>(undefined);
+  readonly quoting = signal(false);
+  readonly quoteError = signal('');
+  readonly shippingOptionId = signal<string | null>(null);
+  /** Pickup at the shop, when offered by the API. */
+  readonly pickup = signal<PickupInfo | null>(null);
+  readonly deliveryMethod = signal<'delivery' | 'pickup'>('delivery');
+  readonly shippingOption = computed(() =>
+    this.deliveryMethod() === 'pickup'
+      ? this.pickup()?.option
+      : this.quote()?.options.find((option) => option.id === this.shippingOptionId()),
+  );
+  readonly total = computed(() => this.cart.total() + (this.shippingOption()?.price ?? 0));
+  private quoteRequest = 0;
+
   readonly form = inject(FormBuilder).nonNullable.group({
     full_name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
     email: ['', [Validators.required, Validators.email, Validators.maxLength(160)]],
@@ -90,9 +111,75 @@ export class CheckoutComponent implements OnDestroy {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private destroyed = false;
 
+  constructor() {
+    void this.checkout.getPickup().then((pickup) => this.pickup.set(pickup));
+  }
+
+  /** Pickup orders need no address: its fields are left out of the form. */
+  setDeliveryMethod(method: 'delivery' | 'pickup'): void {
+    this.deliveryMethod.set(method);
+    for (const field of ADDRESS_FIELDS) {
+      const control = this.form.controls[field];
+      if (method === 'pickup') {
+        control.disable();
+      } else {
+        control.enable();
+      }
+    }
+    this.error.set('');
+  }
+
   showError(field: keyof typeof this.form.controls): boolean {
     const control = this.form.controls[field];
     return control.invalid && control.touched;
+  }
+
+  /** Quotes shipping once address, city and department are filled in. */
+  async refreshQuote(): Promise<void> {
+    const { address, city, department } = this.form.controls;
+    if (
+      this.deliveryMethod() === 'pickup' ||
+      address.invalid ||
+      city.invalid ||
+      department.invalid
+    ) {
+      return;
+    }
+    const request = ++this.quoteRequest;
+    this.quoting.set(true);
+    this.quoteError.set('');
+    try {
+      const quote = await this.checkout.quoteShipping(
+        this.items(),
+        this.shippingData(),
+        this.form.controls.full_name.valid && this.form.controls.phone.valid
+          ? this.customerData()
+          : null,
+      );
+      if (request !== this.quoteRequest) {
+        return; // the address changed while waiting: a newer quote is on its way
+      }
+      this.quote.set(quote);
+      const current = quote.options.some((option) => option.id === this.shippingOptionId());
+      if (!current) {
+        this.shippingOptionId.set(quote.options[0]?.id ?? null);
+      }
+    } catch (error) {
+      if (request !== this.quoteRequest) {
+        return;
+      }
+      this.quote.set(undefined);
+      this.shippingOptionId.set(null);
+      this.quoteError.set(
+        error instanceof HttpErrorResponse && error.status === 422 && error.error?.detail
+          ? String(error.error.detail)
+          : 'No pudimos calcular el envío. Revisa tu conexión e intenta de nuevo.',
+      );
+    } finally {
+      if (request === this.quoteRequest) {
+        this.quoting.set(false);
+      }
+    }
   }
 
   async pay(): Promise<void> {
@@ -101,30 +188,32 @@ export class CheckoutComponent implements OnDestroy {
       this.host.nativeElement.querySelector<HTMLElement>('.ng-invalid:not(form)')?.focus();
       return;
     }
-    const value = this.form.getRawValue();
-    const customer: CheckoutCustomer = {
-      full_name: value.full_name.trim(),
-      email: value.email.trim(),
-      phone: value.phone,
-    };
-    const shipping: CheckoutShipping = {
-      address: value.address.trim(),
-      address_detail: value.address_detail.trim() || null,
-      city: value.city.trim(),
-      department: value.department,
-    };
-    const items = this.cart
-      .items()
-      .map((item) => ({ sku: item.variant.id, quantity: item.quantity }));
+    if (!this.shippingOption()) {
+      await this.refreshQuote();
+      if (!this.shippingOption()) {
+        this.error.set(this.quoteError() || 'Elige una opción de envío.');
+        return;
+      }
+    }
+    const customer = this.customerData();
+    const shipping = this.deliveryMethod() === 'pickup' ? null : this.shippingData();
 
     this.error.set('');
     this.step.set('creating');
     let created;
     try {
-      created = await this.checkout.createOrder(items, customer, shipping);
+      created = await this.checkout.createOrder(
+        this.items(),
+        customer,
+        shipping,
+        this.deliveryMethod() === 'pickup' ? PICKUP_OPTION_ID : this.shippingOptionId(),
+      );
     } catch (error) {
       this.step.set('form');
       this.error.set(orderErrorMessage(error));
+      if (isShippingConflict(error)) {
+        void this.refreshQuote();
+      }
       return;
     }
     this.order.set(created.order);
@@ -165,6 +254,25 @@ export class CheckoutComponent implements OnDestroy {
     this.destroyed = true;
   }
 
+  private items(): { sku: string; quantity: number }[] {
+    return this.cart.items().map((item) => ({ sku: item.variant.id, quantity: item.quantity }));
+  }
+
+  private customerData(): CheckoutCustomer {
+    const value = this.form.getRawValue();
+    return { full_name: value.full_name.trim(), email: value.email.trim(), phone: value.phone };
+  }
+
+  private shippingData(): CheckoutShipping {
+    const value = this.form.getRawValue();
+    return {
+      address: value.address.trim(),
+      address_detail: value.address_detail.trim() || null,
+      city: value.city.trim(),
+      department: value.department,
+    };
+  }
+
   private async confirm(reference: string, transaction: WompiTransaction): Promise<void> {
     this.step.set('confirming');
     try {
@@ -186,7 +294,18 @@ export class CheckoutComponent implements OnDestroy {
   }
 }
 
+function isShippingConflict(error: unknown): boolean {
+  return (
+    error instanceof HttpErrorResponse &&
+    error.status === 409 &&
+    String(error.error?.detail ?? '').includes('shipping')
+  );
+}
+
 function orderErrorMessage(error: unknown): string {
+  if (isShippingConflict(error)) {
+    return 'El precio del envío cambió. Revisa las opciones y elige de nuevo.';
+  }
   const status = error instanceof HttpErrorResponse ? error.status : 0;
   switch (status) {
     case 409:

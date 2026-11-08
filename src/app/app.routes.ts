@@ -16,5 +16,18 @@ export const routes: Routes = [
       ),
     title: 'Resultado del pago | Café Nuestras Raíces',
   },
+  // Shop counter: the pickup QR opens /retiro/<code> (needs the staff API key).
+  {
+    path: 'retiro',
+    loadComponent: () =>
+      import('./pickup-desk/pickup-desk').then((module) => module.PickupDeskComponent),
+    title: 'Retiro en tienda | Café Nuestras Raíces',
+  },
+  {
+    path: 'retiro/:code',
+    loadComponent: () =>
+      import('./pickup-desk/pickup-desk').then((module) => module.PickupDeskComponent),
+    title: 'Retiro en tienda | Café Nuestras Raíces',
+  },
   { path: '**', redirectTo: '' },
 ];

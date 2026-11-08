@@ -11,7 +11,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { CartService, FREE_SHIPPING_FROM, SHIPPING_COST } from '../cart';
+import { CartService, FREE_SHIPPING_FROM } from '../cart';
 import { CheckoutComponent } from '../checkout/checkout';
 import { PaymentBadgeComponent } from '../payment-badge/payment-badge';
 
@@ -28,7 +28,6 @@ export class CartDrawerComponent implements OnDestroy {
 
   readonly cart = inject(CartService);
   readonly freeShippingFrom = FREE_SHIPPING_FROM;
-  readonly shippingCost = SHIPPING_COST;
   /** Showing the contact, shipping and payment step instead of the cart. */
   readonly checkingOut = signal(false);
   readonly shippingProgress = computed(() =>

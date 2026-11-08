@@ -48,47 +48,134 @@
     </fieldset>
 
     <fieldset [disabled]="step() !== 'form' && step() !== 'paying'">
-      <legend><span class="step-number" aria-hidden="true">2</span> Dirección de envío</legend>
-      <label>
-        Dirección
-        <input
-          formControlName="address"
-          autocomplete="address-line1"
-          placeholder="Calle 10 # 20-30"
-        />
-        @if (showError('address')) {
-          <span class="field-error">Escribe la dirección de entrega.</span>
-        }
-      </label>
-      <label>
-        Apartamento, oficina o indicaciones <span class="optional">(opcional)</span>
-        <input
-          formControlName="address_detail"
-          autocomplete="address-line2"
-          placeholder="Apto 301, torre B"
-        />
-      </label>
-      <div class="field-row place-row">
+      <legend><span class="step-number" aria-hidden="true">2</span> Entrega</legend>
+      @if (pickup(); as pickup) {
+        <div class="delivery-methods" role="radiogroup" aria-label="Forma de entrega">
+          <label class="delivery-method" [class.is-selected]="deliveryMethod() === 'delivery'">
+            <input
+              type="radio"
+              name="delivery-method"
+              value="delivery"
+              [checked]="deliveryMethod() === 'delivery'"
+              (change)="setDeliveryMethod('delivery')"
+            />
+            <span>Envío a domicilio</span>
+          </label>
+          <label class="delivery-method" [class.is-selected]="deliveryMethod() === 'pickup'">
+            <input
+              type="radio"
+              name="delivery-method"
+              value="pickup"
+              [checked]="deliveryMethod() === 'pickup'"
+              (change)="setDeliveryMethod('pickup')"
+            />
+            <span>Recoger en la tienda <strong>Gratis</strong></span>
+          </label>
+        </div>
+      }
+      @if (deliveryMethod() === 'pickup' && pickup(); as pickup) {
+        <div class="pickup-info">
+          <p class="pickup-address">{{ pickup.address }}</p>
+          <p class="pickup-hours">{{ pickup.hours }}</p>
+          <p class="pickup-note">Recoge tu pedido con la referencia que verás al pagar.</p>
+        </div>
+      } @else {
         <label>
-          Ciudad o municipio
-          <input formControlName="city" autocomplete="address-level2" placeholder="Medellín" />
-          @if (showError('city')) {
-            <span class="field-error">Escribe la ciudad.</span>
+          Dirección
+          <input
+            formControlName="address"
+            autocomplete="address-line1"
+            (blur)="refreshQuote()"
+            placeholder="Calle 10 # 20-30"
+          />
+          @if (showError('address')) {
+            <span class="field-error">Escribe la dirección de entrega.</span>
           }
         </label>
         <label>
-          Departamento
-          <select formControlName="department" autocomplete="address-level1">
-            <option value="" disabled>Selecciona…</option>
-            @for (department of departments; track department) {
-              <option [value]="department">{{ department }}</option>
+          Apartamento, oficina o indicaciones <span class="optional">(opcional)</span>
+          <input
+            formControlName="address_detail"
+            autocomplete="address-line2"
+            placeholder="Apto 301, torre B"
+          />
+        </label>
+        <div class="field-row place-row">
+          <label>
+            Ciudad o municipio
+            <input
+              formControlName="city"
+              autocomplete="address-level2"
+              placeholder="Medellín"
+              (blur)="refreshQuote()"
+            />
+            @if (showError('city')) {
+              <span class="field-error">Escribe la ciudad.</span>
             }
-          </select>
-          @if (showError('department')) {
-            <span class="field-error">Selecciona el departamento.</span>
+          </label>
+          <label>
+            Departamento
+            <select
+              formControlName="department"
+              autocomplete="address-level1"
+              (change)="refreshQuote()"
+            >
+              <option value="" disabled>Selecciona…</option>
+              @for (department of departments; track department) {
+                <option [value]="department">{{ department }}</option>
+              }
+            </select>
+            @if (showError('department')) {
+              <span class="field-error">Selecciona el departamento.</span>
+            }
+          </label>
+        </div>
+
+        <div
+          class="shipping-options"
+          role="radiogroup"
+          aria-label="Opciones de envío"
+          aria-live="polite"
+        >
+          <span class="options-title">Envío</span>
+          @if (quoting()) {
+            <p class="options-hint is-loading" role="status">
+              <span class="spinner" aria-hidden="true"></span> Calculando el envío…
+            </p>
+          } @else if (quoteError()) {
+            <p class="field-error">{{ quoteError() }}</p>
+          } @else if (quote(); as quote) {
+            @for (option of quote.options; track option.id) {
+              <label class="shipping-option" [class.is-selected]="shippingOptionId() === option.id">
+                <input
+                  type="radio"
+                  name="shipping-option"
+                  [value]="option.id"
+                  [checked]="shippingOptionId() === option.id"
+                  (change)="shippingOptionId.set(option.id)"
+                />
+                <span class="option-text">
+                  <span class="option-name">{{ option.description }}</span>
+                  @if (option.delivery_estimate) {
+                    <span class="option-eta">{{ option.delivery_estimate }}</span>
+                  }
+                </span>
+                <span class="option-price">
+                  @if (option.price === 0) {
+                    Gratis
+                  } @else {
+                    {{ option.price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                  }
+                </span>
+              </label>
+            }
+          } @else {
+            <p class="options-hint">
+              Completa la dirección, la ciudad y el departamento para ver las opciones.
+            </p>
           }
-        </label>
-      </div>
+        </div>
+      }
     </fieldset>
 
     <dl class="checkout-summary">
@@ -99,16 +186,24 @@
       <div>
         <dt>Envío</dt>
         <dd>
-          @if (cart.shipping() === 0) {
-            Gratis
+          @if (quoting()) {
+            <span class="is-loading"
+              ><span class="spinner" aria-hidden="true"></span> Calculando…</span
+            >
+          } @else if (shippingOption(); as option) {
+            @if (option.price === 0) {
+              Gratis
+            } @else {
+              {{ option.price | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+            }
           } @else {
-            {{ cart.shipping() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+            Por calcular
           }
         </dd>
       </div>
       <div class="summary-total">
         <dt>Total</dt>
-        <dd>{{ cart.grandTotal() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
+        <dd>{{ total() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} COP</dd>
       </div>
     </dl>
 
@@ -123,24 +218,29 @@
         step() === 'creating' ||
         step() === 'redirecting' ||
         step() === 'confirming' ||
+        quoting() ||
         cart.items().length === 0
       "
     >
-      @switch (step()) {
-        @case ('creating') {
-          Preparando tu pedido…
-        }
-        @case ('redirecting') {
-          Te llevamos a Wompi…
-        }
-        @case ('confirming') {
-          Confirmando tu pago…
-        }
-        @case ('paying') {
-          Volver a abrir el pago
-        }
-        @default {
-          Pagar con Wompi
+      @if (quoting() && (step() === 'form' || step() === 'paying')) {
+        <span class="spinner" aria-hidden="true"></span> Calculando el envío…
+      } @else {
+        @switch (step()) {
+          @case ('creating') {
+            Preparando tu pedido…
+          }
+          @case ('redirecting') {
+            Te llevamos a Wompi…
+          }
+          @case ('confirming') {
+            Confirmando tu pago…
+          }
+          @case ('paying') {
+            Volver a abrir el pago
+          }
+          @default {
+            Pagar con Wompi
+          }
         }
       }
     </button>

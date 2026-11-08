@@ -10,6 +10,14 @@ export const ORDERS_API_URL = new InjectionToken<string>('ORDERS_API_URL', {
   factory: () => 'http://127.0.0.1:8000/orders',
 });
 
+export const SHIPPING_API_URL = new InjectionToken<string>('SHIPPING_API_URL', {
+  providedIn: 'root',
+  factory: () => 'http://127.0.0.1:8000/shipping',
+});
+
+/** Id of the "pick up at the shop" option in the API. */
+export const PICKUP_OPTION_ID = 'tienda:retiro';
+
 const WIDGET_SCRIPT = 'https://checkout.wompi.co/widget.js';
 const WEB_CHECKOUT = 'https://checkout.wompi.co/p/';
 /** Route Wompi sends the buyer back to after paying on its page. */
@@ -36,6 +44,29 @@ export interface CheckoutShipping {
   readonly department: string;
 }
 
+/** A way to ship the order, quoted by the API (Envia.com or the shop's flat rate). */
+export interface ShippingOption {
+  /** What the order sends back, e.g. "coordinadora:ground". */
+  readonly id: string;
+  readonly carrier: string;
+  readonly service: string;
+  readonly description: string;
+  readonly delivery_estimate: string | null;
+  readonly price: number;
+}
+
+/** Free pickup at the shop, with where and when. */
+export interface PickupInfo {
+  readonly option: ShippingOption;
+  readonly address: string;
+  readonly hours: string;
+}
+
+export interface ShippingQuote {
+  readonly options: readonly ShippingOption[];
+  readonly free_shipping: boolean;
+}
+
 export interface Order {
   readonly reference: string;
   readonly status: OrderStatus;
@@ -43,6 +74,15 @@ export interface Order {
   readonly shipping_cost: number;
   readonly total: number;
   readonly payment_method: string | null;
+  /** Store pickup only, once paid: the code the buyer shows at the shop (e.g. "K7P4QX"). */
+  readonly pickup_code?: string | null;
+  /** When the shop handed the pickup order over (ISO date), or null. */
+  readonly picked_up_at?: string | null;
+}
+
+/** "K7P4QX" -> "K7P-4QX", easier to read aloud. */
+export function formatPickupCode(code: string): string {
+  return `${code.slice(0, 3)}-${code.slice(3)}`;
 }
 
 /** Values the API signs for the Wompi widget. */
@@ -75,7 +115,7 @@ export interface PaymentOutcome {
 export function webCheckoutUrl(
   checkout: WompiCheckout,
   customer: CheckoutCustomer,
-  shipping: CheckoutShipping,
+  shipping: CheckoutShipping | null,
   redirectUrl: string,
 ): string {
   const params = new URLSearchParams({
@@ -89,14 +129,16 @@ export function webCheckoutUrl(
     'customer-data:full-name': customer.full_name,
     'customer-data:phone-number': customer.phone,
     'customer-data:phone-number-prefix': '+57',
-    'shipping-address:address-line-1': shipping.address,
-    'shipping-address:country': 'CO',
-    'shipping-address:city': shipping.city,
-    'shipping-address:region': shipping.department,
-    'shipping-address:phone-number': customer.phone,
   });
-  if (shipping.address_detail) {
-    params.set('shipping-address:address-line-2', shipping.address_detail);
+  if (shipping) {
+    params.set('shipping-address:address-line-1', shipping.address);
+    params.set('shipping-address:country', 'CO');
+    params.set('shipping-address:city', shipping.city);
+    params.set('shipping-address:region', shipping.department);
+    params.set('shipping-address:phone-number', customer.phone);
+    if (shipping.address_detail) {
+      params.set('shipping-address:address-line-2', shipping.address_detail);
+    }
   }
   return `${WEB_CHECKOUT}?${params}`;
 }
@@ -110,6 +152,7 @@ declare const WidgetCheckout: new (options: object) => {
 export class CheckoutService {
   private readonly http = inject(HttpClient);
   private readonly url = inject(ORDERS_API_URL);
+  private readonly shippingUrl = inject(SHIPPING_API_URL);
   private readonly document = inject(DOCUMENT);
   private readonly cart = inject(CartService);
   private readonly catalog = inject(CatalogService);
@@ -125,7 +168,7 @@ export class CheckoutService {
   redirectToWompi(
     checkout: WompiCheckout,
     customer: CheckoutCustomer,
-    shipping: CheckoutShipping,
+    shipping: CheckoutShipping | null,
   ): void {
     try {
       sessionStorage.setItem(PENDING_ORDER_KEY, checkout.reference);
@@ -192,10 +235,35 @@ export class CheckoutService {
   createOrder(
     items: readonly { sku: string; quantity: number }[],
     customer: CheckoutCustomer,
-    shipping: CheckoutShipping,
+    /** Null when the buyer picks the order up at the shop. */
+    shipping: CheckoutShipping | null,
+    shippingOption: string | null = null,
   ): Promise<CheckoutResponse> {
     return firstValueFrom(
-      this.http.post<CheckoutResponse>(this.url, { items, customer, shipping }),
+      this.http.post<CheckoutResponse>(this.url, {
+        items,
+        customer,
+        shipping,
+        shipping_option: shippingOption,
+      }),
+    );
+  }
+
+  /** Shipping options for the cart and address, from the cheapest. */
+  quoteShipping(
+    items: readonly { sku: string; quantity: number }[],
+    shipping: CheckoutShipping,
+    customer: CheckoutCustomer | null,
+  ): Promise<ShippingQuote> {
+    return firstValueFrom(
+      this.http.post<ShippingQuote>(`${this.shippingUrl}/quote`, { items, shipping, customer }),
+    );
+  }
+
+  /** Pickup at the shop, or null if the shop does not offer it. */
+  getPickup(): Promise<PickupInfo | null> {
+    return firstValueFrom(this.http.get<PickupInfo>(`${this.shippingUrl}/pickup`)).catch(
+      () => null,
     );
   }
 
@@ -217,7 +285,7 @@ export class CheckoutService {
   async openWidget(
     checkout: WompiCheckout,
     customer: CheckoutCustomer,
-    shipping: CheckoutShipping,
+    shipping: CheckoutShipping | null,
   ): Promise<WompiTransaction | undefined> {
     await this.loadWidget();
     const widget = new WidgetCheckout({
@@ -232,14 +300,16 @@ export class CheckoutService {
         phoneNumber: customer.phone,
         phoneNumberPrefix: '+57',
       },
-      shippingAddress: {
-        addressLine1: shipping.address,
-        addressLine2: shipping.address_detail ?? undefined,
-        city: shipping.city,
-        region: shipping.department,
-        phoneNumber: customer.phone,
-        country: 'CO',
-      },
+      ...(shipping && {
+        shippingAddress: {
+          addressLine1: shipping.address,
+          addressLine2: shipping.address_detail ?? undefined,
+          city: shipping.city,
+          region: shipping.department,
+          phoneNumber: customer.phone,
+          country: 'CO',
+        },
+      }),
     });
     return new Promise((resolve) => widget.open((result) => resolve(result.transaction)));
   }

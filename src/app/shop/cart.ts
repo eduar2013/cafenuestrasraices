@@ -7,8 +7,7 @@ export interface CartItem {
   readonly quantity: number;
 }
 
-/** Simulated shipping rules (COP). */
-export const SHIPPING_COST = 9000;
+/** Subtotal (COP) from which shipping is free; must match ENVIO_GRATIS_DESDE in the API. */
 export const FREE_SHIPPING_FROM = 120000;
 
 const STORAGE_KEY = 'cnr-cart';
@@ -34,10 +33,6 @@ export class CartService {
   readonly total = computed(() =>
     this.items().reduce((sum, item) => sum + item.variant.price * item.quantity, 0),
   );
-  readonly shipping = computed(() =>
-    this.total() === 0 || this.total() >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST,
-  );
-  readonly grandTotal = computed(() => this.total() + this.shipping());
   readonly freeShippingRemaining = computed(() => Math.max(0, FREE_SHIPPING_FROM - this.total()));
 
   constructor() {

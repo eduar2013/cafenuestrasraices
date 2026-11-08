@@ -18,6 +18,22 @@
       <p>No se hizo ningún cobro. Puedes intentarlo de nuevo con otro medio de pago.</p>
     }
   }
+  @if (pickup(); as pickup) {
+    <section class="pickup" aria-labelledby="pickup-title">
+      <h4 id="pickup-title">Tu código de retiro</h4>
+      <p class="pickup-code">{{ pickup.code }}</p>
+      <img
+        class="pickup-qr"
+        [src]="pickup.qrUrl"
+        [alt]="'Código QR de retiro ' + pickup.code"
+        width="180"
+        height="180"
+      />
+      <p class="pickup-help">
+        Muestra este código o el QR en la tienda. También te lo enviamos al correo.
+      </p>
+    </section>
+  }
   @if (order(); as order) {
     <dl>
       <div>

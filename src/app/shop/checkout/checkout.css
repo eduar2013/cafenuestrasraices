@@ -149,6 +149,103 @@ select.ng-invalid.ng-touched:focus {
     height: 42px;
   }
 }
+.delivery-methods {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.delivery-method,
+.shipping-option {
+  align-items: center;
+  background: #fffdf9;
+  border: 1px solid #dccdb2;
+  border-radius: 0.55rem;
+  color: #34281e;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  padding: 0.5rem 0.7rem;
+  text-transform: none;
+}
+.delivery-method {
+  display: flex;
+  gap: 0.5rem;
+}
+.delivery-method strong {
+  color: #3f6b40;
+  display: block;
+  font-size: 0.75rem;
+}
+.delivery-method.is-selected,
+.shipping-option.is-selected {
+  border-color: #344e35;
+  box-shadow: 0 0 0 1px #344e35;
+}
+.delivery-method input,
+.shipping-option input {
+  accent-color: #344e35;
+  height: 1rem;
+  margin: 0;
+  width: 1rem;
+}
+.pickup-info {
+  background: #f4f8f1;
+  border: 1px solid #c9d8be;
+  border-radius: 0.55rem;
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  padding: 0.6rem 0.8rem;
+}
+.pickup-info p {
+  margin: 0;
+}
+.pickup-address {
+  font-weight: 600;
+}
+.pickup-hours,
+.pickup-note {
+  color: #4f5f4a;
+  font-size: 0.78rem;
+  margin-top: 0.15rem !important;
+}
+.shipping-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.options-title {
+  color: #7a6548;
+  font-family: system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.options-hint {
+  color: #8c7857;
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  margin: 0;
+}
+.shipping-option {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+.option-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.option-eta {
+  color: #8c7857;
+  font-size: 0.75rem;
+}
+.option-price {
+  font-weight: 700;
+  white-space: nowrap;
+}
 .checkout-summary {
   border-top: 1px solid #dccdb2;
   margin: 0 0 1rem;
@@ -167,7 +264,36 @@ dd {
   font-size: 1.15rem;
   font-weight: 700;
 }
+.spinner {
+  animation: spin 0.7s linear infinite;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-right-color: transparent;
+  display: inline-block;
+  flex: none;
+  height: 0.95em;
+  width: 0.95em;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2s;
+  }
+}
+.is-loading {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.45rem;
+}
 .pay-button {
+  align-items: center;
+  display: flex;
+  gap: 0.55rem;
+  justify-content: center;
   background: #344e35;
   border: 0;
   border-radius: 999px;

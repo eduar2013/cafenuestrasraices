@@ -1,0 +1,103 @@
+<main class="desk" aria-labelledby="desk-title">
+  <div class="desk-card">
+    <h1 id="desk-title">Retiro en tienda</h1>
+
+    @if (message()) {
+      <p class="desk-message" role="alert">{{ message() }}</p>
+    }
+
+    @if (state() === 'needs-key') {
+      <form class="desk-form" (submit)="$event.preventDefault(); saveKey(keyInput.value)">
+        <label for="staff-key">Clave del personal</label>
+        <input id="staff-key" #keyInput type="password" autocomplete="current-password" required />
+        <button type="submit" class="desk-button">Entrar</button>
+        <p class="desk-hint">Se guarda en este dispositivo. Usa solo un equipo de la tienda.</p>
+      </form>
+    } @else {
+      <form class="desk-form desk-search" (submit)="$event.preventDefault(); search(codeInput.value)">
+        <label for="pickup-code">Código de retiro</label>
+        <div class="desk-row">
+          <input
+            id="pickup-code"
+            #codeInput
+            [value]="code() ? format(code()) : ''"
+            placeholder="K7P-4QX"
+            autocomplete="off"
+            autocapitalize="characters"
+            maxlength="12"
+          />
+          <button type="submit" class="desk-button">Buscar</button>
+        </div>
+      </form>
+
+      @switch (state()) {
+        @case ('loading') {
+          <p role="status">Buscando el pedido…</p>
+        }
+        @case ('not-found') {
+          <p class="desk-warning" role="status">No existe un pedido con ese código.</p>
+        }
+        @case ('error') {
+          <p class="desk-warning" role="status">No se pudo consultar el pedido. Intenta de nuevo.</p>
+        }
+        @case ('found') {
+          @if (order(); as order) {
+            <section class="desk-order" aria-label="Pedido">
+              @if (order.status !== 'APPROVED') {
+                <p class="desk-status is-unpaid">Pedido no pagado: no lo entregues</p>
+              } @else if (order.picked_up_at) {
+                <p class="desk-status is-delivered">
+                  Entregado el {{ order.picked_up_at | date: 'd/M/yyyy, h:mm a' }}
+                </p>
+              } @else {
+                <p class="desk-status is-ready">Pagado · listo para entregar</p>
+              }
+
+              <dl>
+                <div>
+                  <dt>Cliente</dt>
+                  <dd>{{ order.customer_name }}</dd>
+                </div>
+                <div>
+                  <dt>Teléfono</dt>
+                  <dd>{{ order.customer_phone }}</dd>
+                </div>
+                <div>
+                  <dt>Pedido</dt>
+                  <dd>{{ order.reference }}</dd>
+                </div>
+                <div>
+                  <dt>Total</dt>
+                  <dd>{{ order.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</dd>
+                </div>
+              </dl>
+
+              <ul class="desk-items">
+                @for (item of order.items; track item.sku) {
+                  <li>
+                    <span class="desk-qty">{{ item.quantity }} ×</span>
+                    {{ item.product_name }} <small>{{ item.variant_name }}</small>
+                  </li>
+                }
+              </ul>
+
+              @if (order.status === 'APPROVED' && !order.picked_up_at) {
+                <p class="desk-hint">Antes de entregar, confirma el nombre del cliente.</p>
+                <button
+                  type="button"
+                  class="desk-button desk-deliver"
+                  [disabled]="delivering()"
+                  (click)="deliver()"
+                >
+                  {{ delivering() ? 'Guardando…' : 'Marcar como entregado' }}
+                </button>
+              }
+            </section>
+          }
+        }
+      }
+
+      <button type="button" class="desk-link" (click)="forgetKey()">Cerrar sesión en este equipo</button>
+    }
+  </div>
+</main>
