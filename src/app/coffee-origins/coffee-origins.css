@@ -94,37 +94,38 @@ button {
   border: 0;
   border-radius: 50%;
   display: flex;
-  height: 32px;
+  height: 26px;
   justify-content: center;
   padding: 0;
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 32px;
+  width: 26px;
 }
+/* Small painted dots, each in its origin's colour (set per pin as --pin). */
 .map-point span {
-  background: var(--action);
-  border: 3px solid #fff;
+  background: var(--pin, var(--action));
+  border: 2px solid #fff;
   border-radius: 50%;
-  box-shadow: 0 0 0 var(--filete) var(--ink);
-  height: 16px;
+  box-shadow: 0 0 0 1.5px var(--ink);
+  height: 11px;
   transition: transform var(--m-in) var(--ease);
-  width: 16px;
+  width: 11px;
 }
 .map-point:hover span {
-  transform: scale(1.2);
+  transform: scale(1.3);
 }
 .map-point.is-selected span {
   animation: pin-pop 520ms var(--ease);
-  background: var(--ink);
-  transform: scale(1.3);
+  box-shadow: 0 0 0 var(--filete) var(--ink);
+  transform: scale(1.45);
 }
 /* A ring keeps breathing around the chosen pin. */
 .map-point.is-selected::after {
   animation: pin-pulse 1.8s var(--ease) infinite;
-  border: var(--filete) solid var(--accent);
+  border: var(--filete) solid var(--pin, var(--accent));
   border-radius: 50%;
   content: '';
-  inset: 4px;
+  inset: 3px;
   pointer-events: none;
   position: absolute;
 }
@@ -133,10 +134,10 @@ button {
     transform: scale(0.6);
   }
   55% {
-    transform: scale(1.6);
+    transform: scale(1.8);
   }
   100% {
-    transform: scale(1.3);
+    transform: scale(1.45);
   }
 }
 @keyframes pin-pulse {
@@ -174,6 +175,21 @@ button {
   gap: 6px;
   justify-content: center;
   margin-top: 16px;
+}
+/* Each name chip carries its pin colour, so names and dots match. */
+.chip-dot {
+  background: var(--pin);
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+  height: 10px;
+  margin-right: 8px;
+  width: 10px;
+}
+.origin-list button {
+  align-items: center;
+  display: inline-flex;
 }
 .origin-list button,
 .coffee-options button {

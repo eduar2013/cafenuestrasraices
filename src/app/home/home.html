@@ -146,9 +146,6 @@
                 <span class="take-meta">
                   {{ coffee.origin ?? '' }}{{ coffee.origin && coffee.process ? ' · ' : '' }}{{ coffee.process ?? '' }}
                 </span>
-                <span class="take-price">
-                  {{ fromPrice(coffee) | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
-                </span>
               </a>
             </li>
           }

@@ -15,12 +15,13 @@
           } @else {
             <img src="images/origins/colombia.svg" alt="Mapa de Colombia continental con división por departamentos y Bogotá D.C." width="400" height="520" loading="lazy" />
           }
-          @for (origin of origins(); track origin.id) {
+          @for (origin of origins(); track origin.id; let i = $index) {
             <button
               class="map-point"
               type="button"
               [style.left.%]="mapLeft(origin)"
               [style.top.%]="mapTop(origin)"
+              [style.--pin]="pinColor(i)"
               [class.is-selected]="selectedOrigin()?.id === origin.id"
               [attr.aria-pressed]="selectedOrigin()?.id === origin.id"
               [attr.aria-label]="'Explorar cafés de ' + origin.name"
@@ -35,12 +36,13 @@
         <p class="map-caption">Colombia continental. Las ubicaciones son aproximadas.</p>
         @if (origins().length > 0) {
           <div class="origin-list" role="group" aria-label="Seleccionar origen por nombre">
-            @for (origin of origins(); track origin.id) {
+            @for (origin of origins(); track origin.id; let i = $index) {
               <button type="button"
                 [attr.aria-pressed]="selectedOrigin()?.id === origin.id"
                 aria-controls="origin-detail"
                 (click)="selectOrigin(origin)"
-              >{{ origin.name }}</button>
+              [style.--pin]="pinColor(i)"
+              ><span class="chip-dot" aria-hidden="true"></span>{{ origin.name }}</button>
             }
           </div>
         }

@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar';
@@ -6,7 +5,7 @@ import { ContactBarComponent } from '../contact-bar/contact-bar';
 import { CafeHistoryComponent } from '../cafe-history/cafe-history';
 import { CoffeeOriginsComponent } from '../coffee-origins/coffee-origins';
 import { CarouselComponent } from '../carousel/carousel';
-import { CatalogService, ShopProduct } from '../shop/catalog';
+import { CatalogService } from '../shop/catalog';
 
 /** Opening hours, every day, in Colombia time. */
 const OPENS_AT = 8;
@@ -23,7 +22,6 @@ export const BAR_METHODS: readonly { readonly name: string; readonly detail: str
 @Component({
   selector: 'app-home',
   imports: [
-    CurrencyPipe,
     RouterLink,
     NavbarComponent,
     ContactBarComponent,
@@ -58,10 +56,6 @@ export class HomeComponent implements OnDestroy {
     );
     return hour >= OPENS_AT && hour < CLOSES_AT;
   });
-
-  fromPrice(product: ShopProduct): number {
-    return Math.min(...product.variants.map((variant) => variant.price));
-  }
 
   ngOnDestroy(): void {
     clearInterval(this.clock);

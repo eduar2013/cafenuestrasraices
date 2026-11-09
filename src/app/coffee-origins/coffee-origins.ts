@@ -14,6 +14,9 @@ import { CoffeeOrigin, normalize, toCoffeeOrigins } from './origins';
 
 const MAP_URL = 'images/origins/colombia.svg';
 
+/** One earthy colour per origin, so each pin can be told apart and matched to its name. */
+const PIN_COLORS = ['#b5532f', '#c08a1e', '#2e6f7a', '#5b3a24', '#7d4e7a', '#2f6b47'];
+
 @Component({
   selector: 'app-coffee-origins',
   standalone: true,
@@ -72,6 +75,10 @@ export class CoffeeOriginsComponent {
 
   selectCoffee(id: string): void {
     this.selectedCoffeeId.set(id);
+  }
+
+  pinColor(index: number): string {
+    return PIN_COLORS[index % PIN_COLORS.length];
   }
 
   mapLeft(origin: CoffeeOrigin): number {
