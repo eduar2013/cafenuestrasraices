@@ -152,19 +152,21 @@ p {
   justify-content: space-between;
 }
 .cart-item h3 {
-  font-family: var(--font-sign);
+  font-family: var(--font-name);
+  font-style: italic;
   font-size: 1.125rem;
-  font-weight: 400;
+  font-weight: 800;
   line-height: 1.2;
   margin: 0;
 }
 .line-total {
-  word-spacing: -0.22em;
   color: var(--price);
-  font-family: var(--font-sign);
+  font-family: var(--font-price);
   font-size: 1.125rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 .cart-item-meta {
   color: var(--muted);
@@ -247,15 +249,17 @@ button {
   padding-top: 12px;
 }
 .cart-total dd {
-  word-spacing: -0.22em;
   color: var(--price);
-  font-family: var(--font-sign);
+  font-family: var(--font-price);
   font-size: 1.5rem;
-  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .checkout-button {
   background: var(--action);
+  box-shadow: var(--action-stripe);
   border: 0;
   border-radius: var(--r);
   color: var(--on-action);

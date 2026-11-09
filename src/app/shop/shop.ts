@@ -48,22 +48,16 @@ export class ShopComponent implements OnDestroy {
   readonly catalog = inject(CatalogService);
   readonly category = signal<string>('todos');
   readonly process = signal<string>('todos');
-  readonly origin = signal<string>('todos');
-  /** Processes and origins present in the catalog, for the filters. */
+  /** Processes present in the catalog, for the filter. */
   readonly processes = computed(() => distinct(this.catalog.products().map((p) => p.process)));
-  readonly origins = computed(() => distinct(this.catalog.products().map((p) => p.origin)));
-  readonly filtered = computed(
-    () =>
-      this.category() !== 'todos' || this.process() !== 'todos' || this.origin() !== 'todos',
-  );
+  readonly filtered = computed(() => this.category() !== 'todos' || this.process() !== 'todos');
   readonly products = computed(() =>
     this.catalog
       .products()
       .filter(
         (product) =>
           (this.category() === 'todos' || product.category.id === this.category()) &&
-          (this.process() === 'todos' || product.process === this.process()) &&
-          (this.origin() === 'todos' || product.origin === this.origin()),
+          (this.process() === 'todos' || product.process === this.process()),
       ),
   );
   /** The painted board lists coffees first, the rest after. */
@@ -181,7 +175,6 @@ export class ShopComponent implements OnDestroy {
   clearFilters(): void {
     this.category.set('todos');
     this.process.set('todos');
-    this.origin.set('todos');
   }
 
   boardMeta(product: ShopProduct): string {

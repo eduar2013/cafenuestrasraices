@@ -85,21 +85,22 @@
         <span><span class="visually-hidden">Origen: </span>{{ originLine() }}</span>
       </p>
     }
-    @if (product().process || leadNotes().length) {
+    @if (leadNotes().length) {
       <dl class="product-lines">
-        @if (product().process) {
-          <div>
-            <dt>Proceso</dt>
-            <dd>{{ product().process }}</dd>
-          </div>
-        }
-        @if (leadNotes().length) {
-          <div>
-            <dt>Notas</dt>
-            <dd>{{ leadNotes().join(', ') }}</dd>
-          </div>
-        }
+        <div>
+          <dt>Notas</dt>
+          <dd>{{ leadNotes().join(', ') }}</dd>
+        </div>
       </dl>
+    }
+
+    @if (hasSheet()) {
+      <button type="button" class="sheet-toggle" aria-haspopup="dialog" (click)="openSheet()">
+        {{ product().isCoffee ? 'Ficha del café' : 'Detalles' }}
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
     }
 
     @if (presentationOptions().length > 0 || weightOptions().length > 0) {
@@ -215,33 +216,60 @@
       </button>
     </div>
 
-    @if (hasSheet()) {
-      <details class="product-sheet">
-        <summary>
-          {{ product().isCoffee ? 'Ficha del café' : 'Detalles' }}
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-            <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  </div>
+
+  <!-- The full sheet opens over the page: centred on wide screens, a bottom sheet on phones. -->
+  @if (hasSheet()) {
+    <dialog
+      #sheetDialog
+      class="product-sheet"
+      [attr.aria-labelledby]="'sheet-title-' + product().id"
+      (click)="$event.target === sheetDialog && sheetDialog.close()"
+    >
+      <div class="sheet-body">
+        <button type="button" class="sheet-close" aria-label="Cerrar ficha" (click)="sheetDialog.close()">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
           </svg>
-        </summary>
-        @if (sheet().length > 0) {
+        </button>
+        @if (currentImage(); as image) {
+          <div class="sheet-photo">
+            <img [src]="image" [alt]="product().name" loading="lazy" />
+          </div>
+        }
+        <div class="sheet-info">
+          <h4 class="sheet-title" [id]="'sheet-title-' + product().id">{{ product().name }}</h4>
+          @if (product().producer) {
+            <p class="product-producer">{{ product().producer }}</p>
+          }
+          @if (originLine()) {
+            <p class="sheet-origin">{{ originLine() }}</p>
+          }
           <dl class="sheet-lines">
-            @for (property of sheet(); track property.label) {
+            @for (property of product().properties; track property.label) {
               <div>
                 <dt>{{ property.label }}</dt>
                 <dd>{{ property.value }}</dd>
               </div>
             }
+            <div>
+              <dt>Presentación</dt>
+              <dd>{{ variant().label }}</dd>
+            </div>
           </dl>
-        }
-        @if ((product().notes?.length ?? 0) > 3) {
-          <p class="sheet-notes">
-            <strong>Todas las notas:</strong> {{ product().notes!.join(', ') }}
-          </p>
-        }
-        @if (product().description) {
-          <p class="sheet-description">{{ product().description }}</p>
-        }
-      </details>
-    }
-  </div>
+          @if (product().notes?.length) {
+            <p class="sheet-label">Notas en taza</p>
+            <ul class="sheet-notes">
+              @for (note of product().notes; track $index) {
+                <li>{{ note }}</li>
+              }
+            </ul>
+          }
+          @if (product().description) {
+            <p class="sheet-description">{{ product().description }}</p>
+          }
+        </div>
+      </div>
+    </dialog>
+  }
 </article>

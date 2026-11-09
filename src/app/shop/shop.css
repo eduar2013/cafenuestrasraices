@@ -166,7 +166,9 @@ h1 {
     color var(--m-in) var(--ease);
 }
 .board-name {
-  font-family: var(--font-sign);
+  font-family: var(--font-name);
+  font-style: italic;
+  font-weight: 800;
   font-size: 1.375rem;
   line-height: 1.15;
 }
@@ -181,14 +183,15 @@ h1 {
   content: ' — ';
 }
 .board-price {
-  word-spacing: -0.22em;
   color: var(--price);
-  font-family: var(--font-sign);
+  font-family: var(--font-price);
   font-size: 1.25rem;
   font-variant-numeric: tabular-nums;
   grid-column: 2;
   grid-row: 1 / span 2;
   white-space: nowrap;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 .board-row a:hover {
   background: var(--action);
@@ -300,32 +303,11 @@ h1 {
     inset 0 0 0 3px var(--state),
     inset 0 0 0 4.5px var(--ink);
 }
-.filter-select {
-  align-items: center;
-  display: flex;
-  gap: 4px;
-}
-.filter-select select {
-  appearance: none;
-  background: transparent
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6' fill='none' stroke='%23141414' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-    no-repeat right 10px center / 18px;
-  border: var(--filete) solid var(--ink);
-  border-radius: var(--r);
-  color: var(--ink);
-  font: inherit;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  min-height: 44px;
-  padding: 0 38px 0 12px;
-}
-.filter-select select:hover {
-  background-color: var(--wall-shade);
-}
 
 .cart-toggle {
   align-items: center;
   background: var(--action);
+  box-shadow: var(--action-stripe);
   border: 0;
   border-radius: var(--r);
   color: var(--on-action);
@@ -606,10 +588,6 @@ select:focus-visible {
   }
   .filter-group .filter-label {
     flex-basis: 100%;
-  }
-  .filter-select,
-  .filter-select select {
-    flex: 1;
   }
   .cart-toggle {
     justify-content: center;

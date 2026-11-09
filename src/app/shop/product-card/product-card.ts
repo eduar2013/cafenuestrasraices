@@ -1,5 +1,14 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, OnDestroy, computed, input, output, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  computed,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { ProductVariant, ShopProduct } from '../catalog';
 
 const ADDED_FEEDBACK_DURATION = 1500;
@@ -37,6 +46,7 @@ export class ProductCardComponent implements OnDestroy {
   /** Images that failed to load fall back to the placeholder. */
   private readonly brokenImages = signal<ReadonlySet<string>>(new Set());
   private addedTimer?: ReturnType<typeof setTimeout>;
+  private readonly sheetDialog = viewChild<ElementRef<HTMLDialogElement>>('sheetDialog');
 
   readonly currentImage = computed(
     () => this.chosenImage() ?? this.product().images[0] ?? this.product().image,
@@ -83,13 +93,9 @@ export class ProductCardComponent implements OnDestroy {
   readonly originLine = computed(() =>
     [this.product().origin, this.product().farm].filter(Boolean).join(' · '),
   );
-  /** Technical sheet: the properties not already on the card (process is). */
-  readonly sheet = computed(() =>
-    this.product().properties.filter((property) => property.label !== 'Proceso'),
-  );
   readonly hasSheet = computed(
     () =>
-      this.sheet().length > 0 ||
+      this.product().properties.length > 0 ||
       !!this.product().description ||
       (this.product().notes?.length ?? 0) > 3,
   );
@@ -134,6 +140,11 @@ export class ProductCardComponent implements OnDestroy {
     const quantity = clampQuantity(input.valueAsNumber);
     this.quantity.set(quantity);
     input.value = `${quantity}`;
+  }
+
+  /** The full coffee sheet opens as a dialog, so neighbouring cards never move. */
+  openSheet(): void {
+    this.sheetDialog()?.nativeElement.showModal();
   }
 
   add(): void {

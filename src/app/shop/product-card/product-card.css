@@ -148,9 +148,10 @@ dd {
   padding: 14px 10px 6px;
 }
 .product-title h3 {
-  font-family: var(--font-sign);
+  font-family: var(--font-name);
+  font-style: italic;
   font-size: 1.625rem;
-  font-weight: 400;
+  font-weight: 800;
   line-height: 1.1;
   text-shadow: var(--sign-shadow);
 }
@@ -281,13 +282,14 @@ dd {
   row-gap: 10px;
 }
 .product-price {
-  word-spacing: -0.22em;
   color: var(--price);
-  font-family: var(--font-sign);
+  font-family: var(--font-price);
   font-size: 1.75rem;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   white-space: nowrap;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 .product-price span {
   color: var(--muted);
@@ -343,6 +345,7 @@ dd {
 .add-button {
   align-items: center;
   background: var(--action);
+  box-shadow: var(--action-stripe);
   border: 0;
   border-radius: var(--r);
   color: var(--on-action);
@@ -361,7 +364,8 @@ dd {
 .add-button:active:not(:disabled) {
   transform: translateY(1px);
 }
-.add-button.is-added {
+.add-button.is-added,
+.add-button.is-added:hover:not(:disabled) {
   background: var(--state);
   color: var(--on-state);
 }
@@ -371,48 +375,196 @@ dd {
   cursor: not-allowed;
 }
 
-/* ---------- Technical sheet ---------- */
+/* ---------- Coffee sheet (dialog) ---------- */
 
-.product-sheet {
-  border-top: 1px dashed var(--line);
-  margin-top: 12px;
-}
-.product-sheet summary {
+/* Sits right under the notes, as the "read more" of the coffee. */
+.sheet-toggle {
   align-items: center;
+  align-self: flex-start;
+  background: none;
+  border: 0;
   color: var(--action);
-  cursor: pointer;
-  display: flex;
+  display: inline-flex;
   font-size: 0.9375rem;
   font-weight: 700;
-  justify-content: space-between;
-  list-style: none;
+  gap: 4px;
   min-height: 44px;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: #2f6b4766;
+  text-underline-offset: 0.25em;
 }
-.product-sheet summary::-webkit-details-marker {
-  display: none;
+.sheet-toggle:hover {
+  text-decoration-color: currentColor;
+  color: var(--action-deep);
 }
-.product-sheet summary svg {
-  transition: transform var(--m-in) var(--ease);
+/* Wide screens: a painted card centred over the page. */
+.product-sheet {
+  background: #fff;
+  border: var(--filete) solid var(--ink);
+  border-radius: var(--r);
+  color: var(--ink);
+  max-height: min(88dvh, 720px);
+  max-width: min(860px, calc(100vw - 32px));
+  padding: 0;
+  width: 100%;
 }
-.product-sheet[open] summary svg {
-  transform: rotate(180deg);
+.product-sheet::backdrop {
+  background: #14141499;
+}
+.product-sheet[open] {
+  animation: sheet-in 320ms var(--ease);
+}
+.product-sheet[open]::backdrop {
+  animation: backdrop-in 320ms var(--ease);
+}
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+.sheet-body {
+  display: grid;
+  gap: 0;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  position: relative;
+}
+.sheet-close {
+  align-items: center;
+  background: var(--wall);
+  border: var(--filete) solid var(--ink);
+  border-radius: 50%;
+  color: var(--ink);
+  display: inline-flex;
+  height: 44px;
+  justify-content: center;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 44px;
+  z-index: 1;
+}
+.sheet-close:hover {
+  background: var(--wall-shade);
+}
+.sheet-photo {
+  align-items: center;
+  background: #f1f1ec;
+  border-right: var(--filete) solid var(--ink);
+  display: flex;
+  justify-content: center;
+  min-height: 320px;
+  padding: 24px;
+}
+.sheet-photo img {
+  display: block;
+  max-height: 520px;
+  max-width: 100%;
+  mix-blend-mode: multiply;
+  object-fit: contain;
+}
+.sheet-info {
+  overflow-y: auto;
+  padding: 28px 24px 24px;
+}
+.sheet-title {
+  font-family: var(--font-name);
+  font-style: italic;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 52px 0 0;
+  text-shadow: var(--sign-shadow);
+}
+.sheet-origin {
+  font-weight: 700;
+  margin-top: 6px;
 }
 .sheet-lines {
-  margin: 0 0 8px;
+  margin: 16px 0 0;
 }
-.sheet-notes,
+.sheet-lines > div {
+  border-top: 1px solid var(--line);
+  column-gap: 12px;
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  padding: 8px 0;
+}
+.sheet-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-top: 16px;
+}
+.sheet-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.sheet-notes li {
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  padding: 4px 12px;
+}
 .sheet-description {
   color: var(--muted);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  margin-bottom: 8px;
+  line-height: 1.6;
+  margin-top: 16px;
 }
-.sheet-notes strong {
-  color: var(--ink);
+/* Phones: a bottom sheet that rises from the foot of the screen. */
+@media (max-width: 639px) {
+  .product-sheet {
+    border-radius: 14px 14px 0 0;
+    border-width: var(--filete) 0 0;
+    margin: auto 0 0;
+    max-height: 90dvh;
+    max-width: 100vw;
+  }
+  .product-sheet[open] {
+    animation: sheet-up 360ms var(--ease);
+  }
+  .sheet-body {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+  .sheet-photo {
+    border-bottom: var(--filete) solid var(--ink);
+    border-right: 0;
+    min-height: 0;
+    padding: 16px;
+  }
+  .sheet-photo img {
+    max-height: 240px;
+  }
+  .sheet-info {
+    overflow: visible;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
 }
 
-button:focus-visible,
-summary:focus-visible {
+button:focus-visible {
   outline: 3px solid var(--action);
   outline-offset: 2px;
 }
@@ -423,9 +575,12 @@ summary:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .product-photo,
   .variant-option span,
-  .product-sheet summary svg,
   .add-button {
     transition: none;
+  }
+  .product-sheet[open],
+  .product-sheet[open]::backdrop {
+    animation: none;
   }
   .product-zoom:hover .product-photo {
     transform: none;

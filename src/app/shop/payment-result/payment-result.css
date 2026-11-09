@@ -64,6 +64,7 @@ dd {
 }
 .result-button {
   background: var(--action);
+  box-shadow: var(--action-stripe);
   border: 0;
   border-radius: var(--r);
   color: var(--on-action);

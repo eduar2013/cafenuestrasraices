@@ -120,7 +120,7 @@ select:hover {
 input:focus,
 select:focus {
   border-color: var(--action);
-  outline: 3px solid #2d4a3740;
+  outline: 3px solid #2f6b4740;
   outline-offset: 0;
 }
 input.ng-invalid.ng-touched,
@@ -326,11 +326,12 @@ dd {
   font-weight: 700;
 }
 .summary-total dd {
-  word-spacing: -0.22em;
   color: var(--price);
-  font-family: var(--font-sign);
+  font-family: var(--font-price);
   font-size: 1.5rem;
-  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 .spinner {
   animation: spin 0.7s linear infinite;
@@ -355,6 +356,7 @@ dd {
 .pay-button {
   align-items: center;
   background: var(--action);
+  box-shadow: var(--action-stripe);
   border: 0;
   border-radius: var(--r);
   color: var(--on-action);

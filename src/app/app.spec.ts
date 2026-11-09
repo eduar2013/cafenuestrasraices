@@ -134,7 +134,7 @@ describe('App', () => {
     expect(history?.compareDocumentPosition(compiled.querySelector('app-carousel')!)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
-    expect(history?.querySelector('img')?.getAttribute('src')).toBe('images/cafe/image.webp');
+    expect(history?.querySelector('img')?.getAttribute('src')).toBe('images/cafe/logo.webp');
     expect(history?.querySelector('img')?.getAttribute('alt')).toBe('Logo de Café Nuestras Raíces');
   });
 

@@ -8,63 +8,72 @@ colors:
   ink: "#141414"
   muted: "#45453f"
   line: "#14141426"
-  action: "#2d4a37"
-  action-deep: "#1f3627"
+  action: "#2f6b47"
+  action-deep: "#275a3c"
+  accent: "#d9a441"
   state: "#e3ddd0"
   error: "#9a2a1d"
 typography:
   sign-display:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+    fontFamily: "Sansita Black, Sansita, Albert Sans, system-ui, sans-serif"
     fontSize: "clamp(3.5rem, 7.5vw, 6rem)"
-    fontWeight: 400
+    fontWeight: 900
+    fontStyle: italic
     lineHeight: 0.95
     letterSpacing: "-0.01em"
   sign-display-home:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+    fontFamily: "Sansita Black, Sansita, Albert Sans, system-ui, sans-serif"
     fontSize: "clamp(3.5rem, 7vw, 5.75rem)"
-    fontWeight: 400
+    fontWeight: 900
+    fontStyle: italic
     lineHeight: 0.95
     letterSpacing: "-0.01em"
   sign-numeral:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+    fontFamily: "Sansita Black, Sansita, Albert Sans, system-ui, sans-serif"
     fontSize: "clamp(3rem, 6vw, 4.5rem)"
-    fontWeight: 400
+    fontWeight: 900
+    fontStyle: italic
     lineHeight: 1
   sign-section:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+    fontFamily: "Sansita Black, Sansita, Albert Sans, system-ui, sans-serif"
     fontSize: "clamp(2rem, 4vw, 3rem)"
-    fontWeight: 400
+    fontWeight: 900
+    fontStyle: italic
     lineHeight: 1.05
   sign-board:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+    fontFamily: "Sansita Black, Sansita, Albert Sans, system-ui, sans-serif"
     fontSize: "clamp(2.25rem, 4vw, 3rem)"
-    fontWeight: 400
+    fontWeight: 900
+    fontStyle: italic
     lineHeight: 1
   sign-method:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+    fontFamily: "Sansita Black, Sansita, Albert Sans, system-ui, sans-serif"
     fontSize: "clamp(1.75rem, 2.6vw, 2.25rem)"
-    fontWeight: 400
+    fontWeight: 900
+    fontStyle: italic
     lineHeight: 1.05
-  sign-title:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+  name-title:
+    fontFamily: "Sansita, Albert Sans, system-ui, sans-serif"
     fontSize: "1.625rem"
-    fontWeight: 400
+    fontWeight: 800
+    fontStyle: italic
     lineHeight: 1.1
-  sign-row:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+  name-row:
+    fontFamily: "Sansita, Albert Sans, system-ui, sans-serif"
     fontSize: "1.375rem"
-    fontWeight: 400
+    fontWeight: 800
+    fontStyle: italic
     lineHeight: 1.15
   sign-price:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+    fontFamily: "Albert Sans, system-ui, sans-serif"
     fontSize: "1.75rem"
-    fontWeight: 400
+    fontWeight: 800
     lineHeight: 1
     fontFeature: "tnum"
   sign-price-row:
-    fontFamily: "Shrikhand, Albert Sans, system-ui, sans-serif"
+    fontFamily: "Albert Sans, system-ui, sans-serif"
     fontSize: "1.25rem"
-    fontWeight: 400
+    fontWeight: 800
     lineHeight: 1
     fontFeature: "tnum"
   headline:
@@ -247,7 +256,7 @@ Density is comfortable and comparative: coffees sit side by side on the same rul
 
 **Key Characteristics:**
 - Lime-wash wall ground on every route, white panels hung on it inside a 2px ink filete.
-- Shrikhand sign lettering only on names, prices, totals, numerals and signs; Albert Sans for everything else.
+- Sansita Black Italic for signs, section headings and numerals; Albert Sans ExtraBold with tabular numerals for prices and totals; Sansita ExtraBold Italic for coffee and product names (cards, sheet, board, cart, "Llévalo", origins detail); Albert Sans for everything else.
 - One action colour (deep green), one chosen-state treatment (stone + inner filete), one error colour.
 - Flat surfaces; depth comes from the filete and the painted letter shadow.
 - The same measurement lines on every card so coffees compare row by row.
@@ -255,11 +264,15 @@ Density is comfortable and comparative: coffees sit side by side on the same rul
 
 ## Colors
 
-A sober enamel palette on a white wall: black for the painting, one green for doing, stone for choosing, red for errors.
+A warm enamel palette on a white wall ("Cafetal", chosen in live mode): black for the painting, one coffee-farm green for doing, a mustard filete under it, stone for choosing, red for errors. Livelier than the first sober green, never loud.
 
 ### Primary
-- **Bottle Green Enamel** (action): every actionable element and nothing else. Primary buttons (Agregar, Ir a pagar, Pagar, Cómo llegar, Tienda in the header), secondary button outlines, link hover, the focus ring, the free-shipping progress bar, the technical-sheet toggle, the coffee pins on the origins map. Text on it is panel white.
-- **Deep Bottle Green** (action-deep): hover and pressed fill of green buttons only.
+- **Cafetal Green** (action, #2f6b47): every actionable element and nothing else. Primary buttons (Añadir al carrito, Finalizar compra, Pagar, Cómo llegar, Tienda in the header, Ver carrito), secondary button outlines, link hover, the focus ring, the free-shipping progress bar, the technical-sheet toggle, the coffee pins on the origins map. Text on it is panel white.
+- **Deep Cafetal Green** (action-deep, #275a3c): hover and pressed fill of green buttons only.
+- **Mustard Filete** (accent, #d9a441): the 3px inset stripe along the foot of filled primary buttons (`--action-stripe`), and two moments of selection on the origins map: the breathing ring around the chosen pin and the brief flash as the chosen department is painted. Never a resting fill, never text.
+
+### Origins map
+Departments are painted inline: stone (#e9e5d9, stroke #b3ab97) by default, light cafetal (#c9dfcd, stroke action green) where the shop's coffees grow, deep cafetal (#6fa57f, ink stroke) for the selected origin's department, over a soft sky gradient (#eef3ec → #f7f5ee). Selecting an origin zooms the map 1.14× toward its pin (800ms), pops the pin, paints the department, and slides the coffee detail in with its notes following one by one. All of it is off under reduced motion.
 
 ### Secondary
 - **Lime Stone** (state): the chosen state. Selected chips (including origin and coffee chips on the map), the checked weight/grind option, the chosen delivery and shipping option, the "added" button state, the cart count badge, state tags (Agotado, product badge), the clear-cart confirmation, the open menu toggle. Always paired with ink text, and on selectable controls with an inner ink filete.
@@ -284,22 +297,22 @@ A sober enamel palette on a white wall: black for the painting, one green for do
 
 ## Typography
 
-**Display Font:** Shrikhand (with Albert Sans, system-ui), self-hosted from `public/fonts` and preloaded
+**Display Font:** Sansita Black (with Albert Sans, system-ui), self-hosted from `public/fonts` and preloaded
 **Body Font:** Albert Sans, variable 400–700 (with system-ui), self-hosted and preloaded; the base face of html and body
 
 **Character:** A heavy, slanted sign-painter's script against a clean, slightly warm grotesque. The script is the painted sign; the sans is the small print under it.
 
 ### Hierarchy
-- **Sign Display** (Shrikhand 400, clamp(3.5rem, 7.5vw, 6rem), 0.95): the shop's page sign ("Tienda"), one per page, decorative and `aria-hidden` when a real h1 follows.
-- **Sign Display Home** (Shrikhand 400, clamp(3.5rem, 7vw, 5.75rem), 0.95): the home page sign ("Tu visita"), same role, slightly smaller so the step list fits beside the photo.
-- **Sign Numeral** (Shrikhand 400, clamp(3rem, 6vw, 4.5rem), 1): the painted number heading each home step. In the first-viewport step list the same numerals are 2rem in a 44px column.
-- **Sign Section** (Shrikhand 400, clamp(2rem, 4vw, 3rem), 1.05): section headings on the home page: step h2s, the history heading, the carousel heading.
-- **Sign Board** (Shrikhand 400, clamp(2.25rem, 4vw, 3rem), 1): the board heading.
-- **Sign Method** (Shrikhand 400, clamp(1.75rem, 2.6vw, 2.25rem), 1.05): brewing-method names on the Prueba menu board, painted at sign scale.
-- **Sign Title** (Shrikhand 400, 1.625rem, 1.1): coffee names on cards, the street address on the location card. Cart names are 1.125rem; the drawer, result and footer brand headings 1.75rem; the return page heading 2rem.
-- **Sign Row** (Shrikhand 400, 1.375rem, 1.15): names on ruled rows and small cards: board rows, the home take-home list, carousel card titles, the header brand name (1.125rem under 768px).
-- **Sign Price** (Shrikhand 400, 1.75rem, 1, tabular figures, word-spacing -0.22em): card prices. Cart and checkout totals 1.5rem, line totals 1.125rem. A muted Albert Sans currency code (Micro) follows display totals.
-- **Sign Price Row** (Shrikhand 400, 1.25rem, 1, tabular figures, word-spacing -0.22em): prices on board rows and the home take-home list.
+- **Sign Display** (Sansita Black 400, clamp(3.5rem, 7.5vw, 6rem), 0.95): the shop's page sign ("Tienda"), one per page, decorative and `aria-hidden` when a real h1 follows.
+- **Sign Display Home** (Sansita Black 400, clamp(3.5rem, 7vw, 5.75rem), 0.95): the home page sign ("Tu visita"), same role, slightly smaller so the step list fits beside the photo.
+- **Sign Numeral** (Sansita Black 400, clamp(3rem, 6vw, 4.5rem), 1): the painted number heading each home step. In the first-viewport step list the same numerals are 2rem in a 44px column.
+- **Sign Section** (Sansita Black 400, clamp(2rem, 4vw, 3rem), 1.05): section headings on the home page: step h2s, the history heading, the carousel heading.
+- **Sign Board** (Sansita Black 400, clamp(2.25rem, 4vw, 3rem), 1): the board heading.
+- **Sign Method** (Sansita Black 400, clamp(1.75rem, 2.6vw, 2.25rem), 1.05): brewing-method names on the Prueba menu board, painted at sign scale.
+- **Sign Title** (Sansita Black 400, 1.625rem, 1.1): coffee names on cards, the street address on the location card. Cart names are 1.125rem; the drawer, result and footer brand headings 1.75rem; the return page heading 2rem.
+- **Sign Row** (Sansita Black 400, 1.375rem, 1.15): names on ruled rows and small cards: board rows, the home take-home list, carousel card titles, the header brand name (1.125rem under 768px).
+- **Price** (Albert Sans 800, 1.75rem, 1, tabular figures, -0.01em): card and sheet prices. Cart and checkout totals 1.5rem, line totals 1.125rem. A muted Albert Sans currency code (Micro) follows display totals.
+- **Price Row** (Albert Sans 800, 1.25rem, 1, tabular figures, -0.01em): prices on board rows and the home take-home list.
 - **Headline** (Albert Sans 700, clamp(1.5rem, 2.6vw, 2rem), 1.15): section headings such as the catalog heading.
 - **Title** (Albert Sans 700, clamp(1.375rem, 2.2vw, 1.75rem), 1.2, max 24ch): the real page h1 under the shop sign.
 - **Body Large** (Albert Sans, 1.125rem): step names in the first-viewport list (700) and the history story (400, line-height 1.65, max 60ch, muted).
@@ -311,7 +324,7 @@ A sober enamel palette on a white wall: black for the painting, one green for do
 - **Micro** (Albert Sans 700, 0.75rem): the currency code after display totals.
 
 ### Named Rules
-**The Sign Lettering Rule.** Shrikhand is used only on coffee names, method names, prices and totals, signs and headings, numerals, the street address, the brand name and the pickup code. Never in paragraphs, buttons, labels or form text.
+**The Sign Lettering Rule.** Sansita Black is used only on signs and headings, method names, numerals, the street address, the brand name and the pickup code; coffee names use Sansita ExtraBold; prices and totals use Albert Sans ExtraBold. Never in paragraphs, buttons, labels or form text.
 
 **The Painted Shadow Rule.** Sign lettering on page signs, numerals, headings and card names carries a soft painted shadow (0.05em 0.05em, ink at 20%, no blur). Prices, row names and running text carry none.
 
@@ -380,7 +393,7 @@ Plain, solid and confident; the green is the only loud thing on the page.
 - **Error:** border and message in muted red (0.8125rem, 600) once the field has been touched.
 
 ### Navigation
-- **Header (contact bar):** sticky, wall ground with a 2px ink bottom rule, one row at every width. Left: the brand lockup (painted mark, a small "Café" over the Shrikhand name, which also links home; the mark tilts -8deg on hover). Right: the green Tienda button, round social buttons (Facebook and Instagram hidden under 768px; WhatsApp stays) and the round menu toggle.
+- **Header (contact bar):** sticky, wall ground with a 2px ink bottom rule, one row at every width. Left: the brand lockup (painted mark, a small "Café" over the Sansita Black name, which also links home; the mark tilts -8deg on hover). Right: the green Tienda button, round social buttons (Facebook and Instagram hidden under 768px; WhatsApp stays) and the round menu toggle.
 - **Menu dropdown:** a white panel in the ink filete, 6px corners, 6px padding, opening under the toggle aligned right, with the dropdown float shadow. Links are 44px rows, Albert Sans 600, filling wall shade on hover.
 - **Breadcrumb:** muted 0.875rem, links underlined, green on hover.
 - **Board rows as links:** each row on the board jumps to its card; hover fills the row green with white text. The home take-home list rows behave the same and open the coffee in the shop.
@@ -395,10 +408,10 @@ A wall-coloured plate in the ink filete, 6px corners, pinned to the foot of the 
 A white framed panel with the department map in grayscale (lightened, softened contrast) so the green pins carry the only colour. Pins are 16px green dots with a 3px white border and an ink ring, growing on hover; the selected pin turns ink. The detail panel beside it uses a Sign Title-scale heading, a framed product photo, ruled lines (9rem term column), pill tasting notes and a green link to the shop.
 
 ### Footer
-Black enamel: the one inverted surface. Ink ground, wall text, a Shrikhand brand name at 1.75rem, Albert Sans 700 column headings at 0.9375rem, softened wall tones for paragraphs (`#d9d9d2`) and hints (`#b9b9b1`), links underlined in wall at 40% that solidify on hover, an outlined "Cómo llegar" button, and a bottom line above a wall-at-20% rule.
+Black enamel: the one inverted surface. Ink ground, wall text, a Sansita Black brand name at 1.75rem, Albert Sans 700 column headings at 0.9375rem, softened wall tones for paragraphs (`#d9d9d2`) and hints (`#b9b9b1`), links underlined in wall at 40% that solidify on hover, an outlined "Cómo llegar" button, and a bottom line above a wall-at-20% rule.
 
 ### The Board (signature)
-A white panel with a double painted frame: the "Hoy tenemos" sign, a muted lead, and an ordered list of coffees, each row a painted line with name (Shrikhand), process, origin and two notes (muted), and the price at the right. Rows are separated by pencil rules; the payment badge sits at the foot.
+A white panel with a double painted frame: the "Hoy tenemos" sign, a muted lead, and an ordered list of coffees, each row a painted line with name (Sansita ExtraBold), process, origin and two notes (muted), and the price at the right. Rows are separated by pencil rules; the payment badge sits at the foot.
 
 ### Ruled Lines (signature)
 Coffee attributes are a definition list on hairline rules: a 4.5rem muted label column and a value column, identical on every card and in the technical sheet, so coffees compare row by row. The location card and origins detail use the same ruled list.
@@ -407,28 +420,28 @@ Coffee attributes are a definition list on hairline rules: a 4.5rem muted label 
 The coffee name is struck through with a 3px ink line, the price becomes a stone "Agotado" tag, and the photo desaturates (70% grayscale). Nothing is hidden.
 
 ### Checkout Steps
-Each step is a white panel framed in ink with an ink tile carrying the step number in Shrikhand (28px, 4px radius). A collapsible order review and an ink-ruled summary with a Shrikhand total precede the pay button and the payment badge.
+Each step is a white panel framed in ink with an ink tile carrying the step number in Sansita Black (28px, 4px radius). A collapsible order review and an ink-ruled summary with an Albert Sans ExtraBold total precede the pay button and the payment badge.
 
 ### Pickup Ticket
-On the result page the pickup code is a dashed-ink ticket on white: the code in Shrikhand at 2.25rem with 0.08em tracking, and the QR below it.
+On the result page the pickup code is a dashed-ink ticket on white: the code in Sansita Black at 2.25rem with 0.08em tracking, and the QR below it.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** frame every hung object (card, panel, photo, map, field group) in the 2px ink filete with 6px corners.
-- **Do** open each page section with a 2px ink rule and a painted numeral or Shrikhand heading.
+- **Do** open each page section with a 2px ink rule and a painted numeral or Sansita Black heading.
 - **Do** keep deep green for actions only: buttons, link hover, focus rings, progress, map pins.
 - **Do** mark every chosen state with stone fill plus the inner ink filete (3px stone gap, 1.5px ink).
-- **Do** set coffee names, prices and totals in Shrikhand with tabular figures, followed by a muted currency code on display totals.
+- **Do** set coffee names in Sansita ExtraBold Italic and prices and totals in Albert Sans ExtraBold with tabular figures, followed by a muted currency code on display totals.
 - **Do** keep the same ruled lines, in the same order, on every product card.
 - **Do** show sold-out coffees with a struck name and a stone Agotado tag instead of hiding them.
 - **Do** honour reduced motion: transitions collapse, smooth scroll turns off.
 
 ### Don't:
-- **Don't** add another accent colour or reintroduce the earlier cobalt, yellow and bright red enamels.
+- **Don't** add another accent colour beyond the mustard filete, or reintroduce the earlier cobalt, yellow and bright red enamels. Don't use the mustard as a fill or for text.
 - **Don't** use the error red for prices, sale tags or emphasis.
 - **Don't** paint status or information green; open/closed is ink.
-- **Don't** set paragraphs, buttons or form labels in Shrikhand.
+- **Don't** set paragraphs, buttons or form labels in Sansita Black.
 - **Don't** put drop shadows on cards or panels; only floating objects (toast, menu dropdown) cast one.
 - **Don't** use chivas, hats or flags as decoration, or flip cards.
 - **Don't** add uppercase tracked labels or eyebrows above headings; hierarchy is by size alone.

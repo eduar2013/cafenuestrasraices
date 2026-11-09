@@ -78,25 +78,32 @@ describe('ProductCardComponent', () => {
     expect(zoomed).toEqual(['images/productos/labralma-lifestyle.jpg']);
   });
 
-  it('should show origin, process and three tasting notes on the card itself', async () => {
+  it('should show origin and only three tasting notes on the card itself', async () => {
     const { element } = await render(byName('LabrAlma'));
     const lines = element.querySelector('.product-lines')!.textContent!;
 
     expect(element.querySelector('.product-origin')?.textContent).toContain('Heliconia, Antioquia');
-    expect(lines).toContain('Lavado');
+    expect(lines).not.toContain('Lavado');
     expect(lines).toContain('Chocolate, Cítricos, Panela');
     expect(lines).not.toContain('Frutos rojos');
   });
 
-  it('should keep the rest of the coffee sheet folded inside the card', async () => {
+  it('should open the full coffee sheet as a dialog instead of growing the card', async () => {
     const { element } = await render(byName('LabrAlma'));
-    const sheet = element.querySelector<HTMLDetailsElement>('.product-sheet')!;
+    const sheet = element.querySelector<HTMLDialogElement>('dialog.product-sheet')!;
+    // jsdom has no showModal; the card only needs to call it.
+    sheet.showModal ??= function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    };
 
     expect(sheet.open).toBe(false);
     expect(sheet.textContent).toContain('Bourbon Papayo');
     expect(sheet.textContent).toContain('1740 m s. n. m.');
     expect(sheet.textContent).toContain('Frutos rojos');
-    expect(sheet.textContent).not.toContain('Proceso');
+    expect(sheet.textContent).toContain('Lavado');
+    expect(sheet.querySelector('.sheet-lines')?.textContent).toContain('Presentación');
+    element.querySelector<HTMLButtonElement>('.sheet-toggle')!.click();
+    expect(sheet.open).toBe(true);
   });
 
   it('should not show a coffee sheet for products that are not coffee', async () => {

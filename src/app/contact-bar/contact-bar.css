@@ -73,6 +73,7 @@
 .shop-cta {
   align-items: center;
   background: var(--action);
+  box-shadow: var(--action-stripe);
   border-radius: var(--r);
   color: var(--on-action);
   display: inline-flex;

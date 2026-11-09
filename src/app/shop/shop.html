@@ -135,17 +135,6 @@
               }
             </div>
           }
-          @if (origins().length > 1) {
-            <label class="filter-select">
-              <span class="filter-label">Origen</span>
-              <select [value]="origin()" (change)="origin.set($any($event.target).value)">
-                <option value="todos">Todos los orígenes</option>
-                @for (option of origins(); track option) {
-                  <option [value]="option">{{ option }}</option>
-                }
-              </select>
-            </label>
-          }
         </div>
         <button
           #cartToggle

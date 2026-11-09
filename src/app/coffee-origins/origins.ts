@@ -23,6 +23,8 @@ export interface CoffeeOrigin {
   readonly longitude: number;
   /** True when the API had no coordinates and the department centre is used. */
   readonly approximate: boolean;
+  /** Department key (lowercase, no accents) used to paint it on the map, when known. */
+  readonly department?: string;
   readonly coffees: readonly [OriginCoffee, ...OriginCoffee[]];
 }
 
@@ -78,6 +80,7 @@ export function toCoffeeOrigins(products: readonly ApiProduct[]): readonly Coffe
         name,
         location: origin.region || name,
         ...position,
+        department: departmentKey(origin),
         coffees: coffees as [OriginCoffee, ...OriginCoffee[]],
       },
     ];
@@ -110,7 +113,16 @@ function originPosition(
   if (origin.latitude !== null && origin.longitude !== null) {
     return { latitude: origin.latitude, longitude: origin.longitude, approximate: false };
   }
-  // Look for a known department in the department field first, then in the region text.
+  const match = departmentKey(origin);
+  if (match) {
+    const [latitude, longitude] = DEPARTMENT_CENTRES[match];
+    return { latitude, longitude, approximate: true };
+  }
+  return undefined;
+}
+
+/** Known department in the department field first, then in the region text. */
+function departmentKey(origin: ApiOrigin): string | undefined {
   for (const text of [origin.department, origin.region]) {
     const key = normalize(text ?? '');
     const match = Object.keys(DEPARTMENT_CENTRES)
@@ -118,13 +130,12 @@ function originPosition(
       // "norte de santander" must win over "santander".
       .sort((a, b) => b.length - a.length)[0];
     if (match) {
-      const [latitude, longitude] = DEPARTMENT_CENTRES[match];
-      return { latitude, longitude, approximate: true };
+      return match;
     }
   }
   return undefined;
 }
 
-function normalize(text: string): string {
+export function normalize(text: string): string {
   return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }

@@ -7,11 +7,11 @@
       "action": {
         "role": "primary",
         "displayName": "Bottle Green Enamel",
-        "canonical": "#2d4a37",
+        "canonical": "#2f6b47",
         "tonalRamp": [
           "#0f1a13",
-          "#1f3627",
-          "#2d4a37",
+          "#275a3c",
+          "#2f6b47",
           "#44664f",
           "#5f826b",
           "#86a38f",
@@ -22,12 +22,12 @@
       "action-deep": {
         "role": "primary",
         "displayName": "Deep Bottle Green",
-        "canonical": "#1f3627",
+        "canonical": "#275a3c",
         "tonalRamp": [
           "#0a120d",
           "#142219",
-          "#1f3627",
-          "#2d4a37",
+          "#275a3c",
+          "#2f6b47",
           "#44664f",
           "#6d8b77",
           "#a5bbab",
@@ -261,12 +261,12 @@
       },
       {
         "name": "focus-ring",
-        "value": "outline: 3px solid #2d4a37; outline-offset: 2px",
+        "value": "outline: 3px solid #2f6b47; outline-offset: 2px",
         "purpose": "Keyboard focus on all controls; wall outline on the ink footer."
       },
       {
         "name": "field-focus-halo",
-        "value": "outline: 3px solid #2d4a3740",
+        "value": "outline: 3px solid #2f6b4740",
         "purpose": "Soft halo around a focused text field, with a green border."
       }
     ],
@@ -361,7 +361,7 @@
       "refersTo": "button-primary",
       "description": "The add-to-cart and every forward action; the only solid green on the page.",
       "html": "<button class=\"ds-btn-primary\">Agregar al carrito</button>",
-      "css": ".ds-btn-primary { background: #2d4a37; color: #ffffff; border: 0; border-radius: 6px; min-height: 48px; padding: 0 18px; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { background: #1f3627; } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+      "css": ".ds-btn-primary { background: #2f6b47; color: #ffffff; border: 0; border-radius: 6px; min-height: 48px; padding: 0 18px; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { background: #275a3c; } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 3px solid #2f6b47; outline-offset: 2px; }"
     },
     {
       "name": "Secondary Button",
@@ -369,7 +369,7 @@
       "refersTo": "button-secondary",
       "description": "Lesser actions such as retry or keep shopping: green outline, fills on hover.",
       "html": "<button class=\"ds-btn-secondary\">Seguir comprando</button>",
-      "css": ".ds-btn-secondary { background: transparent; color: #2d4a37; border: 2px solid #2d4a37; border-radius: 6px; min-height: 44px; padding: 0 18px; font-family: 'Albert Sans', system-ui, sans-serif; font-weight: 700; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-secondary:hover { background: #2d4a37; color: #ffffff; } .ds-btn-secondary:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+      "css": ".ds-btn-secondary { background: transparent; color: #2f6b47; border: 2px solid #2f6b47; border-radius: 6px; min-height: 44px; padding: 0 18px; font-family: 'Albert Sans', system-ui, sans-serif; font-weight: 700; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-secondary:hover { background: #2f6b47; color: #ffffff; } .ds-btn-secondary:focus-visible { outline: 3px solid #2f6b47; outline-offset: 2px; }"
     },
     {
       "name": "Round Button",
@@ -377,7 +377,7 @@
       "refersTo": "button-round",
       "description": "Header social links and menu toggle: ink-outlined circle, wall shade on hover.",
       "html": "<div style=\"display:flex;gap:6px\"><a href=\"#\" class=\"ds-btn-round\" aria-label=\"WhatsApp\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z\"/></svg></a><button class=\"ds-btn-round\" aria-label=\"Menú\" aria-expanded=\"false\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"fill:none;stroke:currentColor;stroke-width:2\"><path d=\"M4 7h16M4 12h16M4 17h16\"/></svg></button></div>",
-      "css": ".ds-btn-round { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; background: transparent; color: #141414; border: 2px solid #141414; border-radius: 50%; cursor: pointer; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-round svg { width: 18px; height: 18px; fill: currentColor; } .ds-btn-round:hover { background: #efefe8; } .ds-btn-round[aria-expanded='true'] { background: #e3ddd0; } .ds-btn-round:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+      "css": ".ds-btn-round { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; background: transparent; color: #141414; border: 2px solid #141414; border-radius: 50%; cursor: pointer; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-round svg { width: 18px; height: 18px; fill: currentColor; } .ds-btn-round:hover { background: #efefe8; } .ds-btn-round[aria-expanded='true'] { background: #e3ddd0; } .ds-btn-round:focus-visible { outline: 3px solid #2f6b47; outline-offset: 2px; }"
     },
     {
       "name": "Filter Chip",
@@ -385,7 +385,7 @@
       "refersTo": "chip",
       "description": "Ink-framed filter; the chosen one turns stone with an inner ink filete.",
       "html": "<div style=\"display:flex;gap:6px\"><button class=\"ds-chip\" aria-pressed=\"true\">Lavado</button><button class=\"ds-chip\" aria-pressed=\"false\">Honey</button><button class=\"ds-chip\" aria-pressed=\"false\">Natural</button></div>",
-      "css": ".ds-chip { background: transparent; color: #141414; border: 2px solid #141414; border-radius: 6px; box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 3px transparent; min-height: 44px; padding: 0 14px; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-chip:hover { background: #efefe8; } .ds-chip[aria-pressed='true'] { background: #e3ddd0; box-shadow: inset 0 0 0 3px #e3ddd0, inset 0 0 0 4.5px #141414; } .ds-chip:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+      "css": ".ds-chip { background: transparent; color: #141414; border: 2px solid #141414; border-radius: 6px; box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 3px transparent; min-height: 44px; padding: 0 14px; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-chip:hover { background: #efefe8; } .ds-chip[aria-pressed='true'] { background: #e3ddd0; box-shadow: inset 0 0 0 3px #e3ddd0, inset 0 0 0 4.5px #141414; } .ds-chip:focus-visible { outline: 3px solid #2f6b47; outline-offset: 2px; }"
     },
     {
       "name": "Text Field",
@@ -393,15 +393,15 @@
       "refersTo": "input",
       "description": "Checkout field: wall fill, soft ink border, green on focus, red when invalid.",
       "html": "<label class=\"ds-field\">Nombre completo<input class=\"ds-input\" placeholder=\"Como aparece en tu documento\"></label>",
-      "css": ".ds-field { display: flex; flex-direction: column; gap: 4px; color: #141414; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 700; } .ds-input { box-sizing: border-box; width: 100%; height: 44px; padding: 0 12px; background: #fafaf6; color: #141414; border: 2px solid #14141466; border-radius: 6px; font: 400 0.9375rem 'Albert Sans', system-ui, sans-serif; transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-input::placeholder { color: #6f6f67; } .ds-input:hover { border-color: #141414; } .ds-input:focus { border-color: #2d4a37; outline: 3px solid #2d4a3740; outline-offset: 0; } .ds-input[aria-invalid='true'] { border-color: #9a2a1d; }"
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 4px; color: #141414; font-family: 'Albert Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 700; } .ds-input { box-sizing: border-box; width: 100%; height: 44px; padding: 0 12px; background: #fafaf6; color: #141414; border: 2px solid #14141466; border-radius: 6px; font: 400 0.9375rem 'Albert Sans', system-ui, sans-serif; transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-input::placeholder { color: #6f6f67; } .ds-input:hover { border-color: #141414; } .ds-input:focus { border-color: #2f6b47; outline: 3px solid #2f6b4740; outline-offset: 0; } .ds-input[aria-invalid='true'] { border-color: #9a2a1d; }"
     },
     {
       "name": "Product Card",
       "kind": "card",
       "refersTo": "card-product",
-      "description": "A coffee's own painted sign: framed photo, Shrikhand name, ruled lines, price and add button at the foot.",
+      "description": "A coffee's own painted sign: framed photo, Sansita Black name, ruled lines, price and add button at the foot.",
       "html": "<article class=\"ds-card\"><div class=\"ds-card-photo\"></div><div class=\"ds-card-body\"><h3 class=\"ds-card-name\">Mauritania Honey</h3><p class=\"ds-card-producer\">Finca Mauritania</p><dl class=\"ds-lines\"><div><dt>Proceso</dt><dd>Honey</dd></div><div><dt>Notas</dt><dd>Miel, frutos rojos</dd></div></dl><div class=\"ds-card-foot\"><p class=\"ds-price\">$50.000<span>COP</span></p><button class=\"ds-card-add\">Agregar</button></div></div></article>",
-      "css": ".ds-card { max-width: 320px; background: #ffffff; color: #141414; border: 2px solid #141414; border-radius: 6px; padding: 5px; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-card-photo { aspect-ratio: 4 / 3; background: #efefe8; border-radius: 3px; } .ds-card-body { padding: 14px 10px 6px; } .ds-card-name { margin: 0; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-weight: 400; font-size: 1.625rem; line-height: 1.1; text-shadow: 0.05em 0.05em 0 #14141433; } .ds-card-producer { margin: 2px 0 0; color: #45453f; font-size: 0.875rem; font-weight: 600; } .ds-lines { margin: 10px 0 0; } .ds-lines > div { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: 12px; padding: 6px 0; border-top: 1px solid #14141426; } .ds-lines > div:last-child { border-bottom: 1px solid #14141426; } .ds-lines dt { color: #45453f; font-size: 0.8125rem; font-weight: 700; } .ds-lines dd { margin: 0; font-size: 0.9375rem; } .ds-card-foot { display: grid; gap: 10px; margin-top: 14px; } .ds-price { margin: 0; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.75rem; line-height: 1; word-spacing: -0.22em; font-variant-numeric: tabular-nums; } .ds-price span { margin-left: 6px; color: #45453f; font: 700 0.75rem 'Albert Sans', sans-serif; } .ds-card-add { min-height: 48px; background: #2d4a37; color: #ffffff; border: 0; border-radius: 6px; font: 700 1rem 'Albert Sans', sans-serif; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-card-add:hover { background: #1f3627; } .ds-card-add:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; }"
+      "css": ".ds-card { max-width: 320px; background: #ffffff; color: #141414; border: 2px solid #141414; border-radius: 6px; padding: 5px; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-card-photo { aspect-ratio: 4 / 3; background: #efefe8; border-radius: 3px; } .ds-card-body { padding: 14px 10px 6px; } .ds-card-name { margin: 0; font-family: 'Sansita Black', 'Albert Sans', sans-serif; font-weight: 400; font-size: 1.625rem; line-height: 1.1; text-shadow: 0.05em 0.05em 0 #14141433; } .ds-card-producer { margin: 2px 0 0; color: #45453f; font-size: 0.875rem; font-weight: 600; } .ds-lines { margin: 10px 0 0; } .ds-lines > div { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: 12px; padding: 6px 0; border-top: 1px solid #14141426; } .ds-lines > div:last-child { border-bottom: 1px solid #14141426; } .ds-lines dt { color: #45453f; font-size: 0.8125rem; font-weight: 700; } .ds-lines dd { margin: 0; font-size: 0.9375rem; } .ds-card-foot { display: grid; gap: 10px; margin-top: 14px; } .ds-price { margin: 0; font-family: 'Sansita Black', 'Albert Sans', sans-serif; font-size: 1.75rem; line-height: 1; word-spacing: -0.22em; font-variant-numeric: tabular-nums; } .ds-price span { margin-left: 6px; color: #45453f; font: 700 0.75rem 'Albert Sans', sans-serif; } .ds-card-add { min-height: 48px; background: #2f6b47; color: #ffffff; border: 0; border-radius: 6px; font: 700 1rem 'Albert Sans', sans-serif; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-card-add:hover { background: #275a3c; } .ds-card-add:focus-visible { outline: 3px solid #2f6b47; outline-offset: 2px; }"
     },
     {
       "name": "Board Row",
@@ -409,7 +409,7 @@
       "refersTo": "board-row",
       "description": "A painted line on the board that jumps to its card; fills green on hover.",
       "html": "<ol class=\"ds-board\"><li><a href=\"#\" class=\"ds-board-row\"><span class=\"ds-board-name\">Oiba's Coffee</span><span class=\"ds-board-meta\">Lavado · Santander — Caramelo, panela</span><span class=\"ds-board-price\">$49.000</span></a></li><li class=\"is-out\"><a href=\"#\" class=\"ds-board-row\"><span class=\"ds-board-name\">Micos Coffee</span><span class=\"ds-board-meta\">Natural · Risaralda</span><span class=\"ds-board-price\">Agotado</span></a></li></ol>",
-      "css": ".ds-board { list-style: none; margin: 0; padding: 0; max-width: 520px; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-board li { border-bottom: 1px solid #14141426; } .ds-board li:first-child { border-top: 1px solid #14141426; } .ds-board-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; align-items: center; min-height: 44px; padding: 10px; border-radius: 4px; color: #141414; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-board-name { font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.375rem; line-height: 1.15; } .ds-board-meta { grid-column: 1; color: #45453f; font-size: 0.875rem; line-height: 1.35; } .ds-board-price { grid-column: 2; grid-row: 1 / span 2; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.25rem; word-spacing: -0.22em; white-space: nowrap; } .ds-board-row:hover { background: #2d4a37; color: #ffffff; } .ds-board-row:hover .ds-board-meta, .ds-board-row:hover .ds-board-price { color: #ffffff; } .ds-board-row:focus-visible { outline: 3px solid #2d4a37; outline-offset: 0; } .is-out .ds-board-name { text-decoration: line-through; text-decoration-thickness: 3px; } .is-out .ds-board-price { background: #e3ddd0; color: #141414; border-radius: 3px; padding: 2px 8px; font: 700 0.8125rem 'Albert Sans', sans-serif; }"
+      "css": ".ds-board { list-style: none; margin: 0; padding: 0; max-width: 520px; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-board li { border-bottom: 1px solid #14141426; } .ds-board li:first-child { border-top: 1px solid #14141426; } .ds-board-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; align-items: center; min-height: 44px; padding: 10px; border-radius: 4px; color: #141414; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-board-name { font-family: 'Sansita Black', 'Albert Sans', sans-serif; font-size: 1.375rem; line-height: 1.15; } .ds-board-meta { grid-column: 1; color: #45453f; font-size: 0.875rem; line-height: 1.35; } .ds-board-price { grid-column: 2; grid-row: 1 / span 2; font-family: 'Sansita Black', 'Albert Sans', sans-serif; font-size: 1.25rem; word-spacing: -0.22em; white-space: nowrap; } .ds-board-row:hover { background: #2f6b47; color: #ffffff; } .ds-board-row:hover .ds-board-meta, .ds-board-row:hover .ds-board-price { color: #ffffff; } .ds-board-row:focus-visible { outline: 3px solid #2f6b47; outline-offset: 0; } .is-out .ds-board-name { text-decoration: line-through; text-decoration-thickness: 3px; } .is-out .ds-board-price { background: #e3ddd0; color: #141414; border-radius: 3px; padding: 2px 8px; font: 700 0.8125rem 'Albert Sans', sans-serif; }"
     },
     {
       "name": "Checkout Step Panel",
@@ -417,15 +417,15 @@
       "refersTo": "panel-step",
       "description": "A white panel hung on the wall with a painted step number.",
       "html": "<fieldset class=\"ds-step\"><legend><span class=\"ds-step-number\">1</span> Tus datos</legend><p class=\"ds-step-hint\">Te escribimos solo sobre este pedido.</p></fieldset>",
-      "css": ".ds-step { max-width: 420px; margin: 0; background: #ffffff; border: 2px solid #141414; border-radius: 6px; padding: 14px 14px 16px; font-family: 'Albert Sans', system-ui, sans-serif; color: #141414; } .ds-step legend { display: flex; align-items: center; gap: 10px; float: left; width: 100%; padding: 0; font-weight: 700; } .ds-step-number { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #141414; color: #fafaf6; border-radius: 4px; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-weight: 400; } .ds-step-hint { clear: both; margin: 12px 0 0; color: #45453f; font-size: 0.875rem; }"
+      "css": ".ds-step { max-width: 420px; margin: 0; background: #ffffff; border: 2px solid #141414; border-radius: 6px; padding: 14px 14px 16px; font-family: 'Albert Sans', system-ui, sans-serif; color: #141414; } .ds-step legend { display: flex; align-items: center; gap: 10px; float: left; width: 100%; padding: 0; font-weight: 700; } .ds-step-number { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #141414; color: #fafaf6; border-radius: 4px; font-family: 'Sansita Black', 'Albert Sans', sans-serif; font-weight: 400; } .ds-step-hint { clear: both; margin: 12px 0 0; color: #45453f; font-size: 0.875rem; }"
     },
     {
       "name": "Header",
       "kind": "nav",
       "refersTo": "header",
-      "description": "Sticky shared header: wall ground, 2px ink bottom rule, Shrikhand brand name, green Tienda button.",
+      "description": "Sticky shared header: wall ground, 2px ink bottom rule, Sansita Black brand name, green Tienda button.",
       "html": "<header class=\"ds-header\"><a href=\"#\" class=\"ds-brand\"><span class=\"ds-brand-name\">Nuestras Raíces</span></a><a href=\"#\" class=\"ds-shop\">Tienda</a></header>",
-      "css": ".ds-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; padding: 8px 16px; background: #fafaf6; color: #141414; border-bottom: 2px solid #141414; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-brand { color: #141414; text-decoration: none; } .ds-brand-name { font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.375rem; line-height: 1.1; white-space: nowrap; } .ds-brand:focus-visible { border-radius: 4px; outline: 3px solid #2d4a37; outline-offset: 4px; } .ds-shop { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; background: #2d4a37; color: #ffffff; border-radius: 6px; font-weight: 700; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-shop:hover { background: #1f3627; } .ds-shop:focus-visible { outline: 3px solid #2d4a37; outline-offset: 3px; }"
+      "css": ".ds-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; padding: 8px 16px; background: #fafaf6; color: #141414; border-bottom: 2px solid #141414; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-brand { color: #141414; text-decoration: none; } .ds-brand-name { font-family: 'Sansita Black', 'Albert Sans', sans-serif; font-size: 1.375rem; line-height: 1.1; white-space: nowrap; } .ds-brand:focus-visible { border-radius: 4px; outline: 3px solid #2f6b47; outline-offset: 4px; } .ds-shop { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; background: #2f6b47; color: #ffffff; border-radius: 6px; font-weight: 700; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-shop:hover { background: #275a3c; } .ds-shop:focus-visible { outline: 3px solid #2f6b47; outline-offset: 3px; }"
     },
     {
       "name": "Visit Step List",
@@ -433,7 +433,7 @@
       "refersTo": "visit-steps",
       "description": "The home page's navigation: painted numerals, step names and muted details on pencil rules.",
       "html": "<ol class=\"ds-steps\"><li><a href=\"#\"><span class=\"ds-step-n\" aria-hidden=\"true\">1</span><span class=\"ds-step-t\"><strong>Llega</strong><span>Lunes a domingo, 8:00 a.m. – 9:00 p.m.</span></span></a></li><li><a href=\"#\"><span class=\"ds-step-n\" aria-hidden=\"true\">2</span><span class=\"ds-step-t\"><strong>Prueba</strong><span>Espresso, V60, Chemex, prensa francesa</span></span></a></li></ol>",
-      "css": ".ds-steps { list-style: none; margin: 0; padding: 0; max-width: 480px; border-top: 2px solid #141414; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-steps li { border-bottom: 1px solid #14141426; } .ds-steps a { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; align-items: center; min-height: 56px; padding: 10px 8px; border-radius: 4px; color: #141414; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-steps a:hover { background: #efefe8; } .ds-steps a:focus-visible { outline: 3px solid #2d4a37; outline-offset: 2px; } .ds-step-n { font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 2rem; line-height: 1; text-align: center; text-shadow: 0.05em 0.05em 0 #14141433; } .ds-step-t { display: flex; flex-direction: column; } .ds-step-t strong { font-size: 1.125rem; } .ds-step-t span { color: #45453f; font-size: 0.9375rem; }"
+      "css": ".ds-steps { list-style: none; margin: 0; padding: 0; max-width: 480px; border-top: 2px solid #141414; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-steps li { border-bottom: 1px solid #14141426; } .ds-steps a { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; align-items: center; min-height: 56px; padding: 10px 8px; border-radius: 4px; color: #141414; text-decoration: none; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-steps a:hover { background: #efefe8; } .ds-steps a:focus-visible { outline: 3px solid #2f6b47; outline-offset: 2px; } .ds-step-n { font-family: 'Sansita Black', 'Albert Sans', sans-serif; font-size: 2rem; line-height: 1; text-align: center; text-shadow: 0.05em 0.05em 0 #14141433; } .ds-step-t { display: flex; flex-direction: column; } .ds-step-t strong { font-size: 1.125rem; } .ds-step-t span { color: #45453f; font-size: 0.9375rem; }"
     },
     {
       "name": "Status Plate",
@@ -449,7 +449,7 @@
       "refersTo": "footer",
       "description": "Black enamel footer, the one inverted surface: ink ground, wall text, outlined wall button.",
       "html": "<footer class=\"ds-footer\"><p class=\"ds-footer-brand\">Nuestras Raíces</p><p>Calle 72 Sur #46 A 35, Sabaneta</p><a href=\"#\" class=\"ds-footer-link\">Instagram</a> <a href=\"#\" class=\"ds-footer-cta\">Cómo llegar</a></footer>",
-      "css": ".ds-footer { max-width: 420px; padding: 32px 24px 20px; background: #141414; color: #fafaf6; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-footer p { margin: 0 0 12px; color: #d9d9d2; line-height: 1.6; } .ds-footer .ds-footer-brand { color: #fafaf6; font-family: 'Shrikhand', 'Albert Sans', sans-serif; font-size: 1.75rem; line-height: 1.1; } .ds-footer-link { color: #fafaf6; text-decoration: underline; text-decoration-color: #fafaf666; text-underline-offset: 0.25em; } .ds-footer-link:hover { text-decoration-color: #fafaf6; } .ds-footer-cta { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; color: #fafaf6; border: 2px solid #fafaf6; border-radius: 6px; font-weight: 700; text-decoration: none; } .ds-footer-cta:hover { background: #fafaf6; color: #141414; } .ds-footer a:focus-visible { border-radius: 2px; outline: 3px solid #fafaf6; outline-offset: 2px; }"
+      "css": ".ds-footer { max-width: 420px; padding: 32px 24px 20px; background: #141414; color: #fafaf6; font-family: 'Albert Sans', system-ui, sans-serif; } .ds-footer p { margin: 0 0 12px; color: #d9d9d2; line-height: 1.6; } .ds-footer .ds-footer-brand { color: #fafaf6; font-family: 'Sansita Black', 'Albert Sans', sans-serif; font-size: 1.75rem; line-height: 1.1; } .ds-footer-link { color: #fafaf6; text-decoration: underline; text-decoration-color: #fafaf666; text-underline-offset: 0.25em; } .ds-footer-link:hover { text-decoration-color: #fafaf6; } .ds-footer-cta { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; color: #fafaf6; border: 2px solid #fafaf6; border-radius: 6px; font-weight: 700; text-decoration: none; } .ds-footer-cta:hover { background: #fafaf6; color: #141414; } .ds-footer a:focus-visible { border-radius: 2px; outline: 3px solid #fafaf6; outline-offset: 2px; }"
     }
   ],
   "narrative": {
@@ -457,7 +457,7 @@
     "overview": "The system is rotulación popular: the hand-painted lettering on the walls of neighbourhood shops in Antioquia, made sober. The ground is a lime-wash white wall. Every coffee gets its own painted sign: its name and price in a sign-painter's script with a soft painted shadow. Everything else is set in a plain, warm sans that never competes with the lettering. Painted signs carry the character; a quiet text face carries the information.\n\nThe palette is held back on purpose. Black enamel does the lettering, the prices and the filete, the thin painted line that frames objects on the wall. One deep green marks everything you can act on. A pale stone with an inner ink filete marks what you have chosen. A muted red appears only when something is wrong. Hierarchy comes from size alone, never from extra colours or uppercase tracking.\n\nDensity is comfortable and comparative: coffees sit side by side on the same ruled lines, so origin, process, notes and price can be compared at a glance, and the add button is visible on every card without opening anything. Long pages are divided like a wall of painted signs: large painted numerals and headings, separated by 2px ink rules. Confirmed rejections: the cream-and-serif artisan grid and the white third-wave product grid; chivas, hats and flags used as decoration; painted lettering in running paragraphs; flip cards.",
     "keyCharacteristics": [
       "Lime-wash wall ground on every route, white panels hung on it inside a 2px ink filete.",
-      "Shrikhand sign lettering only on names, prices, totals, numerals and signs; Albert Sans for everything else.",
+      "Sansita Black sign lettering only on names, prices, totals, numerals and signs; Albert Sans for everything else.",
       "One action colour (deep green), one chosen-state treatment (stone + inner filete), one error colour.",
       "Flat surfaces; depth comes from the filete and the painted letter shadow.",
       "The same measurement lines on every card so coffees compare row by row.",
@@ -481,7 +481,7 @@
       },
       {
         "name": "The Sign Lettering Rule",
-        "body": "Shrikhand is used only on coffee names, method names, prices and totals, signs and headings, numerals, the street address, the brand name and the pickup code. Never in paragraphs, buttons, labels or form text.",
+        "body": "Sansita Black is used only on coffee names, method names, prices and totals, signs and headings, numerals, the street address, the brand name and the pickup code. Never in paragraphs, buttons, labels or form text.",
         "section": "typography"
       },
       {
@@ -502,10 +502,10 @@
     ],
     "dos": [
       "Do frame every hung object (card, panel, photo, map, field group) in the 2px ink filete with 6px corners.",
-      "Do open each page section with a 2px ink rule and a painted numeral or Shrikhand heading.",
+      "Do open each page section with a 2px ink rule and a painted numeral or Sansita Black heading.",
       "Do keep deep green for actions only: buttons, link hover, focus rings, progress, map pins.",
       "Do mark every chosen state with stone fill plus the inner ink filete (3px stone gap, 1.5px ink).",
-      "Do set coffee names, prices and totals in Shrikhand with tabular figures, followed by a muted currency code on display totals.",
+      "Do set coffee names, prices and totals in Sansita Black with tabular figures, followed by a muted currency code on display totals.",
       "Do keep the same ruled lines, in the same order, on every product card.",
       "Do show sold-out coffees with a struck name and a stone Agotado tag instead of hiding them.",
       "Do honour reduced motion: transitions collapse, smooth scroll turns off."
@@ -514,7 +514,7 @@
       "Don't add another accent colour or reintroduce the earlier cobalt, yellow and bright red enamels.",
       "Don't use the error red for prices, sale tags or emphasis.",
       "Don't paint status or information green; open/closed is ink.",
-      "Don't set paragraphs, buttons or form labels in Shrikhand.",
+      "Don't set paragraphs, buttons or form labels in Sansita Black.",
       "Don't put drop shadows on cards or panels; only floating objects (toast, menu dropdown) cast one.",
       "Don't use chivas, hats or flags as decoration, or flip cards.",
       "Don't add uppercase tracked labels or eyebrows above headings; hierarchy is by size alone.",

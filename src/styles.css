@@ -18,18 +18,25 @@ html {
   }
 }
 
-/* Rotulación popular: hand-painted sign lettering, self-hosted. */
+/* Sign lettering (titles, sections, numerals): Sansita Black Italic, self-hosted. Registered
+   as its own family so headings keep their default weight and style declarations. */
 @font-face {
-  font-family: 'Shrikhand';
-  font-style: normal;
-  font-weight: 400;
+  font-family: 'Sansita Black';
   font-display: swap;
-  src: url('/fonts/shrikhand-latin.woff2') format('woff2');
+  src: url('/fonts/sansita-900-italic-latin.woff2') format('woff2');
+}
+/* Coffee names: Sansita ExtraBold Italic, one step lighter than the titles. */
+@font-face {
+  font-family: 'Sansita';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/sansita-800-italic-latin.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Albert Sans';
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 400 800;
   font-display: swap;
   src: url('/fonts/albert-sans-latin.woff2') format('woff2');
 }
@@ -44,15 +51,22 @@ html {
   --muted: #45453f;
   --line: #14141426;
   --line-strong: #141414;
-  --action: #2d4a37;
-  --action-deep: #1f3627;
+  /* "Cafetal" (chosen in live mode): a livelier coffee-farm green for actions, with a
+     mustard filete painted along the foot of every primary button. */
+  --action: #2f6b47;
+  --action-deep: #275a3c;
   --on-action: #ffffff;
+  --accent: #d9a441;
+  --action-stripe: inset 0 -3px 0 var(--accent);
   --price: #141414;
   --state: #e3ddd0;
   --on-state: #141414;
   --error: #9a2a1d;
-  --font-sign: 'Shrikhand', 'Albert Sans', system-ui, sans-serif;
+  --font-sign: 'Sansita Black', 'Sansita', 'Albert Sans', system-ui, sans-serif;
   --font-text: 'Albert Sans', system-ui, sans-serif;
+  --font-name: 'Sansita', 'Albert Sans', system-ui, sans-serif;
+  /* Prices: Albert Sans ExtraBold with even-width numerals, so amounts line up and read clearly. */
+  --font-price: 'Albert Sans', system-ui, sans-serif;
   /* Painted shadow under sign lettering. */
   --sign-shadow: 0.05em 0.05em 0 #14141433;
   --filete: 2px;
