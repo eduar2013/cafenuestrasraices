@@ -230,6 +230,50 @@
       </div>
     </dl>
 
+    <div class="consent">
+      <label class="consent-check">
+        <input
+          type="checkbox"
+          formControlName="accept_terms"
+          [attr.aria-invalid]="showError('accept_terms')"
+          aria-describedby="terms-error"
+        />
+        <span>
+          Acepto los
+          <a routerLink="/terminos" target="_blank" rel="noopener"
+            >Términos y condiciones<span class="visually-hidden"> (nueva pestaña)</span></a
+          >.
+        </span>
+      </label>
+      @if (showError('accept_terms')) {
+        <span class="field-error" id="terms-error">
+          Debes aceptar los términos y condiciones para comprar.
+        </span>
+      }
+
+      <label class="consent-check">
+        <input
+          type="checkbox"
+          formControlName="accept_privacy"
+          [attr.aria-invalid]="showError('accept_privacy')"
+          aria-describedby="privacy-error"
+        />
+        <span>
+          Autorizo el tratamiento de mis datos personales según la
+          <a routerLink="/privacidad" target="_blank" rel="noopener"
+            >Política de tratamiento de datos<span class="visually-hidden">
+              (nueva pestaña)</span
+            ></a
+          >.
+        </span>
+      </label>
+      @if (showError('accept_privacy')) {
+        <span class="field-error" id="privacy-error">
+          Necesitamos tu autorización para procesar el pedido.
+        </span>
+      }
+    </div>
+
     @if (error()) {
       <p class="checkout-error" role="alert">{{ error() }}</p>
     }

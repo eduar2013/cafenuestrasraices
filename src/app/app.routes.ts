@@ -29,5 +29,16 @@ export const routes: Routes = [
       import('./pickup-desk/pickup-desk').then((module) => module.PickupDeskComponent),
     title: 'Retiro en tienda | Café Nuestras Raíces',
   },
+  {
+    path: 'privacidad',
+    loadComponent: () =>
+      import('./legal/privacy-policy').then((module) => module.PrivacyPolicyComponent),
+    title: 'Política de tratamiento de datos | Café Nuestras Raíces',
+  },
+  {
+    path: 'terminos',
+    loadComponent: () => import('./legal/terms').then((module) => module.TermsComponent),
+    title: 'Términos y condiciones | Café Nuestras Raíces',
+  },
   { path: '**', redirectTo: '' },
 ];

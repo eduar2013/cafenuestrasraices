@@ -98,6 +98,14 @@ a:focus-visible {
   font-size: 0.875rem;
   margin: 0;
 }
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+}
+.footer-legal a {
+  font-size: 0.875rem;
+}
 .visually-hidden {
   border: 0;
   clip: rect(0 0 0 0);

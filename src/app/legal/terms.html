@@ -1,0 +1,107 @@
+<app-contact-bar />
+<main class="legal-page" aria-labelledby="terms-title">
+  <article class="legal-doc">
+    <h1 id="terms-title">Términos y condiciones</h1>
+    <p class="legal-meta">Vigentes desde el {{ effectiveDate }}</p>
+
+    <h2>1. Quién vende</h2>
+    <dl>
+      <dt>Nombre</dt>
+      <dd>{{ entity.legalName }} ({{ entity.brand }})</dd>
+      <dt>NIT / C.C.</dt>
+      <dd>{{ entity.taxId }}</dd>
+      <dt>Dirección</dt>
+      <dd>{{ entity.address }}</dd>
+      <dt>Correo</dt>
+      <dd>{{ entity.email }}</dd>
+      <dt>WhatsApp</dt>
+      <dd>
+        <a [href]="entity.whatsappUrl" target="_blank" rel="noopener noreferrer"
+          >{{ entity.whatsapp }}</a
+        >
+      </dd>
+    </dl>
+    <p>
+      Estos términos aplican a las compras hechas en nuestra tienda en línea. Al hacer un pedido
+      declaras que eres mayor de edad y que los aceptas.
+    </p>
+
+    <h2>2. Productos y precios</h2>
+    <p>
+      Los precios se muestran en pesos colombianos (COP) e incluyen los impuestos aplicables. El
+      costo del envío se calcula según tu dirección y se muestra antes de pagar. Las fotos son
+      de referencia; el empaque puede variar. Los productos están sujetos a disponibilidad: si
+      un producto se agota después de tu pago, te contactamos para cambiarlo o devolverte el
+      dinero.
+    </p>
+
+    <h2>3. Pedido y pago</h2>
+    <p>
+      El pedido queda confirmado cuando Wompi aprueba el pago. Te enviamos la confirmación al
+      correo que registraste, con la referencia del pedido. Los medios de pago disponibles son
+      los que ofrece Wompi en su plataforma.
+    </p>
+
+    <h2>4. Envío y retiro en tienda</h2>
+    <ul>
+      <li>
+        <strong>Envío a domicilio:</strong> despachamos con la transportadora que elijas al
+        pagar. El tiempo de entrega que se muestra es el estimado por la transportadora y
+        empieza a contar desde el despacho.
+      </li>
+      <li>
+        <strong>Retiro en tienda:</strong> gratis, en {{ entity.address }}, en el horario de
+        atención. Presenta el código de retiro que te damos al confirmarse el pago.
+      </li>
+    </ul>
+    <p>
+      Revisa tu pedido al recibirlo. Si llega incompleto o con daños, escríbenos dentro de los 5
+      días siguientes con fotos del empaque y del producto.
+    </p>
+
+    <h2>5. Derecho de retracto</h2>
+    <p>
+      Como la compra es a distancia, puedes retractarte dentro de los 5 días hábiles siguientes
+      a la entrega (artículo 47 de la Ley 1480 de 2011). Por tratarse de alimentos, el producto
+      debe estar sin abrir, con su empaque y sello originales. Los costos de transporte de la
+      devolución corren por tu cuenta. Te devolvemos el dinero en máximo 30 días calendario
+      desde que ejerces el retracto.
+    </p>
+
+    <h2>6. Reversión del pago</h2>
+    <p>
+      Si pagaste con un medio electrónico, puedes pedir la reversión del pago dentro de los 5
+      días hábiles siguientes a que conozcas la situación, cuando: fuiste víctima de fraude, la
+      operación no fue solicitada, el producto no se entregó, o no corresponde a lo pedido o
+      está defectuoso (artículo 51 de la Ley 1480 de 2011 y Decreto 587 de 2016). Debes
+      informarnos y presentar la queja ante el emisor de tu medio de pago.
+    </p>
+
+    <h2>7. Garantía</h2>
+    <p>
+      Respondemos por la calidad e idoneidad de nuestros productos dentro de su fecha de
+      consumo preferente. Si un producto llega en mal estado lo cambiamos o te devolvemos el
+      dinero. Los accesorios y artículos no alimenticios tienen la garantía legal que les
+      corresponde.
+    </p>
+
+    <h2>8. Peticiones, quejas y reclamos</h2>
+    <p>
+      Escríbenos a {{ entity.email }} o por WhatsApp al {{ entity.whatsapp }}. Respondemos en
+      máximo 15 días hábiles. También puedes acudir a la Superintendencia de Industria y
+      Comercio.
+    </p>
+
+    <h2>9. Datos personales</h2>
+    <p>
+      Tratamos tus datos según nuestra
+      <a routerLink="/privacidad">Política de tratamiento de datos personales</a>.
+    </p>
+
+    <h2>10. Cambios a estos términos</h2>
+    <p>
+      Podemos actualizar estos términos. Cada compra se rige por la versión vigente al momento
+      de hacer el pedido.
+    </p>
+  </article>
+</main>

@@ -148,14 +148,17 @@ describe('App', () => {
     expect(footer.querySelector('h2')?.textContent).toBe('Enlaces de interés');
     expect(footer.textContent).toContain(String(new Date().getFullYear()));
     const links = Array.from(footer.querySelectorAll('a'));
-    // 5 section links, WhatsApp, Instagram, Facebook, "Cómo llegar" and "Volver al inicio".
-    expect(links.length).toBe(10);
+    // 5 section links, WhatsApp, Instagram, Facebook, "Cómo llegar", the data policy, the
+    // terms and "Volver al inicio".
+    expect(links.length).toBe(12);
     for (const link of links) {
       const href = link.getAttribute('href')!;
       if (href.startsWith('/#')) {
         expect(compiled.querySelector(href.slice(1))).not.toBeNull();
       } else if (href === '/tienda') {
         expect(link.textContent).toBe('Tienda');
+      } else if (href === '/privacidad' || href === '/terminos') {
+        expect(link.getAttribute('target')).toBeNull();
       } else {
         expect(href.startsWith('https://')).toBe(true);
         expect(link.getAttribute('target')).toBe('_blank');

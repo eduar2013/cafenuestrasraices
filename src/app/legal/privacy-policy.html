@@ -1,0 +1,135 @@
+<app-contact-bar />
+<main class="legal-page" aria-labelledby="privacy-title">
+  <article class="legal-doc">
+    <h1 id="privacy-title">Política de tratamiento de datos personales</h1>
+    <p class="legal-meta">Vigente desde el {{ effectiveDate }}</p>
+
+    <h2>1. Responsable del tratamiento</h2>
+    <dl>
+      <dt>Nombre</dt>
+      <dd>{{ entity.legalName }} ({{ entity.brand }})</dd>
+      <dt>NIT / C.C.</dt>
+      <dd>{{ entity.taxId }}</dd>
+      <dt>Dirección</dt>
+      <dd>{{ entity.address }}</dd>
+      <dt>Correo</dt>
+      <dd>{{ entity.email }}</dd>
+      <dt>WhatsApp</dt>
+      <dd>
+        <a [href]="entity.whatsappUrl" target="_blank" rel="noopener noreferrer"
+          >{{ entity.whatsapp }}</a
+        >
+      </dd>
+    </dl>
+    <p>
+      Esta política se adopta en cumplimiento de la Ley 1581 de 2012, el Decreto 1377 de 2013
+      (compilado en el Decreto 1074 de 2015) y demás normas que las modifiquen o complementen.
+    </p>
+
+    <h2>2. Datos que recogemos</h2>
+    <p>Cuando compras en nuestra tienda en línea te pedimos:</p>
+    <ul>
+      <li>Nombre completo, correo electrónico y número de celular.</li>
+      <li>
+        Si eliges envío a domicilio: dirección, indicaciones de entrega, ciudad y departamento.
+      </li>
+      <li>El detalle de tu pedido: productos, cantidades, valores y estado del pago.</li>
+    </ul>
+    <p>
+      No recogemos ni guardamos los datos de tu tarjeta o cuenta bancaria: el pago lo procesa
+      directamente Wompi en su propia plataforma. No recogemos datos sensibles ni datos de
+      menores de edad.
+    </p>
+    <p>
+      Tu navegador guarda el contenido del carrito en su almacenamiento local para que no lo
+      pierdas al recargar la página. Ese dato no sale de tu dispositivo hasta que haces el pedido.
+      No usamos cookies de publicidad ni herramientas de analítica de terceros.
+    </p>
+
+    <h2>3. Para qué usamos tus datos</h2>
+    <ul>
+      <li>Crear, procesar y cobrar tu pedido.</li>
+      <li>Cotizar y despachar el envío, o preparar tu pedido para recoger en la tienda.</li>
+      <li>
+        Enviarte la confirmación de compra y comunicarnos contigo sobre el estado del pedido,
+        la entrega, cambios o devoluciones.
+      </li>
+      <li>Atender tus peticiones, quejas, reclamos y solicitudes de garantía.</li>
+      <li>Cumplir obligaciones legales, contables y tributarias, incluida la facturación.</li>
+      <li>Prevenir fraudes en los pagos.</li>
+    </ul>
+    <p>
+      No vendemos ni cedemos tus datos. No los usamos para enviarte publicidad sin una
+      autorización adicional y expresa.
+    </p>
+
+    <h2>4. Con quién compartimos tus datos</h2>
+    <p>
+      Solo compartimos los datos necesarios con terceros que actúan como encargados del
+      tratamiento, para las finalidades anteriores:
+    </p>
+    <ul>
+      <li>Wompi (Bancolombia), para procesar el pago.</li>
+      <li>
+        Las empresas de mensajería y la plataforma de envíos con que cotizamos y despachamos tu
+        pedido.
+      </li>
+      <li>Los proveedores de alojamiento y correo electrónico que soportan la tienda.</li>
+      <li>Las autoridades que lo soliciten en ejercicio de sus funciones legales.</li>
+    </ul>
+
+    <h2>5. Tus derechos</h2>
+    <p>Como titular de los datos tienes derecho a:</p>
+    <ul>
+      <li>Conocer, actualizar y rectificar tus datos personales.</li>
+      <li>Pedir prueba de la autorización que nos diste.</li>
+      <li>Saber qué uso le hemos dado a tus datos.</li>
+      <li>
+        Revocar la autorización o pedir que suprimamos tus datos, cuando no exista un deber
+        legal o contractual de conservarlos.
+      </li>
+      <li>
+        Presentar quejas ante la Superintendencia de Industria y Comercio, después de haber
+        agotado el trámite de consulta o reclamo con nosotros.
+      </li>
+      <li>Acceder gratis a tus datos personales.</li>
+    </ul>
+
+    <h2>6. Cómo ejercer tus derechos</h2>
+    <p>
+      Escríbenos a {{ entity.email }} o por WhatsApp al {{ entity.whatsapp }}, con tu nombre,
+      tu documento o el correo con que compraste, y lo que solicitas.
+    </p>
+    <ul>
+      <li>
+        <strong>Consultas:</strong> respondemos en máximo 10 días hábiles. Si no es posible, te
+        explicamos por qué y respondemos en máximo 5 días hábiles más.
+      </li>
+      <li>
+        <strong>Reclamos</strong> (corregir, actualizar, suprimir o revocar): respondemos en
+        máximo 15 días hábiles. Si no es posible, te explicamos por qué y respondemos en máximo 8
+        días hábiles más. Si el reclamo está incompleto, te pedimos lo que falta dentro de los 5
+        días hábiles siguientes.
+      </li>
+    </ul>
+
+    <h2>7. Seguridad y conservación</h2>
+    <p>
+      Protegemos tus datos con medidas técnicas y administrativas razonables para evitar su
+      pérdida, uso o acceso no autorizado. Los conservamos mientras sean necesarios para las
+      finalidades descritas y durante el tiempo que exigen las normas contables y tributarias.
+    </p>
+
+    <h2>8. Vigencia y cambios</h2>
+    <p>
+      Esta política rige desde el {{ effectiveDate }}. Si la cambiamos en algo sustancial,
+      publicaremos la nueva versión en esta página y te pediremos una nueva autorización cuando
+      la ley lo exija. Las bases de datos estarán vigentes mientras se mantengan las finalidades
+      del tratamiento.
+    </p>
+
+    <p class="legal-note">
+      Consulta también nuestros <a routerLink="/terminos">Términos y condiciones</a>.
+    </p>
+  </article>
+</main>

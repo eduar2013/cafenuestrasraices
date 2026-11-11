@@ -2,10 +2,13 @@ import { CurrencyPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, computed, inject, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from '../../legal/legal';
 import { CartService } from '../cart';
 import { PaymentBadgeComponent } from '../payment-badge/payment-badge';
 import { PaymentResultComponent } from '../payment-result/payment-result';
 import {
+  CheckoutConsent,
   CheckoutCustomer,
   CheckoutService,
   CheckoutShipping,
@@ -59,7 +62,13 @@ type Step = 'form' | 'creating' | 'paying' | 'redirecting' | 'confirming' | 'res
 
 @Component({
   selector: 'app-checkout',
-  imports: [CurrencyPipe, PaymentBadgeComponent, PaymentResultComponent, ReactiveFormsModule],
+  imports: [
+    CurrencyPipe,
+    PaymentBadgeComponent,
+    PaymentResultComponent,
+    ReactiveFormsModule,
+    RouterLink,
+  ],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -105,6 +114,10 @@ export class CheckoutComponent implements OnDestroy {
     address_detail: ['', Validators.maxLength(120)],
     city: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
     department: ['', Validators.required],
+    /** Acceptance of the terms and conditions. */
+    accept_terms: [false, Validators.requiredTrue],
+    /** Express authorization to process personal data (Ley 1581 de 2012). */
+    accept_privacy: [false, Validators.requiredTrue],
   });
 
   private readonly checkout = inject(CheckoutService);
@@ -152,7 +165,10 @@ export class CheckoutComponent implements OnDestroy {
       const quote = await this.checkout.quoteShipping(
         this.items(),
         this.shippingData(),
-        this.form.controls.full_name.valid && this.form.controls.phone.valid
+        // Name and phone go to the carrier's quote only once the buyer has authorized it.
+        this.form.controls.accept_privacy.value &&
+          this.form.controls.full_name.valid &&
+          this.form.controls.phone.valid
           ? this.customerData()
           : null,
       );
@@ -207,6 +223,7 @@ export class CheckoutComponent implements OnDestroy {
         customer,
         shipping,
         this.deliveryMethod() === 'pickup' ? PICKUP_OPTION_ID : this.shippingOptionId(),
+        this.consentData(),
       );
     } catch (error) {
       this.step.set('form');
@@ -261,6 +278,16 @@ export class CheckoutComponent implements OnDestroy {
   private customerData(): CheckoutCustomer {
     const value = this.form.getRawValue();
     return { full_name: value.full_name.trim(), email: value.email.trim(), phone: value.phone };
+  }
+
+  private consentData(): CheckoutConsent {
+    const value = this.form.getRawValue();
+    return {
+      privacy_accepted: value.accept_privacy,
+      privacy_policy_version: PRIVACY_POLICY_VERSION,
+      terms_accepted: value.accept_terms,
+      terms_version: TERMS_VERSION,
+    };
   }
 
   private shippingData(): CheckoutShipping {

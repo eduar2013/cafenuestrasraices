@@ -1,5 +1,6 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { CartService } from '../cart';
 import { TEST_CATALOG_URL, flushCatalog, provideCatalogTesting } from '../catalog.testing';
 import {
@@ -12,6 +13,7 @@ import {
   SHIPPING_API_URL,
   ShippingQuote,
 } from '../checkout';
+import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from '../../legal/legal';
 import { CheckoutComponent } from './checkout';
 
 const ORDERS_URL = 'http://test/orders';
@@ -82,6 +84,7 @@ describe('CheckoutComponent', () => {
     localStorage.clear();
     TestBed.configureTestingModule({
       providers: [
+        provideRouter([]),
         provideCatalogTesting(),
         { provide: ORDERS_API_URL, useValue: ORDERS_URL },
         { provide: SHIPPING_API_URL, useValue: 'http://test/shipping' },
@@ -124,6 +127,8 @@ describe('CheckoutComponent', () => {
       address_detail: '',
       city: 'Medellín',
       department: 'Antioquia',
+      accept_terms: true,
+      accept_privacy: true,
     });
   }
 
@@ -156,6 +161,13 @@ describe('CheckoutComponent', () => {
       },
       // The cheapest option is chosen by default; the API quotes its price again.
       shipping_option: 'servientrega:express',
+      // The buyer's authorization travels with the versions of the texts they accepted.
+      consent: {
+        privacy_accepted: true,
+        privacy_policy_version: PRIVACY_POLICY_VERSION,
+        terms_accepted: true,
+        terms_version: TERMS_VERSION,
+      },
     });
     create.flush(CREATED);
     await settle();
@@ -310,6 +322,8 @@ describe('CheckoutComponent', () => {
       full_name: 'Ana Gómez',
       email: 'ana@example.com',
       phone: '3001234567',
+      accept_terms: true,
+      accept_privacy: true,
     });
     element.querySelector<HTMLInputElement>('input[value="pickup"]')!.click();
     await fixture.whenStable();
@@ -336,5 +350,51 @@ describe('CheckoutComponent', () => {
     http.expectNone(ORDERS_URL);
     expect(element.querySelectorAll('.field-error').length).toBeGreaterThan(0);
     expect(element.textContent).toContain('Escribe un correo válido');
+  });
+
+  it('should not create the order without the data authorization', async () => {
+    const { fixture, element } = await render();
+    fillForm(fixture);
+    fixture.componentInstance.form.controls.accept_privacy.setValue(false);
+    await submit(fixture, element);
+    await fixture.whenStable();
+
+    http.expectNone(ORDERS_URL);
+    const errors = element.querySelectorAll('.consent .field-error');
+    expect(errors).toHaveLength(1);
+    expect(errors[0].textContent).toContain('Necesitamos tu autorización');
+    expect(element.querySelector('.consent a[href*="privacidad"]')).not.toBeNull();
+  });
+
+  it('should not create the order without accepting the terms', async () => {
+    const { fixture, element } = await render();
+    fillForm(fixture);
+    fixture.componentInstance.form.controls.accept_terms.setValue(false);
+    await submit(fixture, element);
+    await fixture.whenStable();
+
+    http.expectNone(ORDERS_URL);
+    const errors = element.querySelectorAll('.consent .field-error');
+    expect(errors).toHaveLength(1);
+    expect(errors[0].textContent).toContain('términos y condiciones');
+    expect(element.querySelector('.consent a[href*="terminos"]')).not.toBeNull();
+  });
+
+  it('should show one checkbox for the terms and another for the privacy policy', async () => {
+    const { element } = await render();
+    const boxes = element.querySelectorAll<HTMLInputElement>('.consent input[type="checkbox"]');
+    expect(boxes).toHaveLength(2);
+    expect(boxes[0].closest('label')!.querySelector('a[href*="terminos"]')).not.toBeNull();
+    expect(boxes[1].closest('label')!.querySelector('a[href*="privacidad"]')).not.toBeNull();
+  });
+
+  it('should not send name and phone to the shipping quote before the authorization', async () => {
+    const { fixture, element } = await render();
+    fillForm(fixture);
+    fixture.componentInstance.form.controls.accept_privacy.setValue(false);
+    element.querySelector('select')!.dispatchEvent(new Event('change'));
+    await settle();
+
+    expect(http.expectOne(QUOTE_URL).request.body.customer).toBeNull();
   });
 });

@@ -37,6 +37,18 @@ export interface CheckoutCustomer {
   readonly phone: string;
 }
 
+/**
+ * The buyer's express authorization (Ley 1581 de 2012) and acceptance of the terms, one
+ * checkbox each, with the version of each text they saw. The API records when and from where
+ * they were given, and rejects the order unless both are true.
+ */
+export interface CheckoutConsent {
+  readonly privacy_accepted: boolean;
+  readonly privacy_policy_version: string;
+  readonly terms_accepted: boolean;
+  readonly terms_version: string;
+}
+
 export interface CheckoutShipping {
   readonly address: string;
   readonly address_detail: string | null;
@@ -237,7 +249,8 @@ export class CheckoutService {
     customer: CheckoutCustomer,
     /** Null when the buyer picks the order up at the shop. */
     shipping: CheckoutShipping | null,
-    shippingOption: string | null = null,
+    shippingOption: string | null,
+    consent: CheckoutConsent,
   ): Promise<CheckoutResponse> {
     return firstValueFrom(
       this.http.post<CheckoutResponse>(this.url, {
@@ -245,6 +258,7 @@ export class CheckoutService {
         customer,
         shipping,
         shipping_option: shippingOption,
+        consent,
       }),
     );
   }

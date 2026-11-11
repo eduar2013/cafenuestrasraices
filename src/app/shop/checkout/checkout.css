@@ -378,6 +378,39 @@ dd {
   cursor: progress;
   opacity: 0.7;
 }
+.consent {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 16px;
+}
+.consent-check {
+  align-items: flex-start;
+  cursor: pointer;
+  flex-direction: row;
+  font-weight: 400;
+  gap: 10px;
+  line-height: 1.5;
+}
+.consent-check input {
+  accent-color: var(--action);
+  flex: none;
+  height: 20px;
+  margin: 1px 0 0;
+  padding: 0;
+  width: 20px;
+}
+.consent-check input.ng-invalid.ng-touched {
+  outline: 2px solid var(--error);
+  outline-offset: 1px;
+}
+.consent-check a {
+  color: var(--action);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+.consent-check a:hover {
+  color: var(--action-deep);
+}
 .checkout-error {
   background: #fff;
   border: var(--filete) solid var(--error);
